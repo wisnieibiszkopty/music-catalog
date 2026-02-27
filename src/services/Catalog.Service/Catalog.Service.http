@@ -1,0 +1,11 @@
+@Catalog.Service_HostAddress = http://localhost:5222
+
+GET {{Catalog.Service_HostAddress}}/todos/
+Accept: application/json
+
+###
+
+GET {{Catalog.Service_HostAddress}}/todos/1
+Accept: application/json
+
+###
