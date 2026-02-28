@@ -4,12 +4,16 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <InvariantGlobalization>true</InvariantGlobalization>
+    
     <PublishAot>true</PublishAot>
-    <OptimizationPreference>Speed</OptimizationPreference>
+    <SelfContained>true</SelfContained>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    
+    <OptimizationPreference>Size</OptimizationPreference>
     <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
-    <InterceptorsPreviewNamespaces>$(InterceptorsPreviewNamespaces);Dapper.AOT</InterceptorsPreviewNamespaces>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+
+    <InterceptorsPreviewNamespaces>$(InterceptorsPreviewNamespaces);Dapper.AOT</InterceptorsPreviewNamespaces>
   </PropertyGroup>
 
   <ItemGroup>

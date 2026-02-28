@@ -1,23 +1,30 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
-USER $APP_UID
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+﻿FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-ARG BUILD_CONFIGURATION=Release
+RUN apk add --no-cache \
+    clang \
+    build-base \
+    musl-dev \
+    zlib-dev
+
 WORKDIR /src
-COPY ["src/services/Artist.Service/Artist.Service.csproj", "src/services/Artist.Service/"]
-RUN dotnet restore "src/services/Artist.Service/Artist.Service.csproj"
+
 COPY . .
-WORKDIR "/src/src/services/Artist.Service"
-RUN dotnet build "./Artist.Service.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Artist.Service.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish src/services/Artist.Service/Artist.Service.csproj \
+    -c Release \
+    -r linux-musl-x64 \
+    -p:PublishAot=true \
+    -p:SelfContained=true \
+    -p:StripSymbols=true \
+    -o /app
 
-FROM base AS final
+FROM alpine:3.20
+
+RUN adduser -D appuser
+USER appuser
+
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Artist.Service.dll"]
+COPY --from=build /app .
+
+EXPOSE 8080
+ENTRYPOINT ["./Artist.Service"]

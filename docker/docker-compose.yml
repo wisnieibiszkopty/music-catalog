@@ -6,8 +6,6 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=123
       - POSTGRES_DB=artist_db
-    ports:
-      - "5432:5432"
     volumes:
       - artist_data:/var/lib/postgresql
     healthcheck:
@@ -25,5 +23,18 @@ services:
       - ../src/services/Artist.Service/migrations:/flyway/sql
     command: -url=jdbc:postgresql://artist-db:5432/artist_db -user=admin -password=123 -connectRetries=60 migrate
 
+  artist-api:
+    build:
+      context: ..
+      dockerfile: src/services/Artist.Service/Dockerfile
+    depends_on:
+      artist-db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      ConnectionStrings__DefaultConnection: Host=artist-db;Port=5432;Database=artist_db;Username=admin;Password=123
+      ASPNETCORE_URLS: http://+:8080
+  
 volumes:
   artist_data:
