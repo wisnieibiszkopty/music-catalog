@@ -4,9 +4,9 @@
     <Project Path="src/gateway/ApiGateway/ApiGateway.csproj" />
   </Folder>
   <Folder Name="/src/services/">
-    <Project Path="src/services/Artist.Service/Artist.Service.csproj" />
     <Project Path="src/services/Auth.Service/Auth.Service.csproj" />
     <Project Path="src/services/Catalog.Service/Catalog.Service.csproj" />
+    <Project Path="src\services\Artists.Service\Artists.Service.csproj" />
   </Folder>
   <Folder Name="/src/shared/">
     <Project Path="src/shared/Contracts/Contracts.csproj" />
