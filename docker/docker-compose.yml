@@ -20,13 +20,13 @@ services:
       artist-db:
         condition: service_healthy
     volumes:
-      - ../src/services/Artist.Service/migrations:/flyway/sql
+      - ../src/services/Artists.Service/migrations:/flyway/sql
     command: -url=jdbc:postgresql://artist-db:5432/artist_db -user=admin -password=123 -connectRetries=60 migrate
 
   artist-api:
     build:
       context: ..
-      dockerfile: src/services/Artist.Service/Dockerfile
+      dockerfile: src/services/Artists.Service/Dockerfile
     depends_on:
       artist-db:
         condition: service_healthy

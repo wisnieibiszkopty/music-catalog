@@ -10,7 +10,7 @@ WORKDIR /src
 
 COPY . .
 
-RUN dotnet publish src/services/Artist.Service/Artist.Service.csproj \
+RUN dotnet publish src/services/Artists.Service/Artists.Service.csproj \
     -c Release \
     -r linux-musl-x64 \
     -p:PublishAot=true \
@@ -27,4 +27,4 @@ WORKDIR /app
 COPY --from=build /app .
 
 EXPOSE 8080
-ENTRYPOINT ["./Artist.Service"]
+ENTRYPOINT ["./Artists.Service"]

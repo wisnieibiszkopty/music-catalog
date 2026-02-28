@@ -1,6 +1,7 @@
 using Artists.Service.Core;
 using Artists.Service;
 using Dapper;
+using Scalar.AspNetCore;
 
 [assembly: DapperAot]
 
@@ -21,10 +22,8 @@ builder.Services.AddScoped<IArtistService, ArtistService>();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+app.MapOpenApi();
+app.MapScalarApiReference();
 
 app.MapArtistEndpoints();
 
