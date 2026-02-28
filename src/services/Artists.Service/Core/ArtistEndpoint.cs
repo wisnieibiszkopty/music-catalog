@@ -1,4 +1,6 @@
-namespace Artist.Service.Core;
+using Artists.Service.Core.Models;
+
+namespace Artists.Service.Core;
 
 public static class ArtistEndpoint
 {
@@ -9,6 +11,8 @@ public static class ArtistEndpoint
 
         group.MapGet("/", GetAll);
 
+        
+        
         return builder;
     }
 

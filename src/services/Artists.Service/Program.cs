@@ -1,5 +1,5 @@
-using Artist.Service;
-using Artist.Service.Core;
+using Artists.Service.Core;
+using Artists.Service;
 using Dapper;
 
 [assembly: DapperAot]

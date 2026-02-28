@@ -1,7 +1,7 @@
 using System.Data;
 using Npgsql;
 
-namespace Artist.Service;
+namespace Artists.Service;
 
 public interface IDbConnectionFactory
 {
