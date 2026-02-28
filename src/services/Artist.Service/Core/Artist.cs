@@ -1,4 +1,4 @@
-namespace Artist.Service;
+namespace Artist.Service.Core;
 
 public class Artist
 {
