@@ -13,6 +13,7 @@ namespace Artists.Service;
 [JsonSerializable(typeof(ArtistDto))]
 [JsonSerializable(typeof(IEnumerable<ArtistDto>))]
 [JsonSerializable(typeof(List<ArtistDto>))]
+[JsonSerializable(typeof(Microsoft.AspNetCore.Mvc.ProblemDetails))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext
 {
 

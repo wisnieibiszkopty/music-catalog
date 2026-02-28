@@ -44,16 +44,25 @@ public class ArtistService(IDbConnectionFactory db): IArtistService
         using var connection = await db.CreateConnectionAsync();
 
         const string sql = @"
-            UPDATE artists 
-            SET name = @Name, 
-                founded_year = @FoundedYear, 
-                description = @Description, 
-                image_url = @ImageUrl, 
-                is_band = @IsBand
-            WHERE id = @Id
-            RETURNING *;";
+        UPDATE artists 
+        SET name = @Name, 
+            founded_year = @FoundedYear, 
+            description = @Description, 
+            image_url = @ImageUrl, 
+            is_band = @IsBand
+        WHERE id = @Id
+        RETURNING *;";
         
-        return await connection.QueryFirstOrDefaultAsync<Artist>(sql, artist);
+        var parameters = new { 
+            Id = id, 
+            artist.Name, 
+            artist.FoundedYear, 
+            artist.Description, 
+            artist.ImageUrl, 
+            artist.IsBand 
+        };
+    
+        return await connection.QueryFirstOrDefaultAsync<Artist>(sql, parameters);
     }
 
     // TODO id is broken
