@@ -1,0 +1,29 @@
+services:
+  artist-db:
+    image: postgres:18-alpine
+    container_name: artist_db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=artist_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - artist_data:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d artist_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  artist-db-migrator:
+    image: flyway/flyway:latest-alpine
+    depends_on: 
+      artist-db:
+        condition: service_healthy
+    volumes:
+      - ../src/services/Artist.Service/migrations:/flyway/sql
+    command: -url=jdbc:postgresql://artist-db:5432/artist_db -user=admin -password=123 -connectRetries=60 migrate
+
+volumes:
+  artist_data:

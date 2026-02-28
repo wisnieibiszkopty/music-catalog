@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS artists (
+    id UUID PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_artists_name ON artists(name);
