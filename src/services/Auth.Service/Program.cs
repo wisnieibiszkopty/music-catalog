@@ -8,8 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options => 
-    options.UseInMemoryDatabase("AuthDb")
+    options.UseNpgsql(connectionString)
 );
 
 builder.Services
@@ -22,11 +23,14 @@ builder.Services
     
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference();
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
 }
+
+app.MapOpenApi();
+app.MapScalarApiReference();
 
 app.MapGroup("/auth").MapIdentityApi<IdentityUser>();
 

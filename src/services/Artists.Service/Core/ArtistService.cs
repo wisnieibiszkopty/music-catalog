@@ -38,6 +38,7 @@ public class ArtistService(IDbConnectionFactory db): IArtistService
         return createdArtist;
     }
 
+    // TODO id is broken
     public async Task<Artist?> Update(Guid id, ArtistDto artist)
     {
         using var connection = await db.CreateConnectionAsync();
@@ -55,6 +56,7 @@ public class ArtistService(IDbConnectionFactory db): IArtistService
         return await connection.QueryFirstOrDefaultAsync<Artist>(sql, artist);
     }
 
+    // TODO id is broken
     public async Task<bool> Delete(Guid id)
     {
         using var connection = await db.CreateConnectionAsync();

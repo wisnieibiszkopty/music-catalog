@@ -1,4 +1,33 @@
 services:
+  auth-db:
+    image: postgres:18-alpine
+    container_name: auth-db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=auth-db
+    volumes:
+      - auth-data:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d artist_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  
+  auth-api:
+    build:
+      context: ..
+      dockerfile: src/services/Auth.Service/Dockerfile
+    container_name: auth-api
+    depends_on:
+      auth-db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      ConnectionStrings__DefaultConnection: Host=auth-db;Port=5432;Database=auth_db;Username=admin;Password=123
+      ASPNETCORE_URLS: http://+:8080
+  
   artist-db:
     image: postgres:18-alpine
     container_name: artist_db
@@ -9,7 +38,7 @@ services:
     volumes:
       - artist_data:/var/lib/postgresql
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U admin -d artist_db" ]
+      test: [ "CMD-SHELL", "pg_isready -U admin -d auth-db" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -31,10 +60,11 @@ services:
       artist-db:
         condition: service_healthy
     ports:
-      - "8080:8080"
+      - "8081:8080"
     environment:
       ConnectionStrings__DefaultConnection: Host=artist-db;Port=5432;Database=artist_db;Username=admin;Password=123
       ASPNETCORE_URLS: http://+:8080
   
 volumes:
+  auth-data:
   artist_data:
