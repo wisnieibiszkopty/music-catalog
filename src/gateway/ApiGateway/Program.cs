@@ -1,22 +1,40 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+
 var builder = WebApplication.CreateSlimBuilder(args);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.MetadataAddress = "http://keycloak:8080/auth/realms/music-catalog/.well-known/openid-configuration"; 
+        options.RequireHttpsMetadata = false; 
+        
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = true,
+            ValidAudience = "api-client",
+            ValidateIssuer = true,
+            ValidIssuer = "http://localhost:8080/auth/realms/music-catalog", 
+            NameClaimType = "preferred_username"
+        };
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AuthPolicy", policy => policy.RequireAuthenticatedUser());
+    options.AddPolicy("AdminPolicy", policy => 
+        policy.RequireClaim("realm_access", "admin"));
+});
 
 builder.Services
     .AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("FrontendPolicy", policy =>
-    {
-        policy.WithOrigins("http://localhost:5173")
-            .AllowAnyMethod()
-            .AllowAnyHeader();
-    });
-});
-
 var app = builder.Build();
 
-app.UseCors("FrontendPolicy");
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapReverseProxy();
 
 app.Run();
