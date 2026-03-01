@@ -1,6 +1,7 @@
 using Artists.Service.Core.Dto;
 using Artists.Service.Core.Models;
 using Artists.Service.Core.Validators;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Artists.Service.Core;
 
@@ -13,9 +14,9 @@ public static class ArtistEndpoint
 
         group.MapGet("/", GetAll);
         group.MapGet("/{id:guid}", GetById);
-        group.MapPost("/", Create);
-        group.MapPut("/{id:guid}", Update);
-        group.MapDelete("/{id:guid}", Delete);
+        group.MapPost("/", Create).RequireAuthorization(new AuthorizeAttribute { Roles = "admin"});
+        group.MapPut("/{id:guid}", Update).RequireAuthorization(new AuthorizeAttribute { Roles = "admin"});
+        group.MapDelete("/{id:guid}", Delete).RequireAuthorization(new AuthorizeAttribute { Roles = "admin"});
         
         return builder;
     }
