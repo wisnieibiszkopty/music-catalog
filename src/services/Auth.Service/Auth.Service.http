@@ -1,30 +1,51 @@
-@Auth.Service_HostAddress = http://localhost:8080/api/auth
+@hostname = localhost
+@port = 8080
+@gatewayUrl = http://{{hostname}}:{{port}}
+@realm = music-catalog
 
-POST http://localhost:8080/api/auth/login
+### 
+
+GET {{gatewayUrl}}/auth/realms/{{realm}}/.well-known/openid-configuration
+
+### 
+
+POST {{gatewayUrl}}/auth/realms/{{realm}}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=api-client&
+username=admin&
+password=admin&
+grant_type=password
+
+### 
+
+@adminToken = {{login.response.body.access_token}}
+
+###
+
+POST {{gatewayUrl}}/auth/admin/realms/{{realm}}/users
+Authorization: Bearer {{adminToken}}
 Content-Type: application/json
 
 {
-  "email": "user@example.com",
-  "password": "TwojeHaslo123!"
+  "username": "newuser",
+  "enabled": true,
+  "email": "new@user.com",
+  "firstName": "Jan",
+  "lastName": "Kowalski",
+  "credentials": [
+    {
+      "type": "password",
+      "value": "password123",
+      "temporary": false
+    }
+  ]
 }
+###
+
+GET {{gatewayUrl}}/api/artists
 
 ###
 
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-
-{
-  "email": "user@example.com",
-  "password": "TwojeHaslo123!"
-}
-
-###
-
-GET http://localhost:8080/api/artists
-Accept: application/json
-
-###
-
-GET http://localhost:8080/api/artists
-Authorization: Bearer CfDJ8KQBViqKt7JCgEevj-nUWnqjN2Q46WlHOaU5EkDVf6flKyDnyksDEztASRczzIBwxUujhfyI6vOBQVpeKGHJ3JTUQZfflsqOB2ss5TfUh4aU8SKumJY47nItyHR63ScKJf9dLY6xNaxMFVNvJC7SR3dlrLqA6kArzClkQEjFWqxXBJvfjsIL61eCjbMrK7Oyi37eE4a7sIw1PxCQFl4lknUtEK-eeVSVj-8M4A030j78FhdlXgdIrENZJeQI-dySqfoT53EsbCHrmlKnxHAQIgLUGh1ZIDApyz7CcOwpiRU9NqKlXqlozwAIINz_EOX5noPb7j48i1JANiBuGIxt2rX2M81njz02CRWysw_MulIqnpoJ7OUkTZNKclQE8VxHpbNuQ34EYANUjsh7Oy9tqN0mrUG5_vdSZTsyOAEPAoBOXlnUg1mD-6kg1N87yKkQARjeTwJzHBPY_QoyAXBq0F2ZY7CWuEN4xoJQd1rJUfSS8bg_cYkh20kiND1awfyOG2zGlDdnin-LJs3zZHEpnjmltksIf4vAYCTEwTYyXzqBARfrTKjQJalspfdwFwYRVx42aV8ocgORwwtPDwF7_ABqxeIH0P-MDMWQ4V_uqs7wEYglkm7e68mA4JL90MvkrNtgslA_qw2VjVJHfxK85jRRVdGhwv4QbD7E2KC4QQOtzry2SItLyc_uchYvXxGIlA
-Accept: application/json
+GET {{gatewayUrl}}/api/artists
+Authorization: Bearer {{adminToken}}
