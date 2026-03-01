@@ -8,3 +8,9 @@
 **/*.sln.docstates
 
 **/publish/
+
+# Auto-generated type declarations
+**/auto-imports.d.ts
+**/components.d.ts
+
+**/node_modules
