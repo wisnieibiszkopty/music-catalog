@@ -8,7 +8,7 @@ public static class ArtistEndpoint
 {
     public static IEndpointRouteBuilder MapArtistEndpoints(this IEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup("/api/v1/artists")
+        var group = builder.MapGroup("/api/artists")
             .WithTags("Artists");
 
         group.MapGet("/", GetAll);

@@ -1,9 +1,16 @@
 {
   "realm": "music-catalog",
   "enabled": true,
+  "registrationAllowed": true,      
+  "registrationEmailAsUsername": false,
+  "rememberMe": true,
+  "verifyEmail": false,
+  "resetPasswordAllowed": true,
+  "defaultRoles": [ "user" ],
   "clients": [
     {
       "clientId": "api-client",
+      
       "enabled": true,
       "protocol": "openid-connect",
       "publicClient": true,
