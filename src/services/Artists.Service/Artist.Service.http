@@ -7,6 +7,10 @@
 
 GET {{gatewayUrl}}/auth/realms/{{realm}}/.well-known/openid-configuration
 
+###
+
+GET http://localhost:8080/auth/realms/music-catalog/protocol/openid-connect/3p-cookies/step1.html
+
 ### 
 
 POST {{gatewayUrl}}/auth/realms/{{realm}}/protocol/openid-connect/token
