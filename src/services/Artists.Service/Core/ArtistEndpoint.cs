@@ -1,6 +1,8 @@
 using Artists.Service.Core.Dto;
 using Artists.Service.Core.Models;
 using Artists.Service.Core.Validators;
+using Contracts;
+using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Artists.Service.Core;
@@ -17,6 +19,8 @@ public static class ArtistEndpoint
         group.MapPost("/", Create).RequireAuthorization(new AuthorizeAttribute { Roles = "admin"});
         group.MapPut("/{id:guid}", Update).RequireAuthorization(new AuthorizeAttribute { Roles = "admin"});
         group.MapDelete("/{id:guid}", Delete).RequireAuthorization(new AuthorizeAttribute { Roles = "admin"});
+
+        group.MapPost("/scrap/{name}", Scrap);
         
         return builder;
     }
@@ -65,5 +69,12 @@ public static class ArtistEndpoint
     {
         var deleted = await artistService.Delete(id);
         return deleted ? Results.NoContent() : Results.BadRequest();
+    }
+
+    private static async Task<IResult> Scrap(string name, IPublishEndpoint publishEndpoint)
+    {
+        await publishEndpoint.Publish(new SearchArtist{ Name = name});
+
+        return Results.Ok();
     }
 }

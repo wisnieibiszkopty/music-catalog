@@ -1,0 +1,11 @@
+@Scraper.Service_HostAddress = http://localhost:5288
+
+GET {{Scraper.Service_HostAddress}}/todos/
+Accept: application/json
+
+###
+
+GET {{Scraper.Service_HostAddress}}/todos/1
+Accept: application/json
+
+###

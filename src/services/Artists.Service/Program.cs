@@ -1,6 +1,7 @@
 using Artists.Service.Core;
 using Artists.Service;
 using Dapper;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
@@ -14,6 +15,19 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 });
 
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, config) =>
+    {
+        config.Host(builder.Configuration.GetValue<string>("RabbitMq:Host"), "/", h => 
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+    });
+});
+
+// TODO move to utils?
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
