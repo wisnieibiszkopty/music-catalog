@@ -12,6 +12,15 @@ services:
       - keycloak
       #- artist-service
   
+  web-app:
+    container_name: web-app
+    build:
+      context: ../src/frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:8080/api
+        - VITE_KEYCLOAK_URL=http://localhost:8080/auth
+  
   keycloak-db:
     image: postgres:18-alpine
     container_name: keycloak-db
