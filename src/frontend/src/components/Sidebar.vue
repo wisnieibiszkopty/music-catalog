@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import keycloak from '@/services/keycloak';
+import keycloak from '@/services/core/keycloak';
 import type { NavigationMenuItem } from '@nuxt/ui'
-import {lo} from "@nuxt/ui/locale";
 
 const items: NavigationMenuItem[] = [
   {
@@ -13,6 +12,16 @@ const items: NavigationMenuItem[] = [
     label: 'Albums',
     icon: 'i-lucide-users',
     to: '/albums',
+  },
+  {
+    label: 'Playlists',
+    icon: 'i-lucide-list-music',
+    to: '/playlists',
+  },
+  {
+    label: 'Scrapper',
+    icon: 'i-lucide-searchint',
+    to: '/scrapper',
   },
   {
     label: 'Settings',

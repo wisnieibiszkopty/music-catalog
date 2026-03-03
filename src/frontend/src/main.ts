@@ -6,7 +6,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import ui from '@nuxt/ui/vue-plugin'
-import keycloak from './services/keycloak'
+import keycloak from './services/core/keycloak'
 
 
 const app = createApp(App)
