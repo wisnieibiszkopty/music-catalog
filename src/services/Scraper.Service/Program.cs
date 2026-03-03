@@ -8,6 +8,12 @@ var builder = WebApplication.CreateSlimBuilder(args);
 //     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 // });
 
+builder.Services.AddHttpClient<SpotifyClient>(client =>
+{
+    client.BaseAddress = new Uri("https://api.spotify.com/v1");
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
+
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer < ArtistSearchConsumer>();
