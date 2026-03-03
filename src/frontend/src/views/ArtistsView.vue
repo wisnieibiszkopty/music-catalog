@@ -1,11 +1,23 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { type Artist, ArtistsService } from '@/services/api/artists-service.ts'
 
+const artists = ref<Artist[]>([])
+
+const loadArtists = async () => {
+  try {
+    artists.value = await ArtistsService.getAll()
+  } catch (error) {
+    // TODO display toast
+    console.error(error)
+  }
+}
+
+onMounted(loadArtists)
 </script>
 
 <template>
-<p>artists</p>
+  <p>artists</p>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
