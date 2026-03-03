@@ -10,7 +10,7 @@ services:
       - ASPNETCORE_URLS=http://+:8080
     depends_on:
       - keycloak
-      - artist-service
+      #- artist-service
   
   keycloak-db:
     image: postgres:18-alpine
@@ -48,42 +48,42 @@ services:
       - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
     restart: unless-stopped
 
-  artist-db:
-    image: postgres:18-alpine
-    container_name: artist-db
-    environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=123
-      - POSTGRES_DB=artist_db
-    volumes:
-      - artist-data:/var/lib/postgresql
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U admin -d artist-db" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-  artist-db-migrator:
-    image: flyway/flyway:latest-alpine
-    container_name: artist-db-migrator
-    depends_on: 
-      artist-db:
-        condition: service_healthy
-    volumes:
-      - ../src/services/Artists.Service/migrations:/flyway/sql
-    command: -url=jdbc:postgresql://artist-db:5432/artist_db -user=admin -password=123 -connectRetries=60 migrate
-
-  artist-service:
-    container_name: artist-service
-    build:
-      context: ..
-      dockerfile: src/services/Artists.Service/Dockerfile
-    depends_on:
-      artist-db:
-        condition: service_healthy
-    environment:
-      ConnectionStrings__DefaultConnection: Host=artist-db;Port=5432;Database=artist_db;Username=admin;Password=123
-      ASPNETCORE_URLS: http://+:8080
+#  artist-db:
+#    image: postgres:18-alpine
+#    container_name: artist-db
+#    environment:
+#      - POSTGRES_USER=admin
+#      - POSTGRES_PASSWORD=123
+#      - POSTGRES_DB=artist_db
+#    volumes:
+#      - artist-data:/var/lib/postgresql
+#    healthcheck:
+#      test: [ "CMD-SHELL", "pg_isready -U admin -d artist-db" ]
+#      interval: 5s
+#      timeout: 5s
+#      retries: 5
+#
+#  artist-db-migrator:
+#    image: flyway/flyway:latest-alpine
+#    container_name: artist-db-migrator
+#    depends_on: 
+#      artist-db:
+#        condition: service_healthy
+#    volumes:
+#      - ../src/services/Artists.Service/migrations:/flyway/sql
+#    command: -url=jdbc:postgresql://artist-db:5432/artist_db -user=admin -password=123 -connectRetries=60 migrate
+#
+#  artist-service:
+#    container_name: artist-service
+#    build:
+#      context: ..
+#      dockerfile: src/services/Artists.Service/Dockerfile
+#    depends_on:
+#      artist-db:
+#        condition: service_healthy
+#    environment:
+#      ConnectionStrings__DefaultConnection: Host=artist-db;Port=5432;Database=artist_db;Username=admin;Password=123
+#      ASPNETCORE_URLS: http://+:8080
   
 volumes:
   keycloak-data:
