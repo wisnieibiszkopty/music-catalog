@@ -30,6 +30,8 @@ builder.Services.AddTransient<BearerTokenProvider>();
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<DiscoverAlbumsConsumer>();
+    x.AddConsumer<ScrapeAlbumDetailsConsumer>();
+    x.AddConsumer<DiscoverArtistConsumer>();
     
     x.UsingRabbitMq((context, config) =>
     {

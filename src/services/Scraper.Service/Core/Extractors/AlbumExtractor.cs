@@ -27,11 +27,12 @@ public class AlbumExtractor
         return (ids, total);
     }
     
-    public AlbumDetails? ExtractFullAlbumInfo(string json)
+    public AlbumDetails ExtractFullAlbumInfo(string json)
     {
         using var doc = JsonDocument.Parse(json);
         var root = doc.RootElement;
-        
+
+        var id = root.GetProperty("id").GetString() ?? String.Empty;
         var name = root.GetProperty("name").GetString() ?? String.Empty;
         var releaseDate = root.GetProperty("release_date").GetString() ?? String.Empty;
         var totalTracks = root.GetProperty("total_tracks").GetInt32();
@@ -56,6 +57,6 @@ public class AlbumExtractor
             }
         }
 
-        return new AlbumDetails(name, releaseDate, totalTracks, imageUrl, tracks);
+        return new AlbumDetails(id, name, releaseDate, totalTracks, imageUrl, tracks);
     }
 }

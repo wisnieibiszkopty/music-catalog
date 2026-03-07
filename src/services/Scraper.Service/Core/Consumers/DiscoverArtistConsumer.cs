@@ -1,0 +1,22 @@
+using MassTransit;
+using Contracts;
+
+namespace Scraper.Service.Core.Consumers;
+
+public class DiscoverArtistConsumer : IConsumer<DiscoverArtist>
+{
+    private readonly IMusicServiceClient _client;
+
+    public DiscoverArtistConsumer(IMusicServiceClient client)
+    {
+        _client = client;
+    }
+    
+    public async Task Consume(ConsumeContext<DiscoverArtist> context)
+    {
+        var artistName = context.Message.ArtistName;
+        var artist = await _client.GetArtistByName(artistName);
+
+        await context.Publish(new SaveArtistData(artist));
+    }
+}

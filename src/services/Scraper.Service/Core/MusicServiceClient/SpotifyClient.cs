@@ -25,7 +25,6 @@ public class SpotifyClient : IMusicServiceClient
         _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
     
-    // TODO format data and push to queue
     public async Task<ArtistDetails> GetArtistByName(string name)
     {
         await SetBearerToken();
@@ -44,8 +43,8 @@ public class SpotifyClient : IMusicServiceClient
         
         var body = await response.Content.ReadAsStringAsync();
 
-        var artistScraper = new ArtistExtractor();
-        var artistId = artistScraper.ExtractArtistId(body);
+        var extractor = new ArtistExtractor();
+        var artistId = extractor.ExtractArtistId(body);
         return artistId;
     }
 
@@ -57,8 +56,8 @@ public class SpotifyClient : IMusicServiceClient
         
         var body = await response.Content.ReadAsStringAsync();
         
-        var artistScraper = new ArtistExtractor();
-        var artistDetails = artistScraper.ExtractArtistDetails(body);
+        var extractor = new ArtistExtractor();
+        var artistDetails = extractor.ExtractArtistDetails(body);
         return artistDetails;
     }
     
@@ -79,8 +78,8 @@ public class SpotifyClient : IMusicServiceClient
 
             var body = await response.Content.ReadAsStringAsync();
 
-            var scraper = new AlbumExtractor();
-            var (ids, apiTotal) = scraper.ParseAlbumsPage(body);
+            var extractor = new AlbumExtractor();
+            var (ids, apiTotal) = extractor.ParseAlbumsPage(body);
         
             allAlbumIds.AddRange(ids);
             total = apiTotal; 
@@ -103,8 +102,8 @@ public class SpotifyClient : IMusicServiceClient
         
         var body = await response.Content.ReadAsStringAsync();
 
-        var scraper = new Core.AlbumExtractor();
-        var albumDetails = scraper.ExtractFullAlbumInfo(body);
+        var extractor = new AlbumExtractor();
+        var albumDetails = extractor.ExtractFullAlbumInfo(body);
         
         _logger.LogInformation("Fetched album details for album with id {AlbumId}", albumId);
         
