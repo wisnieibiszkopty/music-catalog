@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
+using Contracts;
 using MassTransit;
-using Scraper.Service;
-using Scraper.Service.Core;
-using Scraper.Service.Core.Consumers;
+using Orchestrator.Service;
+using Orchestrator.Service.Core.Saga;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -11,24 +11,10 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 });
 
-builder.Services.AddHttpClient<SpotifyClient>(client =>
-{
-    var baseAddress = builder.Configuration["Spotify:BaseAddress"]!;
-    client.BaseAddress = new Uri(baseAddress);
-    client.DefaultRequestHeaders.Add("Accept", "application/json");
-});
-
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = builder.Configuration["Redis:Configuration"];
-    options.InstanceName = builder.Configuration["Redis:InstanceName"];
-});
-
-builder.Services.AddTransient<BearerTokenProvider>();
-
 builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumer<DiscoverAlbumsConsumer>();
+    x.AddSagaStateMachine<AlbumScraperSaga, AlbumScraperState>()
+        .InMemoryRepository();
     
     x.UsingRabbitMq((context, config) =>
     {
@@ -53,13 +39,17 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.MapScrapperEndpoints();
+app.MapScrappingEndpoints();
 
 app.Run();
 
-[JsonSerializable(typeof(string))]
-[JsonSerializable(typeof(List<string>))]
-internal partial class AppJsonSerializerContext : JsonSerializerContext
-{
 
-}
+
+[JsonSerializable(typeof(StartAlbumsScraping))]
+[JsonSerializable(typeof(DiscoverAlbums))]
+[JsonSerializable(typeof(AlbumsDiscovered))]
+[JsonSerializable(typeof(ScrapeAlbumDetails))]
+[JsonSerializable(typeof(SaveAlbumData))]
+[JsonSerializable(typeof(AlbumSaved))]
+[JsonSerializable(typeof(AllAlbumsScraped))]
+internal partial class AppJsonSerializerContext : JsonSerializerContext { }

@@ -1,7 +1,7 @@
 using MassTransit;
 using Contracts;
 
-namespace Scraper.Service;
+namespace Scraper.Service.Core.Consumers;
 
 public class ArtistSearchConsumer : IConsumer<SearchArtist>
 {

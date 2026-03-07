@@ -40,19 +40,35 @@ public class SpotifyClient
         return body;
     }
 
-    public async Task<string> GetAlbumsByArtistId(string artistId)
+    public async Task<List<string>> GetAlbumsByArtistId(string artistId)
     {
         await SetBearerToken();
+        
+        var allAlbumIds = new List<string>();
+        int offset = 0;
+        const int limit = 10;
+        int total = 0;
 
-        // generalnie bedzie trzeba po kolei leciec requesty az sie skoncza albumy, bo dziady dały limity xDDDD 
-        // na początku tyl dobrze ża daje jaki jest total
-        var response = await _http.GetAsync($"artists/{Uri.EscapeDataString(artistId)}/albums?include_groups=album&limit=10");
+        do
+        {
+            var url = $"artists/{Uri.EscapeDataString(artistId)}/albums?include_groups=album&limit={limit}&offset={offset}";
+            var response = await _http.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsStringAsync();
+
+            var scraper = new AlbumScraper();
+            var (ids, apiTotal) = scraper.ParseAlbumsPage(body);
         
-        var body = await response.Content.ReadAsStringAsync();
-        
-        _logger.LogInformation(body);
-        
-        return body;
+            allAlbumIds.AddRange(ids);
+            total = apiTotal; 
+            offset += limit; 
+
+            _logger.LogInformation("Fetched {Count}/{Total} albums for ArtistId {ArtistId}", allAlbumIds.Count, total, artistId);
+
+        } while (allAlbumIds.Count < total);
+
+        return allAlbumIds;
     }
 
     public async Task<string> GetAlbumInfo(string albumId)

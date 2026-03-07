@@ -22,6 +22,6 @@ public static class ScrapperEndpoints
     private static async Task<IResult> ScrapArtistsAlbums(string artistId, SpotifyClient client)
     {
         var result = await client.GetAlbumsByArtistId(artistId);
-        return Results.Content(result, "application/json");
+        return Results.Ok(result);
     }
 }
