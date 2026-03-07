@@ -1,10 +1,9 @@
 using System.Net.Http.Headers;
 using Contracts;
-using Scraper.Service.Core;
 
-namespace Scraper.Service;
+namespace Scraper.Service.Core;
 
-public class SpotifyClient
+public class SpotifyClient : IMusicServiceClient
 {
     private readonly ILogger _logger;
     private readonly HttpClient _http;
@@ -27,19 +26,42 @@ public class SpotifyClient
     }
     
     // TODO format data and push to queue
-    public async Task<string> GetArtistByNameAsync(string name)
+    public async Task<ArtistDetails> GetArtistByName(string name)
     {
         await SetBearerToken();
+
+        var artistId = await GetArtistId(name);
+        var artistDetails = await GetArtistDetails(artistId!);
         
-        var response = await _http.GetAsync($"search?q={Uri.EscapeDataString(name)}&type=artist&limit=1");
+        return artistDetails;
+    }
+
+    private async Task<string?> GetArtistId(string artistName)
+    {
+        var url = $"search?q={Uri.EscapeDataString(artistName)}&type=artist&limit=1";
+        var response = await _http.GetAsync(url);
+        response.EnsureSuccessStatusCode();
+        
+        var body = await response.Content.ReadAsStringAsync();
+
+        var artistScraper = new ArtistExtractor();
+        var artistId = artistScraper.ExtractArtistId(body);
+        return artistId;
+    }
+
+    private async Task<ArtistDetails> GetArtistDetails(string artistId)
+    {
+        var url = $"artists/{Uri.EscapeDataString(artistId)}";
+        var response = await _http.GetAsync(url);
+        response.EnsureSuccessStatusCode();
         
         var body = await response.Content.ReadAsStringAsync();
         
-        _logger.LogInformation(body);
-        
-        return body;
+        var artistScraper = new ArtistExtractor();
+        var artistDetails = artistScraper.ExtractArtistDetails(body);
+        return artistDetails;
     }
-
+    
     public async Task<List<string>> GetAlbumsByArtistId(string artistId)
     {
         await SetBearerToken();
@@ -57,7 +79,7 @@ public class SpotifyClient
 
             var body = await response.Content.ReadAsStringAsync();
 
-            var scraper = new AlbumScraper();
+            var scraper = new AlbumExtractor();
             var (ids, apiTotal) = scraper.ParseAlbumsPage(body);
         
             allAlbumIds.AddRange(ids);
@@ -71,16 +93,21 @@ public class SpotifyClient
         return allAlbumIds;
     }
 
-    public async Task<string> GetAlbumInfo(string albumId)
+    public async Task<AlbumDetails?> GetAlbumInfo(string albumId)
     {
         await SetBearerToken();
-        
-        var response = await _http.GetAsync($"albums/{Uri.EscapeDataString(albumId)}");
+
+        var url = $"albums/{Uri.EscapeDataString(albumId)}";
+        var response = await _http.GetAsync(url);
+        response.EnsureSuccessStatusCode();
         
         var body = await response.Content.ReadAsStringAsync();
+
+        var scraper = new Core.AlbumExtractor();
+        var albumDetails = scraper.ExtractFullAlbumInfo(body);
         
-        _logger.LogInformation(body);
+        _logger.LogInformation("Fetched album details for album with id {AlbumId}", albumId);
         
-        return body;
+        return albumDetails;
     }
 }

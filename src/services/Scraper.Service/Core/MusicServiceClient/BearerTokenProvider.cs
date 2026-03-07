@@ -20,7 +20,7 @@ public class BearerTokenProvider
         _cache = cache;
         _clientId = config["Spotify:ClientId"]!;
         _clientSecret = config["Spotify:ClientSecret"]!;
-        _tokenAddress = config["Spotify:TokenAddress"]!;
+        _tokenAddress = config["MusicService:TokenAddress"]!;
     }
 
     public async Task<string> GetTokenAsync()

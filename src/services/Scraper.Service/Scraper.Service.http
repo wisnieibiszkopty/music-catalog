@@ -2,8 +2,12 @@
 
 ###
 
-@clientId=
-@clientSecret=
+GET https://musicbrainz.org/ws/2/artist/?query=artist:radiohead&fmt=json&limit=1
+
+###
+
+@clientId=588b30cfce4645f6902414dbd7001255
+@clientSecret=5419234d5cee44389b17b39dfc3c6561
 
 POST https://accounts.spotify.com/api/token
 Content-Type: application/x-www-form-urlencoded
@@ -12,11 +16,15 @@ grant_type=client_credentials&client_id={{clientId}}&client_secret={{clientSecre
 
 ###
 
-@bearer=
+@bearer=BQDNAqh_dkuCBSf9r77NAtjCS6xXuC5aE3QNbllkJeYVPvoBd2_NSuBhtSVdNFvO-YYRSdx72wsq3PjfFNixVEVqmN54hREKCLnnAD2raStTMvnSM6qkH64Gb_LdK12XN0LanwjrIcg
 
 GET https://api.spotify.com/v1/artists/4Z8W4fKeB5YxbusRsdQVPb
 Authorization: Bearer {{bearer}}
 
+###
+
+GET https://api.spotify.com/v1/artists/0TnOYISbd1XYRBk9myaseg
+Authorization: Bearer {{bearer}}
 
 ###
 

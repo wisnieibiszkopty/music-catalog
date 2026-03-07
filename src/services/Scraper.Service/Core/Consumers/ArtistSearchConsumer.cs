@@ -5,9 +5,9 @@ namespace Scraper.Service.Core.Consumers;
 
 public class ArtistSearchConsumer : IConsumer<SearchArtist>
 {
-    private readonly SpotifyClient _spotifyClient;
+    private readonly IMusicServiceClient _spotifyClient;
 
-    public ArtistSearchConsumer(SpotifyClient spotifyClient)
+    public ArtistSearchConsumer(IMusicServiceClient spotifyClient)
     {
         _spotifyClient = spotifyClient;
     }

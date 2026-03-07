@@ -26,6 +26,6 @@ public static class ScrappingEndpoints
     {
         var correlationId = Guid.NewGuid();
         await publishEndpoint.Publish(new StartAlbumsScraping(correlationId, artistId));
-        return Results.Accepted($"/status/{correlationId}", new { CorrelationId = correlationId });
+        return Results.Accepted();
     }
 }

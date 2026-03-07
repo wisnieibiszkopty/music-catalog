@@ -9,19 +9,26 @@ public static class ScrapperEndpoints
 
         group.MapGet("/artist/{artistName}", ScrapArtistByName);
         group.MapGet("/albums/{artistId}", ScrapArtistsAlbums);
+        group.MapGet("/album-info/{albumId}", ScrapAlbum);
         
         return builder;
     }
 
-    private static async Task<IResult> ScrapArtistByName(string artistName, SpotifyClient client)
+    private static async Task<IResult> ScrapArtistByName(string artistName, IMusicServiceClient client)
     {
-        var result = await client.GetArtistByNameAsync(artistName);
-        return Results.Content(result, "application/json");
+        var result = await client.GetArtistByName(artistName);
+        return Results.Ok(result);
     }
 
-    private static async Task<IResult> ScrapArtistsAlbums(string artistId, SpotifyClient client)
+    private static async Task<IResult> ScrapArtistsAlbums(string artistId, IMusicServiceClient client)
     {
         var result = await client.GetAlbumsByArtistId(artistId);
+        return Results.Ok(result);
+    }
+
+    private static async Task<IResult> ScrapAlbum(string albumId, IMusicServiceClient client)
+    {
+        var result = await client.GetAlbumInfo(albumId);
         return Results.Ok(result);
     }
 }

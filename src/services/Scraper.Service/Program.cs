@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Contracts;
 using MassTransit;
 using Scraper.Service;
 using Scraper.Service.Core;
@@ -11,9 +12,9 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 });
 
-builder.Services.AddHttpClient<SpotifyClient>(client =>
+builder.Services.AddHttpClient<IMusicServiceClient, SpotifyClient>(client =>
 {
-    var baseAddress = builder.Configuration["Spotify:BaseAddress"]!;
+    var baseAddress = builder.Configuration["MusicService:BaseAddress"]!;
     client.BaseAddress = new Uri(baseAddress);
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
@@ -59,6 +60,8 @@ app.Run();
 
 [JsonSerializable(typeof(string))]
 [JsonSerializable(typeof(List<string>))]
+[JsonSerializable(typeof(AlbumDetails))]
+[JsonSerializable(typeof(ArtistDetails))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext
 {
 
