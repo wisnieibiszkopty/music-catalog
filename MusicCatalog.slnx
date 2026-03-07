@@ -5,8 +5,9 @@
   </Folder>
   <Folder Name="/src/services/">
     <Project Path="src/services/Catalog.Service/Catalog.Service.csproj" />
-    <Project Path="src\services\Artists.Service\Artists.Service.csproj" />
+    <Project Path="src/services/Artists.Service/Artists.Service.csproj" />
     <Project Path="src/services/Scraper.Service/Scraper.Service.csproj" />
+    <Project Path="src/services/Orchestrator.Service/Orchestrator.Service.csproj" />
   </Folder>
   <Folder Name="/src/shared/">
     <Project Path="src/shared/Contracts/Contracts.csproj" />

@@ -47,16 +47,12 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-app.MapGet("/{name}", async (string name, SpotifyClient client) =>
-{
-    var result = await client.GetArtistByNameAsync(name);
-    return Results.Content(result, "application/json");
-});
-
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.MapScrapperEndpoints();
 
 app.Run();
 
