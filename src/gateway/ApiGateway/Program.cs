@@ -22,8 +22,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AuthPolicy", policy => policy.RequireAuthenticatedUser());
-    options.AddPolicy("AdminPolicy", policy => 
-        policy.RequireClaim("realm_access", "admin"));
 });
 
 builder.Services

@@ -46,7 +46,7 @@
             "userinfo.token.claim": "true",
             "id.token.claim": "true",
             "access.token.claim": "true",
-            "claim.name": "realm_access",
+            "claim.name": "role",
             "jsonType.label": "String"
           }
         }

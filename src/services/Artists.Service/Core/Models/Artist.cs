@@ -10,5 +10,4 @@ public partial class Artist
     public bool IsBand { get; set; }
     
     public List<Genre> Genres { get; set; } = [];
-    public List<BandMember> Members { get; set; } = [];
 }

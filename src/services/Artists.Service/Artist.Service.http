@@ -7,7 +7,21 @@
 
 GET {{gatewayUrl}}/auth/realms/{{realm}}/.well-known/openid-configuration
 
-### 
+###
+
+POST {{gatewayUrl}}/auth/realms/{{realm}}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=api-client&
+username=user&
+password=user&
+grant_type=password
+
+> {%
+    client.global.set("userToken", response.body.access_token);
+%}
+
+###
 
 POST {{gatewayUrl}}/auth/realms/{{realm}}/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
@@ -17,9 +31,9 @@ username=admin&
 password=admin&
 grant_type=password
 
-### 
-
-@adminToken = eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRS2RwY0JnVUdlVnRVUC1Ob0lKZFNsdDZURkh5Q1liejJFaDJXMldmYWRRIn0.eyJleHAiOjE3NzI5NTM1NDAsImlhdCI6MTc3Mjk1MzI0MCwianRpIjoiY2IxYjM1YTktZGZlYS00ZGExLWE4ZWUtNDNmYjIzZmQ3MzEzIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL211c2ljLWNhdGFsb2ciLCJhdWQiOiJhcGktY2xpZW50Iiwic3ViIjoiNzMyZmU2NGYtNzliZi00YTRhLTlkMTQtYjg4ZjVkODdhN2ExIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYXBpLWNsaWVudCIsInNlc3Npb25fc3RhdGUiOiI3ZjZkODAzZi03NzcxLTRhNmQtOWRiMy1iYTdhNmNmOWZlZmIiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiYWRtaW4iXX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6IjdmNmQ4MDNmLTc3NzEtNGE2ZC05ZGIzLWJhN2E2Y2Y5ZmVmYiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicmVhbG1fYWNjZXNzIjpbImFkbWluIl0sIm5hbWUiOiJhZG1pbiBhZG1pbiIsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWluIiwiZ2l2ZW5fbmFtZSI6ImFkbWluIiwiZmFtaWx5X25hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5AYWRtaW4ifQ.uFpN7FFBs5KJ6rfcV0wrQbFiaRjb4OL4oMH1tsck4Rbtyy1gaFmGOyfHgXdb7TvDF6R6dBn-PuyBIEszwz0MWBx6L3DOAtogyO3JODFmU-LecbN_Lf-utiRFs6TPCHBBTKH5nKm7m--OU3nlJa0ju9ftCQ-U-Lb8X5OAcIn2LH9Mguq_twnYhLi_XhKgTrP9C7QXGza1FPa0XntFD_nA_Aq7ONSOF7FCTCo3N-w_dmhWX8SCWOGeYVduRd34MX7ebb_RO9K834PkRA48bj8pcnTAQ23fxlN3hipTNiHBW3OOBRre66R0bhavh1GNJ5sTHK5LI-6XUEt0IO-fKEf6Vw
+> {%
+client.global.set("adminToken", response.body.access_token);
+%}
 
 ###
 
@@ -52,7 +66,7 @@ GET http://localhost:8080/api/artists/550e8400-e29b-41d4-a716-446655440000
 ###
 
 DELETE http://localhost:8080/api/artists/550e8400-e29b-41d4-a716-446655440000
-Authorization: Bearer {{adminToken}}
+Authorization: Bearer {{userToken}}
 
 ###
 

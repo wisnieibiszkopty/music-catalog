@@ -1,5 +1,3 @@
-using System.Security.Claims;
-using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -19,40 +17,19 @@ public static class KeycloakAuthenticationExtension
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = false,
-                    NameClaimType = "preferred_username",
-                    RoleClaimType = ClaimTypes.Role
+                    ValidateIssuer = true,
+                    ValidIssuer = "http://localhost:8080/auth/realms/music-catalog" 
                 };
-
-                options.Events = MapRoles();
             });
 
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(Policies.Admin, policy => 
+                policy.RequireAssertion(context => 
+                    context.User.HasClaim(c => 
+                        c.Type == "realm_access" && c.Value.Contains("admin"))));
+        });
 
         return services;
-    }
-
-    private static JwtBearerEvents MapRoles()
-    {
-        return new JwtBearerEvents
-        {
-            OnTokenValidated = context =>
-            {
-                var principal = context.Principal;
-                if (principal?.HasClaim(c => c.Type == "realm_access") == true)
-                {
-                    var realmAccessClaim = principal.FindFirst("realm_access")!.Value;
-                    using var jsonDoc = JsonDocument.Parse(realmAccessClaim);
-                    if (jsonDoc.RootElement.TryGetProperty("roles", out var roles))
-                    {
-                        var claims = roles.EnumerateArray()
-                            .Select(r => new Claim(ClaimTypes.Role, r.GetString()!));
-                        var identity = new ClaimsIdentity(claims);
-                        principal.AddIdentity(identity);
-                    }
-                }
-                
-                return Task.CompletedTask;
-            }
-        };
     }
 }

@@ -2,6 +2,7 @@ using Artists.Service.Core.Dto;
 using Artists.Service.Core.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
+using Shared.Auth;
 
 namespace Artists.Service.Core;
 
@@ -14,9 +15,9 @@ public static class ArtistsEndpoint
 
         group.MapGet("/", GetAll);
         group.MapGet("/{id}", GetById);
-        group.MapPost("/", Create).RequireAuthorization(new AuthorizeAttribute { Roles = "admin"});
-        group.MapPut("/{id}", Update).RequireAuthorization(new AuthorizeAttribute { Roles = "admin"});
-        group.MapDelete("/{id}", Delete).RequireAuthorization(new AuthorizeAttribute { Roles = "admin"});
+        group.MapPost("/", Create).RequireAuthorization(Policies.Admin);
+        group.MapPut("/{id}", Update).RequireAuthorization(Policies.Admin);
+        group.MapDelete("/{id}", Delete).RequireAuthorization(Policies.Admin);
         
         return builder;
     }
