@@ -28,8 +28,8 @@ builder.Services.AddMassTransit(x =>
     
     x.UsingRabbitMq((context, config) =>
     {
-        var connectionString = builder.Configuration.GetConnectionString("RabbitMq");
-        config.Host(connectionString);
+        var connectionString = builder.Configuration.GetConnectionString("RabbitMq")!;
+        config.Host(new Uri(connectionString));
         config.ConfigureJsonSerializerOptions(options =>
         {
             options.TypeInfoResolver = AppJsonSerializerContext.Default;
