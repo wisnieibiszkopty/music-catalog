@@ -1,7 +1,6 @@
 using System.Text.Json.Serialization;
 using Contracts;
 using MassTransit;
-using Scraper.Service;
 using Scraper.Service.Core;
 using Scraper.Service.Core.Consumers;
 using Scraper.Service.Core.MusicServiceClient;
@@ -22,11 +21,11 @@ builder.Services.AddHttpClient<IMusicServiceClient, SpotifyClient>(client =>
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = builder.Configuration["Redis:Configuration"];
-    options.InstanceName = builder.Configuration["Redis:InstanceName"];
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "ScrapperService";
 });
 
-builder.Services.AddTransient<BearerTokenProvider>();
+builder.Services.AddSingleton<BearerTokenProvider>();
 
 builder.Services.AddMassTransit(x =>
 {
@@ -37,7 +36,7 @@ builder.Services.AddMassTransit(x =>
     x.UsingRabbitMq((context, config) =>
     {
         var connectionString = builder.Configuration.GetConnectionString("RabbitMq");
-        config.Host(connectionString);
+        config.Host(new Uri(connectionString!));
         config.ConfigureJsonSerializerOptions(options =>
         {
             options.TypeInfoResolver = AppJsonSerializerContext.Default;

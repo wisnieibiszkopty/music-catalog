@@ -42,10 +42,10 @@ public class AlbumScraperSaga : MassTransitStateMachine<AlbumScraperState>
                 })
                 .ThenAsync(async context =>
                 {
-                    var tasks = context.Message.AlbumIds.Select(id =>
-                        context.Publish(new ScrapeAlbumDetails(context.Saga.CorrelationId, id)));
-
-                    await Task.WhenAll(tasks);
+                    foreach (var id in context.Message.AlbumIds)
+                    {
+                        await context.Publish(new ScrapeAlbumDetails(context.Saga.CorrelationId, id));
+                    }
                 })
                 .TransitionTo(ProcessingAlbums)
         );

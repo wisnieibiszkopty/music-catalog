@@ -12,4 +12,6 @@ public class AlbumScraperState : SagaStateMachineInstance, ISagaVersion
     public int TotalAlbums { get; set; }
     public int ProcessedAlbums { get; set; }
     public DateTime? RequestTime { get; set; }
+    
+    public AlbumScraperState() {}
 }

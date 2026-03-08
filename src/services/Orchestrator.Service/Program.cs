@@ -5,7 +5,7 @@ using Orchestrator.Service;
 using Orchestrator.Service.Core.Saga;
 using Shared.Auth;
 
-var builder = WebApplication.CreateSlimBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -24,7 +24,10 @@ builder.Services.AddMassTransit(x =>
     
     x.UsingRabbitMq((context, config) =>
     {
-        config.Host("localhost");
+        var connectionString = builder.Configuration.GetConnectionString("RabbitMq")!;
+        config.Host(new Uri(connectionString));
+        config.UseMessageRetry(r => r.Interval(5, TimeSpan.FromSeconds(10)));
+        
         config.ConfigureJsonSerializerOptions(options =>
         {
             options.TypeInfoResolver = AppJsonSerializerContext.Default;
@@ -61,4 +64,5 @@ app.Run();
 [JsonSerializable(typeof(SaveAlbumData))]
 [JsonSerializable(typeof(AlbumSaved))]
 [JsonSerializable(typeof(AllAlbumsScraped))]
+[JsonSerializable(typeof(AlbumScraperState))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext { }

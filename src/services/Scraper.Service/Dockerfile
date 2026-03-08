@@ -25,7 +25,6 @@ ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Scraper.Service.csproj" \
     -c $BUILD_CONFIGURATION \
     -r linux-musl-x64 \
-    --no-restore \
     -o /app/publish \
     /p:PublishAot=true \
     /p:StripSymbols=true

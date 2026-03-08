@@ -34,6 +34,7 @@ services:
     depends_on:
       - keycloak
       - artist-service
+      - orchestrator-service
 
   keycloak-db:
     image: postgres:18-alpine
@@ -65,11 +66,38 @@ services:
       KC_DB_PASSWORD: keycloak
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-    depends_on:
-      - keycloak-db
     volumes:
       - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
     restart: unless-stopped
+    depends_on:
+      - keycloak-db
+
+  orchestrator-service:
+    container_name: orchestrator-service
+    build:
+      context: ..
+      dockerfile: src/services/Orchestrator.Service/Dockerfile
+    environment:
+      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
+      ConnectionStrings__Redis: redis:6379
+      Redis__InstanceName: ScrapperService
+      ASPNETCORE_URLS: http://+:8080
+    depends_on:
+      - rabbitmq
+      - redis
+    
+  scraper-service:
+    container_name: scraper-service
+    build:
+      context: ..
+      dockerfile: src/services/Scraper.Service/Dockerfile
+    environment:
+      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
+      ConnectionStrings__Redis: redis:6379,abortConnect=false
+      ASPNETCORE_URLS: http://+:8080
+    depends_on:
+      - rabbitmq
+      - redis
 
   artist-db:
     image: postgres:18-alpine
@@ -89,11 +117,11 @@ services:
   artist-db-migrator:
     image: flyway/flyway:latest-alpine
     container_name: artist-db-migrator
-    depends_on: 
-      artist-db:
-        condition: service_healthy
     volumes:
       - ../src/services/Artists.Service/migrations:/flyway/sql
+    depends_on:
+      artist-db:
+        condition: service_healthy
     command: -url=jdbc:postgresql://artist-db:5432/artist_db -user=admin -password=123 -connectRetries=60 migrate
 
   artist-service:
@@ -101,17 +129,17 @@ services:
     build:
       context: ..
       dockerfile: src/services/Artists.Service/Dockerfile
-    depends_on:
-      artist-db:
-        condition: service_healthy
     environment:
       ConnectionStrings__DefaultConnection: Host=artist-db;Port=5432;Database=artist_db;Username=admin;Password=123
       ConnectionStrings__RabbitMq=rabbitmq: //guest:guest@rabbitmq
       ASPNETCORE_URLS: http://+:8080
+    depends_on:
+      artist-db:
+        condition: service_healthy
   
 volumes:
   keycloak-data:
   artist-data:
   redis-data:
-  rabbit-data:
-  rabbit-log:
+  rabbitmq-data:
+  rabbitmq-log:

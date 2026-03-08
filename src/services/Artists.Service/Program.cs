@@ -1,11 +1,13 @@
 using Artists.Service.Core;
 using Artists.Service;
+using Artists.Service.Core.Consumers;
 using Artists.Service.Core.Dto;
 using Artists.Service.Core.Repositories;
 using Artists.Service.Core.Services;
 using Artists.Service.Core.Validators;
 using Dapper;
 using FluentValidation;
+using MassTransit;
 using Scalar.AspNetCore;
 using Shared;
 using Shared.Auth;
@@ -20,17 +22,23 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 });
 
-// builder.Services.AddMassTransit(x =>
-// {
-//     x.UsingRabbitMq((context, config) =>
-//     {
-//         config.Host(builder.Configuration.GetValue<string>("RabbitMq:Host"), "/", h => 
-//         {
-//             h.Username("guest");
-//             h.Password("guest");
-//         });
-//     });
-// });
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<SaveArtistDataConsumer>();
+    
+    x.UsingRabbitMq((context, config) =>
+    {
+        var connectionString = builder.Configuration.GetConnectionString("RabbitMq");
+        config.Host(connectionString);
+        config.ConfigureJsonSerializerOptions(options =>
+        {
+            options.TypeInfoResolver = AppJsonSerializerContext.Default;
+            return options;
+        });
+        
+        config.ConfigureEndpoints(context);
+    });
+});
 
 builder.Services.AddKeycloakAuthentication("http://keycloak:8080/auth/realms/music-catalog");
 
