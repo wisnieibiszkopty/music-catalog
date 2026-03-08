@@ -1,10 +1,11 @@
 using Artists.Service.Core.Dto;
 using Artists.Service.Core.Models;
 using Dapper;
+using Shared;
 
 namespace Artists.Service.Core.Repositories;
 
-public class ArtistsRepository(IDbConnectionFactory db)
+public class ArtistsRepository(IDbConnectionFactory db) : IArtistsRepository
 {
     public async Task<IEnumerable<ArtistBaseDto>> GetAll()
     {

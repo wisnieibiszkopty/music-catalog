@@ -1,8 +1,6 @@
 using Artists.Service.Core.Dto;
-using Dapper;
 using Artists.Service.Core.Models;
 using Artists.Service.Core.Repositories;
-using Artists.Service.Core.Validators;
 
 namespace Artists.Service.Core.Services;
 
