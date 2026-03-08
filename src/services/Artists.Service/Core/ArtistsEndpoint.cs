@@ -1,7 +1,6 @@
 using Artists.Service.Core.Dto;
 using Artists.Service.Core.Services;
 using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 using Shared.Auth;
 
 namespace Artists.Service.Core;
@@ -16,7 +15,7 @@ public static class ArtistsEndpoint
         group.MapGet("/", GetAll);
         group.MapGet("/{id}", GetById);
         group.MapPost("/", Create).RequireAuthorization(Policies.Admin);
-        group.MapPut("/{id}", Update).RequireAuthorization(Policies.Admin);
+        group.MapPut("/", Update).RequireAuthorization(Policies.Admin);
         group.MapDelete("/{id}", Delete).RequireAuthorization(Policies.Admin);
         
         return builder;
@@ -47,7 +46,7 @@ public static class ArtistsEndpoint
         return Results.Ok(createdArtist);
     }
     
-    private static async Task<IResult> Update(string id, ArtistDto artistDto, IArtistsService artistsService, IValidator<ArtistDto> validator)
+    private static async Task<IResult> Update(ArtistDto artistDto, IArtistsService artistsService, IValidator<ArtistDto> validator)
     {
         var validationResult = await validator.ValidateAsync(artistDto);
 
@@ -56,7 +55,7 @@ public static class ArtistsEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
         
-        var updatedArtist = await artistsService.Update(id, artistDto);
+        var updatedArtist = await artistsService.Update(artistDto);
         return updatedArtist is not null ? Results.Ok(updatedArtist) : Results.NotFound();
     }
     

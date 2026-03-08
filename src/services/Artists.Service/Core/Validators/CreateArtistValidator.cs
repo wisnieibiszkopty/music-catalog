@@ -7,6 +7,10 @@ public class CreateArtistValidator : AbstractValidator<ArtistDto>
 {
     public CreateArtistValidator()
     {
+        RuleFor(x => x.Id)
+            .Length(22).WithMessage("ID must be exactly 22 characters")
+            .When(x => !string.IsNullOrEmpty(x.Id)); 
+        
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Artist name is required")
             .MaximumLength(255).WithMessage("Maximal name length is 255");

@@ -61,14 +61,35 @@ GET http://localhost:8080/api/artists
 
 ###
 
-GET http://localhost:8080/api/artists/550e8400-e29b-41d4-a716-446655440000
+GET http://localhost:8080/api/artists/6iUWvApr1hdiFyXoA8CEDO
 
 ###
 
-DELETE http://localhost:8080/api/artists/550e8400-e29b-41d4-a716-446655440000
-Authorization: Bearer {{userToken}}
-
-###
-
-GET http://localhost:8080/api/artists
+POST http://localhost:8080/api/artists
 Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Radiohead",
+  "isBand": true
+}
+
+###
+
+PUT http://localhost:8080/api/artists
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "id": "6iUWvApr1hdiFyXoA8CEDO",
+  "name": "Radiohead",
+  "foundedYear": 1985,
+  "isBand": true
+}
+
+###
+
+DELETE http://localhost:8080/api/artists/6iUWvApr1hdiFyXoA8CEDO
+Authorization: Bearer {{adminToken}}
+
+###

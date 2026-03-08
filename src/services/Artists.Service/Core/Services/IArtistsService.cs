@@ -8,6 +8,6 @@ public interface IArtistsService
     Task<IEnumerable<ArtistBaseDto>> GetAll();
     Task<Artist?> GetById(string id);
     Task<Artist> Create(ArtistDto artistDto);
-    Task<Artist?> Update(string id, ArtistDto artist);
+    Task<Artist?> Update(ArtistDto artist);
     Task<bool> Delete(string id);
 }
