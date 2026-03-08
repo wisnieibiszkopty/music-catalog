@@ -11,18 +11,18 @@ RUN apk add --no-cache clang build-base zlib-dev
 
 WORKDIR /src
 
-COPY ["src/services/Artists.Service/Artists.Service.csproj", "src/services/Artists.Service/"]
+COPY ["src/services/Orchestrator.Service/Orchestrator.Service.csproj", "src/services/Orchestrator.Service/"]
 COPY ["src/shared/Contracts/Contracts.csproj", "src/shared/Contracts/"]
 COPY ["src/shared/Shared/Shared.csproj", "src/shared/Shared/"]
 
-RUN dotnet restore "src/services/Artists.Service/Artists.Service.csproj"
+RUN dotnet restore "src/services/Orchestrator.Service/Orchestrator.Service.csproj"
 
 COPY . .
-WORKDIR "/src/src/services/Artists.Service"
+WORKDIR "/src/src/services/Orchestrator.Service"
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Artists.Service.csproj" \
+RUN dotnet publish "./Orchestrator.Service.csproj" \
     -c $BUILD_CONFIGURATION \
     -r linux-musl-x64 \
     --no-restore \
@@ -34,8 +34,8 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-RUN chmod +x ./Artists.Service
+RUN chmod +x ./Orchestrator.Service
 
 USER $APP_UID
 
-ENTRYPOINT ["./Artists.Service"]
+ENTRYPOINT ["./Orchestrator.Service"]

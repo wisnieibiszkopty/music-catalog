@@ -7,10 +7,12 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <PublishAot>true</PublishAot>
     <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\shared\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\..\shared\Shared\Shared.csproj" />
   </ItemGroup>
   
   <ItemGroup>
@@ -18,6 +20,12 @@
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.0" />
     <PackageReference Include="MassTransit.Redis" Version="8.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="..\..\..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
   </ItemGroup>
   
 </Project>

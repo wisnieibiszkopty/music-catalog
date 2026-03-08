@@ -1,7 +1,9 @@
 using System.Net.Http.Headers;
 using Contracts;
+using Scraper.Service.Core.Extractors;
+using Scraper.Service.Core.MusicServiceClient;
 
-namespace Scraper.Service.Core;
+namespace Scraper.Service.Core.MusicServiceClient;
 
 public class SpotifyClient : IMusicServiceClient
 {

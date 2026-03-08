@@ -6,6 +6,7 @@ var builder = WebApplication.CreateSlimBuilder(args);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        // TODO get paths from config
         options.MetadataAddress = "http://keycloak:8080/auth/realms/music-catalog/.well-known/openid-configuration"; 
         options.RequireHttpsMetadata = false; 
         

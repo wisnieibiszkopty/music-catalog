@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Contracts;
 
-namespace Scraper.Service.Core;
+namespace Scraper.Service.Core.Extractors;
 
 public class ArtistExtractor
 {

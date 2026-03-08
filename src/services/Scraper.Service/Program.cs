@@ -4,6 +4,7 @@ using MassTransit;
 using Scraper.Service;
 using Scraper.Service.Core;
 using Scraper.Service.Core.Consumers;
+using Scraper.Service.Core.MusicServiceClient;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -35,7 +36,8 @@ builder.Services.AddMassTransit(x =>
     
     x.UsingRabbitMq((context, config) =>
     {
-        config.Host("localhost");
+        var connectionString = builder.Configuration.GetConnectionString("RabbitMq");
+        config.Host(connectionString);
         config.ConfigureJsonSerializerOptions(options =>
         {
             options.TypeInfoResolver = AppJsonSerializerContext.Default;

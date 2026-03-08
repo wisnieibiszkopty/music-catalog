@@ -8,6 +8,7 @@
     <PublishAot>true</PublishAot>
     <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
     <UserSecretsId>3430de71-f74b-4536-97d3-491e6c8256f3</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +20,12 @@
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.3" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="..\..\..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
   </ItemGroup>
   
 </Project>

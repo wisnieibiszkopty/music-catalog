@@ -62,6 +62,6 @@ public static class ArtistsEndpoint
     private static async Task<IResult> Delete(string id, IArtistsService artistsService)
     {
         var deleted = await artistsService.Delete(id);
-        return deleted ? Results.NoContent() : Results.BadRequest();
+        return deleted ? Results.NoContent() : Results.NotFound();
     }
 }

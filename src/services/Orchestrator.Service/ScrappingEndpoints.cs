@@ -1,5 +1,6 @@
 using Contracts;
 using MassTransit;
+using Shared.Auth;
 
 namespace Orchestrator.Service;
 
@@ -7,19 +8,19 @@ public static class ScrappingEndpoints
 {
     public static IEndpointRouteBuilder MapScrappingEndpoints(this IEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup("/api/scrapper")
+        var group = builder.MapGroup("/api/scraper")
             .WithTags("Scrapper");
 
-        group.MapGet("/artists/{artistName}", ScrapArtistByName);
-        group.MapGet("/albums/{artistId}", ScrapArtistsAlbums);
+        group.MapGet("/artists/{artistName}", ScrapArtistByName).RequireAuthorization(Policies.Admin);
+        group.MapGet("/albums/{artistId}", ScrapArtistsAlbums).RequireAuthorization(Policies.Admin);
         
         return builder;
     }
     
-    private static async Task<IResult> ScrapArtistByName(string artistName)
+    private static async Task<IResult> ScrapArtistByName(string artistName, IPublishEndpoint publishEndpoint)
     {
-        await Task.CompletedTask;
-        return Results.Ok();
+        await publishEndpoint.Publish(new DiscoverArtist(artistName));
+        return Results.Accepted();
     }
 
     private static async Task<IResult> ScrapArtistsAlbums(string artistId, IPublishEndpoint publishEndpoint)

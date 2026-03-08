@@ -3,6 +3,7 @@ using Contracts;
 using MassTransit;
 using Orchestrator.Service;
 using Orchestrator.Service.Core.Saga;
+using Shared.Auth;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -14,7 +15,12 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddMassTransit(x =>
 {
     x.AddSagaStateMachine<AlbumScraperSaga, AlbumScraperState>()
-        .InMemoryRepository();
+        .RedisRepository(redis =>
+        {
+            var redisConnection = builder.Configuration.GetConnectionString("Redis");
+            redis.DatabaseConfiguration(redisConnection);
+            redis.KeyPrefix = "orchestrator";
+        });
     
     x.UsingRabbitMq((context, config) =>
     {
@@ -29,6 +35,8 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
+builder.Services.AddKeycloakAuthentication("http://keycloak:8080/auth/realms/music-catalog");
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -39,11 +47,12 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapScrappingEndpoints();
 
 app.Run();
-
-
 
 [JsonSerializable(typeof(StartAlbumsScraping))]
 [JsonSerializable(typeof(DiscoverAlbums))]
