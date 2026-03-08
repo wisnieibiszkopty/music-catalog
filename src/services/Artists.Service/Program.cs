@@ -6,11 +6,9 @@ using Artists.Service.Core.Services;
 using Artists.Service.Core.Validators;
 using Dapper;
 using FluentValidation;
-using MassTransit;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using Shared;
+using Shared.Auth;
 
 [assembly: DapperAot]
 
@@ -33,21 +31,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 //     });
 // });
 
-// TODO move to utils?
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.Authority = "http://keycloak:8080/auth/realms/music-catalog";
-        options.RequireHttpsMetadata = false;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = false,
-            NameClaimType = "preferred_username",
-            RoleClaimType = "realm_access"
-        };
-    });
-
-builder.Services.AddAuthorization();
+builder.Services.AddKeycloakAuthentication("http://keycloak:8080/auth/realms/music-catalog");
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
