@@ -1,13 +1,11 @@
 using Artists.Service.Core.Dto;
-using Artists.Service.Core.Models;
-using Artists.Service.Core.Validators;
-using Contracts;
-using MassTransit;
+using Artists.Service.Core.Services;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Artists.Service.Core;
 
-public static class ArtistEndpoint
+public static class ArtistsEndpoint
 {
     public static IEndpointRouteBuilder MapArtistEndpoints(this IEndpointRouteBuilder builder)
     {
@@ -15,29 +13,28 @@ public static class ArtistEndpoint
             .WithTags("Artists");
 
         group.MapGet("/", GetAll);
-        group.MapGet("/{id:guid}", GetById);
+        group.MapGet("/{id}", GetById);
         group.MapPost("/", Create).RequireAuthorization(new AuthorizeAttribute { Roles = "admin"});
-        group.MapPut("/{id:guid}", Update).RequireAuthorization(new AuthorizeAttribute { Roles = "admin"});
-        group.MapDelete("/{id:guid}", Delete).RequireAuthorization(new AuthorizeAttribute { Roles = "admin"});
+        group.MapPut("/{id}", Update).RequireAuthorization(new AuthorizeAttribute { Roles = "admin"});
+        group.MapDelete("/{id}", Delete).RequireAuthorization(new AuthorizeAttribute { Roles = "admin"});
         
         return builder;
     }
 
-    private static async Task<IResult> GetAll(IArtistService artistService)
+    private static async Task<IResult> GetAll(IArtistsService artistsService)
     {
-        var artists = await artistService.GetAll();
+        var artists = await artistsService.GetAll();
         return Results.Ok(artists);
     }
 
-    private static async Task<IResult> GetById(Guid id, IArtistService artistService)
+    private static async Task<IResult> GetById(string id, IArtistsService artistsService)
     {
-        var artist = await artistService.GetById(id);
+        var artist = await artistsService.GetById(id);
         return artist is not null ? Results.Ok(artist) : Results.NotFound();
     }
     
-    private static async Task<IResult> Create(ArtistDto artistDto, IArtistService artistService)
+    private static async Task<IResult> Create(ArtistDto artistDto, IArtistsService artistsService, IValidator<ArtistDto> validator)
     {
-        var validator = new CreateArtistValidator();
         var validationResult = await validator.ValidateAsync(artistDto);
 
         if (!validationResult.IsValid)
@@ -45,13 +42,12 @@ public static class ArtistEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var createdArtist = await artistService.Create(artistDto);
+        var createdArtist = await artistsService.Create(artistDto);
         return Results.Ok(createdArtist);
     }
     
-    private static async Task<IResult> Update(Guid id, ArtistDto artistDto, IArtistService artistService)
+    private static async Task<IResult> Update(string id, ArtistDto artistDto, IArtistsService artistsService, IValidator<ArtistDto> validator)
     {
-        var validator = new CreateArtistValidator();
         var validationResult = await validator.ValidateAsync(artistDto);
 
         if (!validationResult.IsValid)
@@ -59,13 +55,13 @@ public static class ArtistEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
         
-        var updatedArtist = await artistService.Update(id, artistDto);
+        var updatedArtist = await artistsService.Update(id, artistDto);
         return updatedArtist is not null ? Results.Ok(updatedArtist) : Results.NotFound();
     }
     
-    private static async Task<IResult> Delete(Guid id, IArtistService artistService)
+    private static async Task<IResult> Delete(string id, IArtistsService artistsService)
     {
-        var deleted = await artistService.Delete(id);
+        var deleted = await artistsService.Delete(id);
         return deleted ? Results.NoContent() : Results.BadRequest();
     }
 }

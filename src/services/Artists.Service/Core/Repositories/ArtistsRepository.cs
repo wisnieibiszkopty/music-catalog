@@ -1,10 +1,10 @@
 using Artists.Service.Core.Dto;
-using Dapper;
 using Artists.Service.Core.Models;
+using Dapper;
 
-namespace Artists.Service.Core;
+namespace Artists.Service.Core.Repositories;
 
-public class ArtistService(IDbConnectionFactory db): IArtistService
+public class ArtistsRepository(IDbConnectionFactory db)
 {
     public async Task<IEnumerable<ArtistBaseDto>> GetAll()
     {
@@ -16,7 +16,7 @@ public class ArtistService(IDbConnectionFactory db): IArtistService
         return artists;
     }
 
-    public async Task<Artist?> GetById(Guid id)
+    public async Task<Artist?> GetById(string id)
     {
         using var connection = await db.CreateConnectionAsync();
 
@@ -37,9 +37,8 @@ public class ArtistService(IDbConnectionFactory db): IArtistService
     
         return createdArtist;
     }
-
-    // TODO id is broken
-    public async Task<Artist?> Update(Guid id, ArtistDto artist)
+    
+    public async Task<Artist?> Update(string id, ArtistDto artist)
     {
         using var connection = await db.CreateConnectionAsync();
 
@@ -64,9 +63,8 @@ public class ArtistService(IDbConnectionFactory db): IArtistService
     
         return await connection.QueryFirstOrDefaultAsync<Artist>(sql, parameters);
     }
-
-    // TODO id is broken
-    public async Task<bool> Delete(Guid id)
+    
+    public async Task<bool> Delete(string id)
     {
         using var connection = await db.CreateConnectionAsync();
 

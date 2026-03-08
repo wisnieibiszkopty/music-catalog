@@ -1,6 +1,10 @@
 using Artists.Service.Core;
 using Artists.Service;
+using Artists.Service.Core.Dto;
+using Artists.Service.Core.Services;
+using Artists.Service.Core.Validators;
 using Dapper;
+using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -49,7 +53,8 @@ builder.Services.AddOpenApi();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddSingleton<IDbConnectionFactory>(_ => new PostgresDbConnectionFactory(connectionString));
 
-builder.Services.AddScoped<IArtistService, ArtistService>();
+builder.Services.AddScoped<IArtistsService, ArtistsService>();
+builder.Services.AddScoped<IValidator<ArtistDto>, CreateArtistValidator>();
 
 var app = builder.Build();
 
