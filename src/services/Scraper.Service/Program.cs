@@ -1,6 +1,10 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Contracts;
 using MassTransit;
+using MassTransit.Events;
+using MassTransit.Metadata;
+using MassTransit.Serialization;
 using Scraper.Service.Core;
 using Scraper.Service.Core.Consumers;
 using Scraper.Service.Core.MusicServiceClient;
@@ -57,7 +61,11 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.MapScrapperEndpoints();
+using (var scope = app.Services.CreateScope())
+{
+    var client = scope.ServiceProvider.GetService<IMusicServiceClient>();
+    Console.WriteLine(client == null ? "NULL" : "OK");
+}
 
 app.Run();
 
@@ -65,6 +73,16 @@ app.Run();
 [JsonSerializable(typeof(List<string>))]
 [JsonSerializable(typeof(AlbumDetails))]
 [JsonSerializable(typeof(ArtistDetails))]
+[JsonSerializable(typeof(DiscoverArtist))]
+[JsonSerializable(typeof(FaultEvent<DiscoverArtist>))]
+[JsonSerializable(typeof(SaveArtistData))]
+[JsonSerializable(typeof(ArtistSaved))]
+[JsonSerializable(typeof(ReceiveFaultEvent))]
+[JsonSerializable(typeof(FaultExceptionInfo))]
+[JsonSerializable(typeof(JsonElement))]
+[JsonSerializable(typeof(MessageEnvelope))]
+[JsonSerializable(typeof(JsonMessageEnvelope))]
+[JsonSerializable(typeof(BusHostInfo))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext
 {
 

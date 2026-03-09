@@ -96,6 +96,8 @@ services:
       ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
       ConnectionStrings__Redis: redis:6379,abortConnect=false
       ASPNETCORE_URLS: http://+:8080
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
     depends_on:
       - rabbitmq
       - redis

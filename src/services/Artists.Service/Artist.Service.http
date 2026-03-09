@@ -61,7 +61,7 @@ GET http://localhost:8080/api/artists
 
 ###
 
-GET http://localhost:8080/api/artists/6iUWvApr1hdiFyXoA8CEDO
+GET http://localhost:8080/api/artists/05bh1HQ397HsnksmwQgdEi
 
 ###
 
@@ -81,7 +81,7 @@ Authorization: Bearer {{adminToken}}
 Content-Type: application/json
 
 {
-  "id": "6iUWvApr1hdiFyXoA8CEDO",
+  "id": "05bh1HQ397HsnksmwQgdEi",
   "name": "Radiohead",
   "foundedYear": 1985,
   "isBand": true
@@ -89,7 +89,10 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:8080/api/artists/6iUWvApr1hdiFyXoA8CEDO
+DELETE http://localhost:8080/api/artists/05bh1HQ397HsnksmwQgdEi
 Authorization: Bearer {{adminToken}}
 
 ###
+
+POST http://localhost:8080/api/scraper/artists/deftones
+Authorization: Bearer {{adminToken}}

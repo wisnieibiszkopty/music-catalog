@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
 using Contracts;
 using MassTransit;
+using MassTransit.Metadata;
+using MassTransit.Serialization;
 using Orchestrator.Service;
 using Orchestrator.Service.Core.Saga;
 using Shared.Auth;
@@ -14,13 +16,13 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 builder.Services.AddMassTransit(x =>
 {
-    x.AddSagaStateMachine<AlbumScraperSaga, AlbumScraperState>()
-        .RedisRepository(redis =>
-        {
-            var redisConnection = builder.Configuration.GetConnectionString("Redis");
-            redis.DatabaseConfiguration(redisConnection);
-            redis.KeyPrefix = "orchestrator";
-        });
+    // x.AddSagaStateMachine<AlbumScraperSaga, AlbumScraperState>()
+    //     .RedisRepository(redis =>
+    //     {
+    //         var redisConnection = builder.Configuration.GetConnectionString("Redis");
+    //         redis.DatabaseConfiguration(redisConnection);
+    //         redis.KeyPrefix = "orchestrator";
+    //     });
     
     x.UsingRabbitMq((context, config) =>
     {
@@ -65,4 +67,10 @@ app.Run();
 [JsonSerializable(typeof(AlbumSaved))]
 [JsonSerializable(typeof(AllAlbumsScraped))]
 [JsonSerializable(typeof(AlbumScraperState))]
+[JsonSerializable(typeof(DiscoverArtist))]
+[JsonSerializable(typeof(SaveArtistData))]
+[JsonSerializable(typeof(ArtistSaved))]
+[JsonSerializable(typeof(MessageEnvelope))]
+[JsonSerializable(typeof(JsonMessageEnvelope))]
+[JsonSerializable(typeof(BusHostInfo))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext { }

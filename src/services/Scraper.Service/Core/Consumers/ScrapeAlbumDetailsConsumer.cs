@@ -1,5 +1,6 @@
 using Contracts;
 using MassTransit;
+using Scraper.Service.Core.MusicServiceClient;
 
 namespace Scraper.Service.Core.Consumers;
 

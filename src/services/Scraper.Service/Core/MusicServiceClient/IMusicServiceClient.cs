@@ -1,6 +1,6 @@
 using Contracts;
 
-namespace Scraper.Service.Core;
+namespace Scraper.Service.Core.MusicServiceClient;
 
 public interface IMusicServiceClient
 {

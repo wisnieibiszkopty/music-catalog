@@ -18,8 +18,8 @@ public class BearerTokenProvider
     {
         _httpFactory = httpFactory;
         _cache = cache;
-        _clientId = config["Spotify:ClientId"]!;
-        _clientSecret = config["Spotify:ClientSecret"]!;
+        _clientId = Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_ID")!;
+        _clientSecret = Environment.GetEnvironmentVariable("SPOTIFY_CLIENT_SECRET")!;
         _tokenAddress = config["MusicService:TokenAddress"]!;
     }
 
