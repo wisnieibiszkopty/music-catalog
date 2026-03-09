@@ -1,10 +1,11 @@
 using Artists.Service.Core.Dto;
-using Dapper;
 using Artists.Service.Core.Models;
+using Dapper;
+using Shared;
 
-namespace Artists.Service.Core;
+namespace Artists.Service.Core.Repositories;
 
-public class ArtistService(IDbConnectionFactory db): IArtistService
+public class ArtistsRepository(IDbConnectionFactory db) : IArtistsRepository
 {
     public async Task<IEnumerable<ArtistBaseDto>> GetAll()
     {
@@ -16,7 +17,7 @@ public class ArtistService(IDbConnectionFactory db): IArtistService
         return artists;
     }
 
-    public async Task<Artist?> GetById(Guid id)
+    public async Task<Artist?> GetById(string id)
     {
         using var connection = await db.CreateConnectionAsync();
 
@@ -24,22 +25,21 @@ public class ArtistService(IDbConnectionFactory db): IArtistService
         return await connection.QuerySingleOrDefaultAsync<Artist>(sql, new { Id = id });
     }
 
-    public async Task<Artist> Create(ArtistDto artistDto)
+    public async Task<Artist> Create(ArtistDto artist)
     {
         using var connection = await db.CreateConnectionAsync();
 
         const string sql = @"
-            INSERT INTO artists (name, founded_year, description, image_url, is_band)
-            VALUES (@Name, @FoundedYear, @Description, @ImageUrl, @IsBand)
+            INSERT INTO artists (id, name, founded_year, description, image_url, is_band)
+            VALUES (@Id, @Name, @FoundedYear, @Description, @ImageUrl, @IsBand)
             RETURNING *;"; 
         
-        var createdArtist = await connection.QuerySingleAsync<Artist>(sql, artistDto);
+        var createdArtist = await connection.QuerySingleAsync<Artist>(sql, artist);
     
         return createdArtist;
     }
-
-    // TODO id is broken
-    public async Task<Artist?> Update(Guid id, ArtistDto artist)
+    
+    public async Task<Artist?> Update(ArtistDto artist)
     {
         using var connection = await db.CreateConnectionAsync();
 
@@ -53,20 +53,10 @@ public class ArtistService(IDbConnectionFactory db): IArtistService
         WHERE id = @Id
         RETURNING *;";
         
-        var parameters = new { 
-            Id = id, 
-            artist.Name, 
-            artist.FoundedYear, 
-            artist.Description, 
-            artist.ImageUrl, 
-            artist.IsBand 
-        };
-    
-        return await connection.QueryFirstOrDefaultAsync<Artist>(sql, parameters);
+        return await connection.QueryFirstOrDefaultAsync<Artist>(sql, artist);
     }
-
-    // TODO id is broken
-    public async Task<bool> Delete(Guid id)
+    
+    public async Task<bool> Delete(string id)
     {
         using var connection = await db.CreateConnectionAsync();
 

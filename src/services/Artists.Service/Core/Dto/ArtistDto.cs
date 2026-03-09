@@ -2,6 +2,7 @@ namespace Artists.Service.Core.Dto;
 
 public class ArtistDto
 {
+    public string? Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public int? FoundedYear { get; set; }
     public string? Description { get; set; }

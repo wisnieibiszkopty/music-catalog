@@ -9,9 +9,19 @@ GET {{gatewayUrl}}/auth/realms/{{realm}}/.well-known/openid-configuration
 
 ###
 
-GET http://localhost:8080/auth/realms/music-catalog/protocol/openid-connect/3p-cookies/step1.html
+POST {{gatewayUrl}}/auth/realms/{{realm}}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
 
-### 
+client_id=api-client&
+username=user&
+password=user&
+grant_type=password
+
+> {%
+    client.global.set("userToken", response.body.access_token);
+%}
+
+###
 
 POST {{gatewayUrl}}/auth/realms/{{realm}}/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
@@ -21,9 +31,9 @@ username=admin&
 password=admin&
 grant_type=password
 
-### 
-
-@adminToken = eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJSVlJSSDRDcDJGVHNsbjF4VnZPNzZpdHVubDF6N20xajNjbF9Ubzh1V2ZrIn0.eyJleHAiOjE3NzIzNTQwMTgsImlhdCI6MTc3MjM1MzcxOCwianRpIjoiNjEwYTRmYmEtMTM2ZC00MzZhLWJiYjYtMzAyNTQzYTViZWYyIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL211c2ljLWNhdGFsb2ciLCJhdWQiOiJhcGktY2xpZW50Iiwic3ViIjoiNmRiY2IwODQtNGQyNy00ZTI3LWI0NDUtZGVjMTdhYjJhMWFiIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYXBpLWNsaWVudCIsInNlc3Npb25fc3RhdGUiOiJjN2QxNGQwOC1kYjFlLTQzNjItYmE4Yy1hODg1ZGNjYzJiZDIiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiYWRtaW4iXX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6ImM3ZDE0ZDA4LWRiMWUtNDM2Mi1iYThjLWE4ODVkY2NjMmJkMiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicmVhbG1fYWNjZXNzIjpbImFkbWluIl0sIm5hbWUiOiJhZG1pbiBhZG1pbiIsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWluIiwiZ2l2ZW5fbmFtZSI6ImFkbWluIiwiZmFtaWx5X25hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5AYWRtaW4ifQ.JyOh6WWmFjU7te_MHjkLsNzGTLQpL5KJ26oRbb0g349m6YZSFENQUeG0olvlj7oNshGDc4kp0Pmz0F2Ym5P0emkbsAOaC3oRLGkioOTlYLlwyY2KrqHGW7XNyzJK2WatIB7PBnS8Gx3N1uokJwru2GO62uaineYf8TGUgZuXKd90dHDBXh0dWPig0SiycCrcQ0mw6GgfCsC8e1XUKoDk0BBMQgmAR-VQAckFk40oMuHhVcd-xDIwpHV4obdCaD1zZzK9uYimsedKq9uI_SdEkxxqc7dxYGiMi6m0PdjL3g9Nli2OACyrwYnx3EfC4LeHOVUS2A5LUSPsAWeijDf5AA
+> {%
+client.global.set("adminToken", response.body.access_token);
+%}
 
 ###
 
@@ -51,13 +61,38 @@ GET http://localhost:8080/api/artists
 
 ###
 
-GET http://localhost:8080/api/artists/550e8400-e29b-41d4-a716-446655440000
+GET http://localhost:8080/api/artists/05bh1HQ397HsnksmwQgdEi
 
 ###
 
 POST http://localhost:8080/api/artists
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Radiohead",
+  "isBand": true
+}
 
 ###
 
-GET http://localhost:8080/api/artists
+PUT http://localhost:8080/api/artists
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "id": "05bh1HQ397HsnksmwQgdEi",
+  "name": "Radiohead",
+  "foundedYear": 1985,
+  "isBand": true
+}
+
+###
+
+DELETE http://localhost:8080/api/artists/05bh1HQ397HsnksmwQgdEi
+Authorization: Bearer {{adminToken}}
+
+###
+
+POST http://localhost:8080/api/scraper/artists/deftones
 Authorization: Bearer {{adminToken}}

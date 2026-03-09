@@ -1,4 +1,28 @@
 services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    restart: always
+    expose:
+      - "5672"  
+    ports:
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+      - rabbitmq-log:/var/log/rabbitmq
+
+  redis:
+    image: redis:8.6-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: [ "redis-server", "--appendonly", "yes" ]
+
   api-gateway:
     container_name: api-gateway
     build:
@@ -10,7 +34,8 @@ services:
       - ASPNETCORE_URLS=http://+:8080
     depends_on:
       - keycloak
-      #- artist-service
+      - artist-service
+      - orchestrator-service  
   
   web-app:
     container_name: web-app
@@ -51,49 +76,82 @@ services:
       KC_DB_PASSWORD: keycloak
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-    depends_on:
-      - keycloak-db
     volumes:
       - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
     restart: unless-stopped
+    depends_on:
+      - keycloak-db
 
-#  artist-db:
-#    image: postgres:18-alpine
-#    container_name: artist-db
-#    environment:
-#      - POSTGRES_USER=admin
-#      - POSTGRES_PASSWORD=123
-#      - POSTGRES_DB=artist_db
-#    volumes:
-#      - artist-data:/var/lib/postgresql
-#    healthcheck:
-#      test: [ "CMD-SHELL", "pg_isready -U admin -d artist-db" ]
-#      interval: 5s
-#      timeout: 5s
-#      retries: 5
-#
-#  artist-db-migrator:
-#    image: flyway/flyway:latest-alpine
-#    container_name: artist-db-migrator
-#    depends_on: 
-#      artist-db:
-#        condition: service_healthy
-#    volumes:
-#      - ../src/services/Artists.Service/migrations:/flyway/sql
-#    command: -url=jdbc:postgresql://artist-db:5432/artist_db -user=admin -password=123 -connectRetries=60 migrate
-#
-#  artist-service:
-#    container_name: artist-service
-#    build:
-#      context: ..
-#      dockerfile: src/services/Artists.Service/Dockerfile
-#    depends_on:
-#      artist-db:
-#        condition: service_healthy
-#    environment:
-#      ConnectionStrings__DefaultConnection: Host=artist-db;Port=5432;Database=artist_db;Username=admin;Password=123
-#      ASPNETCORE_URLS: http://+:8080
+  orchestrator-service:
+    container_name: orchestrator-service
+    build:
+      context: ..
+      dockerfile: src/services/Orchestrator.Service/Dockerfile
+    environment:
+      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
+      ConnectionStrings__Redis: redis:6379
+      Redis__InstanceName: ScrapperService
+      ASPNETCORE_URLS: http://+:8080
+    depends_on:
+      - rabbitmq
+      - redis
+    
+  scraper-service:
+    container_name: scraper-service
+    build:
+      context: ..
+      dockerfile: src/services/Scraper.Service/Dockerfile
+    environment:
+      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
+      ConnectionStrings__Redis: redis:6379,abortConnect=false
+      ASPNETCORE_URLS: http://+:8080
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
+    depends_on:
+      - rabbitmq
+      - redis
+
+  artist-db:
+    image: postgres:18-alpine
+    container_name: artist-db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=artist_db
+    volumes:
+      - artist-data:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d artist-db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  artist-db-migrator:
+    image: flyway/flyway:latest-alpine
+    container_name: artist-db-migrator
+    volumes:
+      - ../src/services/Artists.Service/migrations:/flyway/sql
+    depends_on:
+      artist-db:
+        condition: service_healthy
+    command: -url=jdbc:postgresql://artist-db:5432/artist_db -user=admin -password=123 -connectRetries=60 migrate
+
+  artist-service:
+    container_name: artist-service
+    build:
+      context: ..
+      dockerfile: src/services/Artists.Service/Dockerfile
+    environment:
+      ConnectionStrings__DefaultConnection: Host=artist-db;Port=5432;Database=artist_db;Username=admin;Password=123
+      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
+      ASPNETCORE_URLS: http://+:8080
+    depends_on:
+      artist-db:
+        condition: service_healthy
   
 volumes:
   keycloak-data:
   artist-data:
+  redis-data:
+  rabbitmq-data:
+  rabbitmq-log:

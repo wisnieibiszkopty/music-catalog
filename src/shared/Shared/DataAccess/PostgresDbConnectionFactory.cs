@@ -1,12 +1,7 @@
 using System.Data;
 using Npgsql;
 
-namespace Artists.Service;
-
-public interface IDbConnectionFactory
-{
-    Task<IDbConnection> CreateConnectionAsync();
-}
+namespace Shared;
 
 public class PostgresDbConnectionFactory : IDbConnectionFactory
 {
