@@ -3,7 +3,7 @@
 </script>
 
 <template>
-<p>register</p>
+
 </template>
 
 <style scoped>
