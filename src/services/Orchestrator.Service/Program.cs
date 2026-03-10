@@ -1,40 +1,25 @@
-using System.Text.Json.Serialization;
-using Contracts;
 using MassTransit;
-using MassTransit.Metadata;
-using MassTransit.Serialization;
 using Orchestrator.Service;
 using Orchestrator.Service.Core.Saga;
 using Shared.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
-});
-
 builder.Services.AddMassTransit(x =>
 {
-    // x.AddSagaStateMachine<AlbumScraperSaga, AlbumScraperState>()
-    //     .RedisRepository(redis =>
-    //     {
-    //         var redisConnection = builder.Configuration.GetConnectionString("Redis");
-    //         redis.DatabaseConfiguration(redisConnection);
-    //         redis.KeyPrefix = "orchestrator";
-    //     });
+    x.AddSagaStateMachine<AlbumScraperSaga, AlbumScraperState>()
+        .RedisRepository(redis =>
+        {
+            var redisConnection = builder.Configuration.GetConnectionString("Redis");
+            redis.DatabaseConfiguration(redisConnection);
+            redis.KeyPrefix = "orchestrator";
+        });
     
     x.UsingRabbitMq((context, config) =>
     {
         var connectionString = builder.Configuration.GetConnectionString("RabbitMq")!;
         config.Host(new Uri(connectionString));
         config.UseMessageRetry(r => r.Interval(5, TimeSpan.FromSeconds(10)));
-        
-        config.ConfigureJsonSerializerOptions(options =>
-        {
-            options.TypeInfoResolver = AppJsonSerializerContext.Default;
-            return options;
-        });
         
         config.ConfigureEndpoints(context);
     });
@@ -58,19 +43,3 @@ app.UseAuthorization();
 app.MapScrappingEndpoints();
 
 app.Run();
-
-[JsonSerializable(typeof(StartAlbumsScraping))]
-[JsonSerializable(typeof(DiscoverAlbums))]
-[JsonSerializable(typeof(AlbumsDiscovered))]
-[JsonSerializable(typeof(ScrapeAlbumDetails))]
-[JsonSerializable(typeof(SaveAlbumData))]
-[JsonSerializable(typeof(AlbumSaved))]
-[JsonSerializable(typeof(AllAlbumsScraped))]
-[JsonSerializable(typeof(AlbumScraperState))]
-[JsonSerializable(typeof(DiscoverArtist))]
-[JsonSerializable(typeof(SaveArtistData))]
-[JsonSerializable(typeof(ArtistSaved))]
-[JsonSerializable(typeof(MessageEnvelope))]
-[JsonSerializable(typeof(JsonMessageEnvelope))]
-[JsonSerializable(typeof(BusHostInfo))]
-internal partial class AppJsonSerializerContext : JsonSerializerContext { }

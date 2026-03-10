@@ -10,15 +10,19 @@ public class SaveArtistDataConsumer(IArtistsService artistsService) : IConsumer<
     public async Task Consume(ConsumeContext<SaveArtistData> context)
     {
         var artistDetails = context.Message.Artist;
-        var artist = new ArtistDto
+        var artistDto = new ArtistDto
         {
             Id = artistDetails.Id,
             Name = artistDetails.Name,
             ImageUrl = artistDetails.ImageUrl
         };
         
-        await artistsService.Create(artist);
+        var savedArtist = await artistsService.Create(artistDto);
         
-        await context.Publish(new ArtistSaved(artist.Name));
+        Console.WriteLine(savedArtist.Id);
+        Console.WriteLine(savedArtist.Name);
+        Console.WriteLine(savedArtist.ImageUrl);
+        
+        await context.Publish(new ArtistSaved(savedArtist.Name));
     }
 }

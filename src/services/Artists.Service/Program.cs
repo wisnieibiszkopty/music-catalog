@@ -1,11 +1,9 @@
 using Artists.Service.Core;
-using Artists.Service;
 using Artists.Service.Core.Consumers;
 using Artists.Service.Core.Dto;
 using Artists.Service.Core.Repositories;
 using Artists.Service.Core.Services;
 using Artists.Service.Core.Validators;
-using Dapper;
 using FluentValidation;
 using MassTransit;
 using Scalar.AspNetCore;
@@ -13,14 +11,7 @@ using Shared;
 using Shared.Auth;
 using Shared.Errors;
 
-[assembly: DapperAot]
-
-var builder = WebApplication.CreateSlimBuilder(args);
-
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
-});
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMassTransit(x =>
 {
@@ -30,11 +21,6 @@ builder.Services.AddMassTransit(x =>
     {
         var connectionString = builder.Configuration.GetConnectionString("RabbitMq")!;
         config.Host(new Uri(connectionString));
-        config.ConfigureJsonSerializerOptions(options =>
-        {
-            options.TypeInfoResolver = AppJsonSerializerContext.Default;
-            return options;
-        });
         
         config.ConfigureEndpoints(context);
     });

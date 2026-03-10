@@ -1,40 +1,23 @@
-﻿FROM mcr.microsoft.com/dotnet/runtime-deps:10.0-alpine AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+USER $APP_UID
 WORKDIR /app
-
-RUN apk add --no-cache icu-libs libintl bash curl
 EXPOSE 8080
 
-FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
-
-RUN apk add --no-cache clang build-base zlib-dev
-
 WORKDIR /src
-
 COPY ["src/services/Scraper.Service/Scraper.Service.csproj", "src/services/Scraper.Service/"]
 COPY ["src/shared/Contracts/Contracts.csproj", "src/shared/Contracts/"]
-COPY ["src/shared/Shared/Shared.csproj", "src/shared/Shared/"]
-
 RUN dotnet restore "src/services/Scraper.Service/Scraper.Service.csproj"
-
 COPY . .
 WORKDIR "/src/src/services/Scraper.Service"
+RUN dotnet build "./Scraper.Service.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Scraper.Service.csproj" \
-    -c $BUILD_CONFIGURATION \
-    -r linux-musl-x64 \
-    -o /app/publish \
-    /p:PublishAot=true \
-    /p:StripSymbols=true
+RUN dotnet publish "./Scraper.Service.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-
-RUN chmod +x ./Scraper.Service
-
-USER $APP_UID
-
-ENTRYPOINT ["./Scraper.Service"]
+ENTRYPOINT ["dotnet", "Scraper.Service.dll"]

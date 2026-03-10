@@ -94,5 +94,5 @@ Authorization: Bearer {{adminToken}}
 
 ###
 
-POST http://localhost:8080/api/scraper/artists/deftones
+POST http://localhost:8080/api/scraper/artists/wisp
 Authorization: Bearer {{adminToken}}

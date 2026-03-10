@@ -1,24 +1,15 @@
-using System.Text.Json.Serialization;
+using Catalog.Service.Core.Consumers;
 using MassTransit;
 
-var builder = WebApplication.CreateSlimBuilder(args);
-
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
-});
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMassTransit(x =>
 {
+    x.AddConsumer<SaveAlbumDataConsumer>();
+    
     x.UsingRabbitMq((context, config) =>
     {
         config.Host("localhost");
-        config.ConfigureJsonSerializerOptions(options =>
-        {
-            options.TypeInfoResolver = AppJsonSerializerContext.Default;
-            return options;
-        });
-        
         config.ConfigureEndpoints(context);
     });
 });
@@ -34,11 +25,3 @@ if (app.Environment.IsDevelopment())
 }
 
 app.Run();
-
-public record Todo(int Id, string? Title, DateOnly? DueBy = null, bool IsComplete = false);
-
-[JsonSerializable(typeof(Todo[]))]
-internal partial class AppJsonSerializerContext : JsonSerializerContext
-{
-
-}

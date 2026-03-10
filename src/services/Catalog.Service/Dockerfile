@@ -1,40 +1,23 @@
-﻿FROM mcr.microsoft.com/dotnet/runtime-deps:10.0-alpine AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+USER $APP_UID
 WORKDIR /app
-
-RUN apk add --no-cache icu-libs libintl bash curl
 EXPOSE 8080
 
-FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
-
-RUN apk add --no-cache clang build-base zlib-dev
-
 WORKDIR /src
-
 COPY ["src/services/Catalog.Service/Catalog.Service.csproj", "src/services/Catalog.Service/"]
 COPY ["src/shared/Contracts/Contracts.csproj", "src/shared/Contracts/"]
-COPY ["src/shared/Shared/Shared.csproj", "src/shared/Shared/"]
-
 RUN dotnet restore "src/services/Catalog.Service/Catalog.Service.csproj"
-
 COPY . .
 WORKDIR "/src/src/services/Catalog.Service"
+RUN dotnet build "./Catalog.Service.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Catalog.Service.csproj" \
-    -c $BUILD_CONFIGURATION \
-    -r linux-musl-x64 \
-    -o /app/publish \
-    /p:PublishAot=true \
-    /p:StripSymbols=true
+RUN dotnet publish "./Catalog.Service.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-
-RUN chmod +x ./Catalog.Service
-
-USER $APP_UID
-
-ENTRYPOINT ["./Catalog.Service"]
+ENTRYPOINT ["dotnet", "Catalog.Service.dll"]
