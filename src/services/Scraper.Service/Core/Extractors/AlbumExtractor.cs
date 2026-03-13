@@ -27,7 +27,7 @@ public class AlbumExtractor
         return (ids, total);
     }
     
-    public AlbumDetails ExtractFullAlbumInfo(string json)
+    public AlbumDetails ExtractFullAlbumInfo(string json, string artistId)
     {
         using var doc = JsonDocument.Parse(json);
         var root = doc.RootElement;
@@ -57,6 +57,6 @@ public class AlbumExtractor
             }
         }
 
-        return new AlbumDetails(id, name, releaseDate, totalTracks, imageUrl, tracks);
+        return new AlbumDetails(id, name, artistId, releaseDate, totalTracks, imageUrl, tracks);
     }
 }

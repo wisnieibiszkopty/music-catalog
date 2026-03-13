@@ -96,3 +96,8 @@ Authorization: Bearer {{adminToken}}
 
 POST http://localhost:8080/api/scraper/artists/wisp
 Authorization: Bearer {{adminToken}}
+
+###
+
+POST http://localhost:8080/api/scraper/albums/3TJZG17pjOKXwx1ELKJPfm
+Authorization: Bearer {{adminToken}}

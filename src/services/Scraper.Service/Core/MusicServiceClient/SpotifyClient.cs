@@ -94,7 +94,7 @@ public class SpotifyClient : IMusicServiceClient
         return allAlbumIds;
     }
 
-    public async Task<AlbumDetails?> GetAlbumInfo(string albumId)
+    public async Task<AlbumDetails?> GetAlbumInfo(string albumId, string artistId)
     {
         await SetBearerToken();
 
@@ -105,7 +105,7 @@ public class SpotifyClient : IMusicServiceClient
         var body = await response.Content.ReadAsStringAsync();
 
         var extractor = new AlbumExtractor();
-        var albumDetails = extractor.ExtractFullAlbumInfo(body);
+        var albumDetails = extractor.ExtractFullAlbumInfo(body, artistId);
         
         _logger.LogInformation("Fetched album details for album with id {AlbumId}", albumId);
         

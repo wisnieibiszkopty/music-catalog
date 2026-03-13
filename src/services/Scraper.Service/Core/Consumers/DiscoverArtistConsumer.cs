@@ -17,10 +17,6 @@ public class DiscoverArtistConsumer : IConsumer<DiscoverArtist>
     {
         var artistName = context.Message.ArtistName;
         var artist = await _client.GetArtistByName(artistName);
-
-        Console.WriteLine(artist.Id);
-        Console.WriteLine(artist.Name);
-        Console.WriteLine(artist.ImageUrl);
         
         await context.Publish(new SaveArtistData(artist));
     }

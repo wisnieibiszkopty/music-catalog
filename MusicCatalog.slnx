@@ -8,6 +8,7 @@
     <Project Path="src/services/Artists.Service/Artists.Service.csproj" />
     <Project Path="src/services/Scraper.Service/Scraper.Service.csproj" />
     <Project Path="src/services/Orchestrator.Service/Orchestrator.Service.csproj" />
+    <Project Path="src/services/Notification.Service/Notification.Service.csproj" />
   </Folder>
   <Folder Name="/src/shared/">
     <Project Path="src/shared/Contracts/Contracts.csproj" />

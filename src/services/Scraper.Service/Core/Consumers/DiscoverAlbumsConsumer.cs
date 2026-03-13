@@ -17,9 +17,7 @@ public class DiscoverAlbumsConsumer : IConsumer<DiscoverAlbums>
     {
         var artistId = context.Message.ArtistId;
         var albums = await _client.GetAlbumsByArtistId(artistId);
-        
-        albums.ForEach(album => 
-            context.Publish(new AlbumsDiscovered(context.Message.CorrelationId, albums))
-        );
+
+        await context.Publish(new AlbumsDiscovered(context.Message.CorrelationId, albums));
     }
 }

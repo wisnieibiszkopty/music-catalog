@@ -8,22 +8,22 @@ public class AlbumScraperSaga : MassTransitStateMachine<AlbumScraperState>
     public State SearchingForAlbumsList { get; private set; }
     public State ProcessingAlbums { get; private set; }
     
-    public Event<StartAlbumsScraping> StartScrapping { get; private set; }
-    public Event<AlbumsDiscovered> ListFound { get; private set; }
-    public Event<AlbumSaved> AlbumProcessed { get; private set; }
+    public Event<StartAlbumsScraping> StartedAlbumsScraping { get; private set; }
+    public Event<AlbumsDiscovered> AlbumsDiscovered { get; private set; }
+    public Event<AlbumSaved> AlbumSaved { get; private set; }
     public Event<ScrapingFailed> JobFailed { get; private set; }
     
     public AlbumScraperSaga()
     {
         InstanceState(x => x.CurrentState);
 
-        Event(() => StartScrapping, x => x.CorrelateById(m => m.Message.CorrelationId));
-        Event(() => ListFound, x => x.CorrelateById(m => m.Message.CorrelationId));
-        Event(() => AlbumProcessed, x => x.CorrelateById(m => m.Message.CorrelationId));
+        Event(() => StartedAlbumsScraping, x => x.CorrelateById(m => m.Message.CorrelationId));
+        Event(() => AlbumsDiscovered, x => x.CorrelateById(m => m.Message.CorrelationId));
+        Event(() => AlbumSaved, x => x.CorrelateById(m => m.Message.CorrelationId));
         Event(() => JobFailed, x => x.CorrelateById(m => m.Message.CorrelationId));
         
         Initially(
-            When(StartScrapping)
+            When(StartedAlbumsScraping)
                 .Then(context =>
                 {
                     context.Saga.ArtistId = context.Message.ArtistId;
@@ -35,7 +35,7 @@ public class AlbumScraperSaga : MassTransitStateMachine<AlbumScraperState>
         );
         
         During(SearchingForAlbumsList, 
-            When(ListFound)
+            When(AlbumsDiscovered)
                 .Then(context =>
                 {
                     context.Saga.TotalAlbums = context.Message.AlbumIds.Count;
@@ -44,14 +44,14 @@ public class AlbumScraperSaga : MassTransitStateMachine<AlbumScraperState>
                 {
                     foreach (var id in context.Message.AlbumIds)
                     {
-                        await context.Publish(new ScrapeAlbumDetails(context.Saga.CorrelationId, id));
+                        await context.Publish(new ScrapeAlbumDetails(context.Saga.CorrelationId, id, context.Saga.ArtistId));
                     }
                 })
                 .TransitionTo(ProcessingAlbums)
         );
         
         During(ProcessingAlbums,
-            When(AlbumProcessed)
+            When(AlbumSaved)
                 .Then(context => context.Saga.ProcessedAlbums++)
                 .If(context => context.Saga.ProcessedAlbums >= context.Saga.TotalAlbums,
                     binder => binder
