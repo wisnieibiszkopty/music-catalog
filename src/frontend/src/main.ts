@@ -7,6 +7,7 @@ import App from './App.vue'
 import router from './router'
 import ui from '@nuxt/ui/vue-plugin'
 import keycloak from './services/core/keycloak'
+import { initNotifications } from '@/services/notifications/notification.handlers.ts'
 
 
 const app = createApp(App)
@@ -29,3 +30,5 @@ keycloak.init({
   app.use(router)
   app.mount('#app')
 })
+
+await initNotifications();

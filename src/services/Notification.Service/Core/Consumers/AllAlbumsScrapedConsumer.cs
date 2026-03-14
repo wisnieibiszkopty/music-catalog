@@ -1,13 +1,16 @@
 using Contracts;
 using MassTransit;
+using Microsoft.AspNetCore.SignalR;
+using Notification.Service.Core.Hubs;
+using Notification.Service.Core.Models;
 
 namespace Notification.Service.Core.Consumers;
 
-public class AllAlbumsScrapedConsumer : IConsumer<AllAlbumsScraped>
+public class AllAlbumsScrapedConsumer(IHubContext<NotificationHub> hubContext) : IConsumer<AllAlbumsScraped>
 {
-    public Task Consume(ConsumeContext<AllAlbumsScraped> context)
+    public async Task Consume(ConsumeContext<AllAlbumsScraped> context)
     {
-        Console.WriteLine(context.Message.ArtistId);
-        return Task.CompletedTask;
+        var artistId = context.Message.ArtistId;
+        await hubContext.Clients.All.SendAsync(MessageTypes.AlbumsSaved, artistId);
     }
 }

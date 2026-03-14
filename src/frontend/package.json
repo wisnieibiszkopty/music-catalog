@@ -16,6 +16,7 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
+    "@microsoft/signalr": "^10.0.0",
     "@nuxt/ui": "^4.5.0",
     "axios": "^1.13.6",
     "keycloak-js": "^26.2.3",

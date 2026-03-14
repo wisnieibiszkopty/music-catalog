@@ -2,7 +2,6 @@ services:
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq
-    restart: always
     expose:
       - "5672"  
     ports:
