@@ -2,7 +2,6 @@ services:
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq
-    restart: always
     expose:
       - "5672"  
     ports:
@@ -110,6 +109,28 @@ services:
     depends_on:
       - rabbitmq
       - redis
+
+  notification-service:
+    container_name: notification-service
+    build: 
+      context: ..
+      dockerfile: src/services/Notification.Service/Dockerfile
+    environment:
+      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
+      ASPNETCORE_URLS: http://+:8080
+    depends_on:
+      - rabbitmq
+
+  catalog-service:
+    container_name: catalog-service
+    build:
+      context: ..
+      dockerfile: src/services/Catalog.Service/Dockerfile
+    environment:
+      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
+      ASPNETCORE_URLS: http://+:8080
+    depends_on:
+      - rabbitmq
 
   artist-db:
     image: postgres:18-alpine

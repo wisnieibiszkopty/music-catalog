@@ -3,6 +3,7 @@ namespace Contracts;
 public record AlbumDetails(
     string Id,
     string Name,
+    string ArtistId,
     string ReleaseDate,
     int TotalTracks,
     string? ImageUrl,

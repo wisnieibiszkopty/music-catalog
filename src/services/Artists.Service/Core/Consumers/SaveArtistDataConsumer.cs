@@ -19,10 +19,6 @@ public class SaveArtistDataConsumer(IArtistsService artistsService) : IConsumer<
         
         var savedArtist = await artistsService.Create(artistDto);
         
-        Console.WriteLine(savedArtist.Id);
-        Console.WriteLine(savedArtist.Name);
-        Console.WriteLine(savedArtist.ImageUrl);
-        
-        await context.Publish(new ArtistSaved(savedArtist.Name));
+        await context.Publish(new ArtistSaved(artistDetails));
     }
 }

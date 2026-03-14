@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
+
+const toaster = {
+  position: 'top-right',
+  duration: 10000
+};
+
 </script>
 
 <template>
-  <UApp>
+  <UApp :toaster="toaster">
     <RouterView />
   </UApp>
 </template>

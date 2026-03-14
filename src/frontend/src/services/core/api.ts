@@ -1,8 +1,10 @@
 import axios from 'axios';
 import keycloak from './keycloak';
 
+export const baseUrl = 'http://localhost:8080/api';
+
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api'
+  baseURL: baseUrl
 });
 
 api.interceptors.request.use(async (config) => {

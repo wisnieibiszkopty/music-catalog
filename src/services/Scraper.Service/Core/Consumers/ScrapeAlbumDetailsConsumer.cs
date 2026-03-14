@@ -16,7 +16,8 @@ public class ScrapeAlbumDetailsConsumer : IConsumer<ScrapeAlbumDetails>
     public async Task Consume(ConsumeContext<ScrapeAlbumDetails> context)
     {
         var albumId = context.Message.AlbumId;
-        var album = await _client.GetAlbumInfo(albumId);
+        var artistId = context.Message.ArtistId;
+        var album = await _client.GetAlbumInfo(albumId, artistId);
 
         if (album == null)
         {
