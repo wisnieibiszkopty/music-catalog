@@ -1,3 +1,4 @@
+using Catalog.Service.Core;
 using Catalog.Service.Core.Consumers;
 using MassTransit;
 
@@ -25,5 +26,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.MapCatalogEndpoints();
 
 app.Run();

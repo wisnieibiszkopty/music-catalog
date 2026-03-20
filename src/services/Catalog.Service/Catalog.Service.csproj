@@ -8,10 +8,13 @@
     <PublishAot>false</PublishAot>
     <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+
+    <RootNamespace>Catalog.Service</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\shared\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\..\shared\Shared\Shared.csproj"/>
   </ItemGroup>
   
   <ItemGroup>
