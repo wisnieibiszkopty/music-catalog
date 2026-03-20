@@ -1,7 +1,13 @@
 using Catalog.Service.Core;
 using Catalog.Service.Core.Consumers;
+using Catalog.Service.Core.Models;
+using Catalog.Service.Core.Services;
+using Catalog.Service.Core.Validators;
+using FluentValidation;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Shared.Auth;
+using Shared.Errors;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,8 +28,15 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddKeycloakAuthentication("http://keycloak:8080/auth/realms/music-catalog");
+
+builder.Services.AddScoped<IValidator<Album>, AlbumValidator>();
+builder.Services.AddScoped<ICatalogService, CatalogService>();
+
 builder.Services.AddOpenApi();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
@@ -33,5 +46,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapCatalogEndpoints();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.UseExceptionHandler();
 
 app.Run();
