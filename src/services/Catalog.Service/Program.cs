@@ -1,8 +1,13 @@
 using Catalog.Service.Core;
 using Catalog.Service.Core.Consumers;
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<CatalogDbContext>(options => 
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))    
+);
 
 builder.Services.AddMassTransit(x =>
 {
