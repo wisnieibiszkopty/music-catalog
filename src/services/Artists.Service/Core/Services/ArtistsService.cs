@@ -1,12 +1,14 @@
 using Artists.Service.Core.Dto;
 using Artists.Service.Core.Models;
 using Artists.Service.Core.Repositories;
+using Contracts;
+using MassTransit;
 using Shared;
 using Shared.Errors;
 
 namespace Artists.Service.Core.Services;
 
-public class ArtistsService(IArtistsRepository repository): IArtistsService
+public class ArtistsService(IArtistsRepository repository, IPublishEndpoint publishEndpoint): IArtistsService
 {
     public async Task<IEnumerable<ArtistBaseDto>> GetAll()
     {
@@ -54,6 +56,13 @@ public class ArtistsService(IArtistsRepository repository): IArtistsService
     
     public async Task<bool> Delete(string id)
     {
-        return await repository.Delete(id);
+        var deleted = await repository.Delete(id);
+
+        if (deleted)
+        {
+            await publishEndpoint.Publish(new ArtistDeleted(id));   
+        }
+        
+        return deleted;
     }
 }

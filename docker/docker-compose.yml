@@ -119,17 +119,6 @@ services:
     depends_on:
       - rabbitmq
 
-  catalog-service:
-    container_name: catalog-service
-    build:
-      context: ..
-      dockerfile: src/services/Catalog.Service/Dockerfile
-    environment:
-      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
-      ASPNETCORE_URLS: http://+:8080
-    depends_on:
-      - rabbitmq
-
   artist-db:
     image: postgres:18-alpine
     container_name: artist-db
@@ -168,9 +157,48 @@ services:
       artist-db:
         condition: service_healthy
   
+  catalog-db:
+    image: postgres:18-alpine
+    container_name: catalog-db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=catalog_db
+    volumes:
+      - catalog-data:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d catalog-db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  catalog-db-migrator:
+    image: flyway/flyway:latest-alpine
+    container_name: catalog-db-migrator
+    volumes:
+      - ../src/services/Catalog.Service/migrations:/flyway/sql
+    depends_on:
+      artist-db:
+        condition: service_healthy
+    command: -url=jdbc:postgresql://catalog-db:5432/catalog_db -user=admin -password=123 -connectRetries=60 migrate
+
+  catalog-service:
+    container_name: catalog-service
+    build:
+      context: ..
+      dockerfile: src/services/Catalog.Service/Dockerfile
+    environment:
+      ConnectionStrings__DefaultConnection: Host=catalog-db;Port=5432;Database=catalog_db;Username=admin;Password=123
+      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
+      ASPNETCORE_URLS: http://+:8080
+    depends_on:
+      catalog-db:
+        condition: service_healthy
+  
 volumes:
   keycloak-data:
   artist-data:
+  catalog-data:
   redis-data:
   rabbitmq-data:
   rabbitmq-log:

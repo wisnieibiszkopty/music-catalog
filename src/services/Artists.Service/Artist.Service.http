@@ -89,15 +89,34 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:8080/api/artists/05bh1HQ397HsnksmwQgdEi
+DELETE http://localhost:8080/api/artists/7dGJo4pcD2V6oG8kP0tJRR
 Authorization: Bearer {{adminToken}}
 
 ###
 
-POST http://localhost:8080/api/scraper/artists/wisp
+POST http://localhost:8080/api/scraper/artists/eminem
 Authorization: Bearer {{adminToken}}
 
-###
+### Get Eminem Albums
+
+POST http://localhost:8080/api/scraper/albums/7dGJo4pcD2V6oG8kP0tJRR
+Authorization: Bearer {{adminToken}}
+
+### Get Wisp Albums
 
 POST http://localhost:8080/api/scraper/albums/3TJZG17pjOKXwx1ELKJPfm
+Authorization: Bearer {{adminToken}}
+
+###
+
+GET http://localhost:8080/api/catalog/albums/7dGJo4pcD2V6oG8kP0tJRR
+
+###
+
+
+GET http://localhost:8080/api/catalog/albums/songs/2cWBwpqMsDJC1ZUwz813lo
+
+###
+
+DELETE http://localhost:8080/api/catalog/2cWBwpqMsDJC1ZUwz813lo
 Authorization: Bearer {{adminToken}}
