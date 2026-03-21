@@ -180,7 +180,7 @@ services:
     depends_on:
       artist-db:
         condition: service_healthy
-    command: -url=jdbc:postgresql://artist-db:5432/catalog_db -user=admin -password=123 -connectRetries=60 migrate
+    command: -url=jdbc:postgresql://catalog-db:5432/catalog_db -user=admin -password=123 -connectRetries=60 migrate
 
   catalog-service:
     container_name: catalog-service
@@ -188,7 +188,7 @@ services:
       context: ..
       dockerfile: src/services/Catalog.Service/Dockerfile
     environment:
-      ConnectionStrings__DefaultConnection: Host=artist-db;Port=5432;Database=artist_db;Username=admin;Password=123
+      ConnectionStrings__DefaultConnection: Host=catalog-db;Port=5432;Database=catalog_db;Username=admin;Password=123
       ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
       ASPNETCORE_URLS: http://+:8080
     depends_on:

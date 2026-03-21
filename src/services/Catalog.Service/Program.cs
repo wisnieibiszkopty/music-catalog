@@ -12,7 +12,8 @@ using Shared.Errors;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<CatalogDbContext>(options => 
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))    
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+        .UseSnakeCaseNamingConvention()
 );
 
 builder.Services.AddMassTransit(x =>

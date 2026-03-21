@@ -23,13 +23,13 @@ public static class CatalogEndpoint
 
     private static async Task<IResult> GetAlbumsByArtistId(string artistId, ICatalogService catalogService)
     {
-        var albums = catalogService.GetAlbumsByArtistId(artistId);
+        var albums = await catalogService.GetAlbumsByArtistId(artistId);
         return Results.Ok(albums);
     }
 
     private static async Task<IResult> GetTracksByAlbumId(string albumId, ICatalogService catalogService)
     {
-        var tracks = catalogService.GetTracksByAlbumId(albumId);
+        var tracks = await catalogService.GetTracksByAlbumId(albumId);
         return Results.Ok(tracks);
     }
 

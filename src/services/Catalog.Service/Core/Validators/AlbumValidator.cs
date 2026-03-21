@@ -26,6 +26,10 @@ public class AlbumValidator : AbstractValidator<Album>
         RuleFor(a => a.TotalTracks)
             .GreaterThan(0);
 
+        RuleFor(a => a)
+            .Must(a => a.TotalTracks == a.Tracks.Count)
+            .WithMessage(a => $"TotalTracks ({a.TotalTracks}) does not match number of tracks ({a.Tracks.Count})");
+
         RuleForEach(a => a.Tracks).SetValidator(new TrackValidator());
     }
     

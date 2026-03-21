@@ -74,7 +74,7 @@ public class SpotifyClient : IMusicServiceClient
 
         do
         {
-            var url = $"artists/{Uri.EscapeDataString(artistId)}/albums?include_groups=album&limit={limit}&offset={offset}";
+            var url = $"artists/{Uri.EscapeDataString(artistId)}/albums?include_groups=album,single&limit={limit}&offset={offset}";
             var response = await _http.GetAsync(url);
             response.EnsureSuccessStatusCode();
 

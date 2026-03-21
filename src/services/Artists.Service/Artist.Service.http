@@ -94,10 +94,19 @@ Authorization: Bearer {{adminToken}}
 
 ###
 
-POST http://localhost:8080/api/scraper/artists/wisp
+POST http://localhost:8080/api/scraper/artists/smiths
 Authorization: Bearer {{adminToken}}
 
 ###
 
-POST http://localhost:8080/api/scraper/albums/3TJZG17pjOKXwx1ELKJPfm
+POST http://localhost:8080/api/scraper/albums/3yY2gUcIsjMr8hjo51PoJ8
 Authorization: Bearer {{adminToken}}
+
+###
+
+GET http://localhost:8080/api/catalog/albums/3yY2gUcIsjMr8hjo51PoJ8
+
+###
+
+
+GET http://localhost:8080/api/catalog/albums/songs/5Y0p2XCgRRIjna91aQE8q7
