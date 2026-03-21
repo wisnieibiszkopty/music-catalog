@@ -14,31 +14,10 @@ const items: NavigationMenuItem[] = [
     to: '/albums',
   },
   {
-    label: 'Playlists',
-    icon: 'i-lucide-list-music',
-    to: '/playlists',
-  },
-  {
     label: 'Scrapper',
     icon: 'i-lucide-searchint',
     to: '/scrapper',
   },
-  {
-    label: 'Settings',
-    icon: 'i-lucide-settings',
-    defaultOpen: true,
-    children: [
-      {
-        label: 'General'
-      },
-      {
-        label: 'Members'
-      },
-      {
-        label: 'Notifications'
-      }
-    ]
-  }
 ];
 
 const notLoggedInBottomItems: NavigationMenuItem = [

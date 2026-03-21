@@ -16,15 +16,16 @@ const router = createRouter({
           component: () => import('../views/ArtistsView.vue'),
         },
         {
-          path: '/albums',
-          name: 'Albums',
-          component: () => import('../views/AlbumsView.vue'),
+          path: '/artists/:id',
+          name: 'ArtistsDetails',
+          component: () => import('../views/ArtistDetailsView.vue'),
+          props: true
         },
         {
-          path: '/playlists',
-          name: 'Playlists',
-          component: () => import('../views/PlaylistView.vue'),
-          meta: { requiresAuth: true }
+          path: '/albums/:id',
+          name: 'Albums',
+          component: () => import('../views/AlbumView.vue'),
+          props: true
         },
         {
           path: '/scrapper',

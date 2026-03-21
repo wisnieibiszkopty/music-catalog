@@ -94,7 +94,7 @@ Authorization: Bearer {{adminToken}}
 
 ###
 
-POST http://localhost:8080/api/scraper/artists/eminem
+POST http://localhost:8080/api/scraper/artists/sanah
 Authorization: Bearer {{adminToken}}
 
 ### Get Eminem Albums
@@ -109,12 +109,12 @@ Authorization: Bearer {{adminToken}}
 
 ###
 
-GET http://localhost:8080/api/catalog/albums/7dGJo4pcD2V6oG8kP0tJRR
+GET http://localhost:8080/api/catalog/albums/3TJZG17pjOKXwx1ELKJPfm
 
 ###
 
 
-GET http://localhost:8080/api/catalog/albums/songs/2cWBwpqMsDJC1ZUwz813lo
+GET http://localhost:8080/api/catalog/albums/songs/47rlABSBChwZC7qxAKzOWw
 
 ###
 
