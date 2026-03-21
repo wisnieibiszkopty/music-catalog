@@ -19,6 +19,7 @@ builder.Services.AddDbContext<CatalogDbContext>(options =>
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<SaveAlbumDataConsumer>();
+    x.AddConsumer<ArtistDeletedConsumer>();
     
     x.UsingRabbitMq((context, config) =>
     {

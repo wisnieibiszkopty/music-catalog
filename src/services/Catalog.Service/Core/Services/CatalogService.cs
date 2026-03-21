@@ -122,4 +122,11 @@ public class CatalogService(CatalogDbContext db) : ICatalogService
         var deletedCount = await db.SaveChangesAsync();
         return deletedCount > 0;
     }
+
+    public async Task DeleteAlbumsByArtistId(string artistId)
+    {
+        await db.Albums
+            .Where(a => a.ArtistId == artistId)
+            .ExecuteDeleteAsync();
+    }
 }

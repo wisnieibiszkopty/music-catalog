@@ -10,12 +10,6 @@ public class SaveAlbumDataConsumer(ICatalogService catalogService) : IConsumer<S
     public async Task Consume(ConsumeContext<SaveAlbumData> context)
     {
         var albumDetails = context.Message.AlbumDetails;
-        
-        Console.WriteLine(albumDetails.Name);
-        Console.WriteLine(albumDetails.ArtistId);
-        
-        Console.WriteLine(String.Join(", ", albumDetails.Tracks.Select(t => t.Name)));
-
         var album = new Album(albumDetails);
         var createdAlbum = await catalogService.Create(album);
         

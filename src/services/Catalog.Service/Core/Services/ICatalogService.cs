@@ -10,4 +10,5 @@ public interface ICatalogService
     public Task<Album> Create(Album album);
     public Task<Album?> Update(Album album);
     public Task<bool> Delete(string albumId);
+    public Task DeleteAlbumsByArtistId(string artistId);
 }
