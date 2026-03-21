@@ -2,6 +2,7 @@
 import { useRoute } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import { CatalogService, type Track } from '@/services/api/catalog-service.ts'
+import keycloak from '@/services/core/keycloak.ts'
 
 const route = useRoute()
 
@@ -14,12 +15,13 @@ onMounted(async () => {
   tracks.value = await CatalogService.getTrackByAlbumId(albumId);
 })
 
-// TODO check permissions
 function deleteAlbum() {}
 </script>
 
 <template>
-  <UButton color="error" @click="deleteAlbum()">Delete</UButton>
+  <UButton v-if="keycloak.isAdmin()" color="error" @click="deleteAlbum()">
+    Delete
+  </UButton>
   <p>tracks</p>
   <ul>
     <li v-for="track in tracks" :key="track.id">

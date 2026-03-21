@@ -27,12 +27,6 @@ const router = createRouter({
           component: () => import('../views/AlbumView.vue'),
           props: true
         },
-        {
-          path: '/scrapper',
-          name: 'Scrapper',
-          component: () => import('../views/ScrapperView.vue'),
-          meta: { requiresAuth: true, role: 'admin' }
-        }
       ]
     },
     {
@@ -54,9 +48,8 @@ router.beforeEach(async (to, from, next) => {
     });
   }
 
-  // TODO not working
   const requiredRole = to.meta.role as string;
-  if(requiredRole && !keycloak.hasRealmRole(requiredRole)){
+  if(requiredRole && !keycloak.isAdmin()){
     return next('/');
   }
 

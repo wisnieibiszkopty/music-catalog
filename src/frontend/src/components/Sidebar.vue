@@ -1,22 +1,13 @@
 <script setup lang="ts">
 import keycloak from '@/services/core/keycloak';
 import type { NavigationMenuItem } from '@nuxt/ui'
+import ArtistScraper from '@/components/ArtistScraper.vue'
 
 const items: NavigationMenuItem[] = [
   {
     label: 'Artists',
     icon: 'i-lucide-inbox',
     to: '/artists',
-  },
-  {
-    label: 'Albums',
-    icon: 'i-lucide-users',
-    to: '/albums',
-  },
-  {
-    label: 'Scrapper',
-    icon: 'i-lucide-searchint',
-    to: '/scrapper',
   },
 ];
 
@@ -59,6 +50,7 @@ const loggedInBottomItems: NavigationMenuItem = [
     }
   }
 ];
+
 </script>
 
 <template>
@@ -70,22 +62,7 @@ const loggedInBottomItems: NavigationMenuItem = [
     </template>
 
     <template #default="{ collapsed }">
-      <!--  TODO remove in the future    -->
-      <UButton
-        :label="collapsed ? undefined : 'Search...'"
-        icon="i-lucide-search"
-        color="neutral"
-        variant="outline"
-        block
-        :square="collapsed"
-      >
-        <template v-if="!collapsed" #trailing>
-          <div class="flex items-center gap-0.5 ms-auto">
-            <UKbd value="meta" variant="subtle" />
-            <UKbd value="K" variant="subtle" />
-          </div>
-        </template>
-      </UButton>
+      <ArtistScraper :collapsed="collapsed"/>
 
       <UNavigationMenu
         :collapsed="collapsed"

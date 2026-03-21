@@ -18,7 +18,7 @@ function onArtistSaved(artist: Artist){
     description: `${artist.name} was added to library`,
     onClick: () => {
       console.log('new artist discovered ' + artist.id)
-      router.push('/artists')
+      router.push(`/artists/${artist.id}`);
     },
   })
 }

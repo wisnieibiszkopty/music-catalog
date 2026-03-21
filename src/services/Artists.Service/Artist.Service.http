@@ -99,17 +99,17 @@ Authorization: Bearer {{adminToken}}
 
 ### Get Eminem Albums
 
-POST http://localhost:8080/api/scraper/albums/7dGJo4pcD2V6oG8kP0tJRR
+POST http://localhost:8080/api/scraper/albums/4Z8W4fKeB5YxbusRsdQVPb
 Authorization: Bearer {{adminToken}}
 
 ### Get Wisp Albums
 
-POST http://localhost:8080/api/scraper/albums/3TJZG17pjOKXwx1ELKJPfm
+POST http://localhost:8080/api/scraper/albums/0TMvoNR0AIJV138mHY6jdE
 Authorization: Bearer {{adminToken}}
 
 ###
 
-GET http://localhost:8080/api/catalog/albums/3TJZG17pjOKXwx1ELKJPfm
+GET http://localhost:8080/api/catalog/albums/4Z8W4fKeB5YxbusRsdQVPb
 
 ###
 

@@ -6,6 +6,8 @@ import { type Artist, ArtistsService } from '@/services/api/artists-service.ts'
 import { type Album, CatalogService } from '@/services/api/catalog-service.ts'
 import AlbumsList from '@/components/AlbumsList.vue'
 import { useToast } from '@nuxt/ui/composables'
+import keycloak from '@/services/core/keycloak.ts'
+import { ScraperService } from '@/services/api/scraper-service.ts'
 
 const route = useRoute()
 const router = useRouter()
@@ -31,7 +33,10 @@ onMounted(async () => {
   console.log(artist)
 })
 
-// TODO check permissions
+async function searchForAlbums(){
+  await ScraperService.searchForAlbums(artist.value.id);
+}
+
 function deleteArtist() {
   ArtistsService.delete(artist.value.id)
 
@@ -46,7 +51,10 @@ function deleteArtist() {
 </script>
 <template>
   <div>
-    <UButton color="error" @click="deleteArtist()">Delete</UButton>
+    <div v-if="keycloak.isAdmin()">
+      <UButton @click="deleteArtist()" color="error"> Delete </UButton>
+      <UButton @click="searchForAlbums()" color="neutral" icon="i-lucide-rocket">Get Album's data</UButton>
+    </div>
     <UPageSection :title="artist.name" orientation="horizontal">
       <img :src="artist.imageUrl" :alt="artist.name" loading="lazy" />
     </UPageSection>
@@ -55,7 +63,7 @@ function deleteArtist() {
 </template>
 
 <style scoped>
-div{
+div {
   height: 100%;
   overflow-y: auto;
 }
