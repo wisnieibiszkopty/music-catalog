@@ -27,10 +27,9 @@ onMounted(async () => {
   // TODO get artist from api if not in store
   artist.value = artistsStore.getById(artistId)!
 
-  albums.value = await CatalogService.getAlbumsByArtistId(artist.value.id)
-
-  console.log(albums.value)
-  console.log(artist)
+  const fetchedAlbums = await CatalogService
+    .getAlbumsByArtistId(artist.value.id)
+  albums.value = fetchedAlbums.sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime());
 })
 
 async function searchForAlbums(){
@@ -41,7 +40,8 @@ function deleteArtist() {
   ArtistsService.delete(artist.value.id)
 
   toast.add({
-    title: `Delete artist: ${artist.value.name}`,
+    title: `Deleted artist: ${artist.value.name}`,
+    color: 'error'
   })
 
   artistsStore.deleteById(artist.value.id)

@@ -2,6 +2,7 @@ import { onEvent, startConnection } from '@/services/notifications/notifications
 import { useToast } from '@nuxt/ui/composables'
 import router from '@/router';
 import type { Artist } from '@/services/api/artists-service.ts'
+import { useArtistsStore } from '@/stores/artists-store.ts'
 
 export async function initNotifications(){
   await startConnection();
@@ -12,6 +13,9 @@ export async function initNotifications(){
 
 function onArtistSaved(artist: Artist){
   const toast = useToast();
+  const store = useArtistsStore();
+
+  store.add(artist);
 
   toast.add({
     title: 'New artist discovered',

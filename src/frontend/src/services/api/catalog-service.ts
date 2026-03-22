@@ -25,5 +25,10 @@ export const CatalogService = {
   getTrackByAlbumId: async (albumId: string): Promise<Track[]> => {
     const { data } = await api.get(`/catalog/albums/songs/${albumId}`)
     return data
+  },
+
+  delete: async (albumId: string): Promise<boolean> => {
+    const response = await api.delete(`/catalog/${albumId}`);
+    return response.status >= 200 && response.status < 300
   }
 }

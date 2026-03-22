@@ -12,12 +12,17 @@ export const ArtistsService = {
     const { data } = await api.get('/artists');
 
     const artistStore = useArtistsStore();
-    artistStore.save(data);
+    artistStore.set(data);
 
     return data;
   },
 
   delete: async (artistId: string) => {
-    await api.delete(`/artists/${artistId}`);
+    const response = await api.delete(`/artists/${artistId}`);
+
+    if (response.status >= 200 && response.status < 300){
+      const artistsStore = useArtistsStore();
+      artistsStore.deleteById(artistId);
+    }
   }
 }

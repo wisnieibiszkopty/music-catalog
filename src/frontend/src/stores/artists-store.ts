@@ -6,8 +6,12 @@ export const useArtistsStore = defineStore('artists', {
     artists: [] as Artist[],
   }),
   actions: {
-    save(newArtists: Artist[]) {
-      this.artists = [...this.artists, ...newArtists];
+    add(newArtist: Artist){
+      this.artists.push(newArtist);
+    },
+
+    set(newArtists: Artist[]) {
+      this.artists.splice(0, this.artists.length, ...newArtists);
     },
 
     getById(artistId: string) {

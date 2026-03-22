@@ -32,8 +32,6 @@ const notLoggedInBottomItems: NavigationMenuItem = [
   },
 ];
 
-
-
 const loggedInBottomItems: NavigationMenuItem = [
   {
     label: `Welcome ${keycloak.tokenParsed?.preferred_username}`,
