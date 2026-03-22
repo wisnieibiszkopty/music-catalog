@@ -1,6 +1,7 @@
 using MassTransit;
 using Notification.Service.Core.Consumers;
 using Notification.Service.Core.Hubs;
+using Shared.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<ArtistSavedConsumer>();
     x.AddConsumer<AllAlbumsScrapedConsumer>();
+    x.AddConsumer<ScrapingFailedConsumer>();
     
     x.UsingRabbitMq((context, config) =>
     {
@@ -17,6 +19,8 @@ builder.Services.AddMassTransit(x =>
         config.ConfigureEndpoints(context);
     });
 });
+
+builder.Services.AddKeycloakAuthentication("http://keycloak:8080/auth/realms/music-catalog");
 
 builder.Services.AddSignalR();
 

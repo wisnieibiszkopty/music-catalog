@@ -4,4 +4,5 @@ public static class MessageTypes
 {
     public const string ArtistSaved = "ArtistSaved";
     public const string AlbumsSaved = "AlbumsSaved";
+    public const string ScrapingFailed = "ScrapingFailed";
 }

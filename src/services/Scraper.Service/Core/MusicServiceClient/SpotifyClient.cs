@@ -71,18 +71,26 @@ public class SpotifyClient : IMusicServiceClient
         int offset = 0;
         const int limit = 10;
         int total = 0;
-
+        
         do
         {
             var url = $"artists/{Uri.EscapeDataString(artistId)}/albums?include_groups=album&limit={limit}&offset={offset}";
             var response = await _http.GetAsync(url);
-            response.EnsureSuccessStatusCode();
+
+            if ((int)response.StatusCode == 429)
+            {
+                var retryAfter = response.Headers.RetryAfter?.Delta?.TotalSeconds
+                                 ?? (response.Headers.RetryAfter?.Date - DateTimeOffset.UtcNow)?.TotalSeconds
+                                 ?? 1;
+
+                _logger.LogWarning("Rate limited. Retry-After: {Seconds} seconds", retryAfter);
+                throw new MusicServiceRateLimitException(retryAfter);
+            }
 
             var body = await response.Content.ReadAsStringAsync();
-
             var extractor = new AlbumExtractor();
             var (ids, apiTotal) = extractor.ParseAlbumsPage(body);
-        
+    
             allAlbumIds.AddRange(ids);
             total = apiTotal; 
             offset += limit; 

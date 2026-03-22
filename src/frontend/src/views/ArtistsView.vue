@@ -1,27 +1,71 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { type Artist, ArtistsService } from '@/services/api/artists-service.ts'
+import { onMounted } from 'vue'
+import { ArtistsService } from '@/services/api/artists-service.ts'
+import { useArtistsStore } from '@/stores/artists-store.ts'
 
-const artists = ref<Artist[]>([])
+const artistsStore = useArtistsStore()
+
+onMounted(async () => {
+  await loadArtists()
+})
 
 const loadArtists = async () => {
-  try {
-    artists.value = await ArtistsService.getAll();
-    console.log(artists);
-  } catch (error) {
-    // TODO display toast
-    console.error(error)
-  }
+  await ArtistsService.getAll()
 }
-
-onMounted(loadArtists);
 </script>
 
 <template>
-  <p>artists</p>
-  <li v-for="artist in artists">
-    {{ artist.name }}
-  </li>
+  <div>
+    <ul>
+      <RouterLink
+        v-for="artist in artistsStore.artists"
+        :key="artist.id"
+        :to="`/artists/${artist.id}`"
+        custom
+        v-slot="{ navigate }"
+      >
+        <TransitionGroup name="list" tag="ul">
+          <li @click="navigate" >
+            <img :src="artist.imageUrl" :alt="artist.name" />
+            <p>{{ artist.name }}</p>
+          </li>
+        </TransitionGroup>
+      </RouterLink>
+    </ul>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+div {
+  height: 100%;
+  overflow-y: auto;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 20px;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 180px));
+  justify-content: center;
+  gap: 48px;
+}
+
+li {
+  cursor: pointer;
+  text-align: center;
+}
+
+li img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 8px;
+}
+
+.list-move {
+  transition: transform 0.3s ease;
+}
+</style>

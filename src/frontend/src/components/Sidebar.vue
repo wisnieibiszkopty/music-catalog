@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import keycloak from '@/services/core/keycloak';
 import type { NavigationMenuItem } from '@nuxt/ui'
+import ArtistScraper from '@/components/ArtistScraper.vue'
 
 const items: NavigationMenuItem[] = [
   {
@@ -8,37 +9,6 @@ const items: NavigationMenuItem[] = [
     icon: 'i-lucide-inbox',
     to: '/artists',
   },
-  {
-    label: 'Albums',
-    icon: 'i-lucide-users',
-    to: '/albums',
-  },
-  {
-    label: 'Playlists',
-    icon: 'i-lucide-list-music',
-    to: '/playlists',
-  },
-  {
-    label: 'Scrapper',
-    icon: 'i-lucide-searchint',
-    to: '/scrapper',
-  },
-  {
-    label: 'Settings',
-    icon: 'i-lucide-settings',
-    defaultOpen: true,
-    children: [
-      {
-        label: 'General'
-      },
-      {
-        label: 'Members'
-      },
-      {
-        label: 'Notifications'
-      }
-    ]
-  }
 ];
 
 const notLoggedInBottomItems: NavigationMenuItem = [
@@ -62,8 +32,6 @@ const notLoggedInBottomItems: NavigationMenuItem = [
   },
 ];
 
-
-
 const loggedInBottomItems: NavigationMenuItem = [
   {
     label: `Welcome ${keycloak.tokenParsed?.preferred_username}`,
@@ -80,6 +48,7 @@ const loggedInBottomItems: NavigationMenuItem = [
     }
   }
 ];
+
 </script>
 
 <template>
@@ -91,22 +60,7 @@ const loggedInBottomItems: NavigationMenuItem = [
     </template>
 
     <template #default="{ collapsed }">
-      <!--  TODO remove in the future    -->
-      <UButton
-        :label="collapsed ? undefined : 'Search...'"
-        icon="i-lucide-search"
-        color="neutral"
-        variant="outline"
-        block
-        :square="collapsed"
-      >
-        <template v-if="!collapsed" #trailing>
-          <div class="flex items-center gap-0.5 ms-auto">
-            <UKbd value="meta" variant="subtle" />
-            <UKbd value="K" variant="subtle" />
-          </div>
-        </template>
-      </UButton>
+      <ArtistScraper :collapsed="collapsed"/>
 
       <UNavigationMenu
         :collapsed="collapsed"
@@ -119,17 +73,6 @@ const loggedInBottomItems: NavigationMenuItem = [
         :items="keycloak.authenticated ? loggedInBottomItems : notLoggedInBottomItems"
         orientation="vertical"
         class="mt-auto"
-      />
-    </template>
-
-    <!--  TODO remove in the future    -->
-    <template #footer="{ collapsed }">
-      <UButton
-        :label="collapsed ? undefined : 'Footer'"
-        color="neutral"
-        variant="ghost"
-        class="w-full"
-        :block="collapsed"
       />
     </template>
   </UDashboardSidebar>

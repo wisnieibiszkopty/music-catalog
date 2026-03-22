@@ -11,7 +11,7 @@ public class AlbumScraperSaga : MassTransitStateMachine<AlbumScraperState>
     public Event<StartAlbumsScraping> StartedAlbumsScraping { get; private set; }
     public Event<AlbumsDiscovered> AlbumsDiscovered { get; private set; }
     public Event<AlbumSaved> AlbumSaved { get; private set; }
-    public Event<ScrapingFailed> JobFailed { get; private set; }
+    public Event<ScrapingFailed> ScrapingFailed { get; private set; }
     
     public AlbumScraperSaga()
     {
@@ -20,7 +20,7 @@ public class AlbumScraperSaga : MassTransitStateMachine<AlbumScraperState>
         Event(() => StartedAlbumsScraping, x => x.CorrelateById(m => m.Message.CorrelationId));
         Event(() => AlbumsDiscovered, x => x.CorrelateById(m => m.Message.CorrelationId));
         Event(() => AlbumSaved, x => x.CorrelateById(m => m.Message.CorrelationId));
-        Event(() => JobFailed, x => x.CorrelateById(m => m.Message.CorrelationId));
+        Event(() => ScrapingFailed, x => x.CorrelateById(m => m.Message.CorrelationId));
         
         Initially(
             When(StartedAlbumsScraping)

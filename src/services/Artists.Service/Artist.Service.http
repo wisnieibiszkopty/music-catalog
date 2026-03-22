@@ -94,29 +94,33 @@ Authorization: Bearer {{adminToken}}
 
 ###
 
-POST http://localhost:8080/api/scraper/artists/eminem
+POST http://localhost:8080/api/scraper/artists/sanah
 Authorization: Bearer {{adminToken}}
 
 ### Get Eminem Albums
 
-POST http://localhost:8080/api/scraper/albums/7dGJo4pcD2V6oG8kP0tJRR
+POST http://localhost:8080/api/scraper/albums/3yY2gUcIsjMr8hjo51PoJ8
 Authorization: Bearer {{adminToken}}
 
 ### Get Wisp Albums
 
-POST http://localhost:8080/api/scraper/albums/3TJZG17pjOKXwx1ELKJPfm
+POST http://localhost:8080/api/scraper/albums/0TMvoNR0AIJV138mHY6jdE
 Authorization: Bearer {{adminToken}}
 
 ###
 
-GET http://localhost:8080/api/catalog/albums/7dGJo4pcD2V6oG8kP0tJRR
+GET http://localhost:8080/api/catalog/albums/4Z8W4fKeB5YxbusRsdQVPb
 
 ###
 
 
-GET http://localhost:8080/api/catalog/albums/songs/2cWBwpqMsDJC1ZUwz813lo
+GET http://localhost:8080/api/catalog/albums/songs/47rlABSBChwZC7qxAKzOWw
 
 ###
 
 DELETE http://localhost:8080/api/catalog/2cWBwpqMsDJC1ZUwz813lo
 Authorization: Bearer {{adminToken}}
+
+###
+
+GET https://api.spotify.com/v1/artists/3yY2gUcIsjMr8hjo51PoJ8/albums?*

@@ -9,6 +9,7 @@ const router = createRouter({
     {
       path: '/',
       component: LayoutView,
+      redirect: '/artists',
       children: [
         {
           path: '/artists',
@@ -16,29 +17,24 @@ const router = createRouter({
           component: () => import('../views/ArtistsView.vue'),
         },
         {
-          path: '/albums',
+          path: '/artists/:id',
+          name: 'ArtistsDetails',
+          component: () => import('../views/ArtistDetailsView.vue'),
+          props: true,
+        },
+        {
+          path: '/albums/:id',
           name: 'Albums',
-          component: () => import('../views/AlbumsView.vue'),
+          component: () => import('../views/AlbumView.vue'),
+          props: true,
         },
-        {
-          path: '/playlists',
-          name: 'Playlists',
-          component: () => import('../views/PlaylistView.vue'),
-          meta: { requiresAuth: true }
-        },
-        {
-          path: '/scrapper',
-          name: 'Scrapper',
-          component: () => import('../views/ScrapperView.vue'),
-          meta: { requiresAuth: true, role: 'admin' }
-        }
-      ]
+      ],
     },
     {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
-      component: NotFoundView
-    }
+      component: NotFoundView,
+    },
   ],
 })
 
@@ -53,9 +49,8 @@ router.beforeEach(async (to, from, next) => {
     });
   }
 
-  // TODO not working
   const requiredRole = to.meta.role as string;
-  if(requiredRole && !keycloak.hasRealmRole(requiredRole)){
+  if(requiredRole && !keycloak.isAdmin()){
     return next('/');
   }
 
