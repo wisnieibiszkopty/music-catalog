@@ -1,4 +1,5 @@
 import api from '@/services/core/api.ts'
+import {useAlbumStore} from "@/stores/album-store.ts";
 
 export interface Album {
   id: string;
@@ -19,16 +20,27 @@ export interface Track {
 export const CatalogService = {
   getAlbumsByArtistId: async (artistId: string): Promise<Album[]> => {
     const { data } = await api.get(`/catalog/albums/${artistId}`);
+
+    const albumStore = useAlbumStore();
+    albumStore.set(data);
+
     return data;
   },
 
-  getTrackByAlbumId: async (albumId: string): Promise<Track[]> => {
+  getTracksByAlbumId: async (albumId: string): Promise<Track[]> => {
     const { data } = await api.get(`/catalog/albums/songs/${albumId}`)
     return data
   },
 
   delete: async (albumId: string): Promise<boolean> => {
     const response = await api.delete(`/catalog/${albumId}`);
-    return response.status >= 200 && response.status < 300
+    const deleted = response.status >= 200 && response.status < 300;
+
+    if(deleted){
+      const albumStore = useAlbumStore();
+      albumStore.deleteById(albumId);
+    }
+
+    return deleted;
   }
 }

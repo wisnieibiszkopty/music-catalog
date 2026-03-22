@@ -9,6 +9,7 @@ export async function initNotifications(){
 
   onEvent("ArtistSaved", onArtistSaved);
   onEvent("AlbumsSaved", onAlbumsSaved);
+  onEvent("ScrapingFailed", onScrapingFailed);
 }
 
 function onArtistSaved(artist: Artist){
@@ -37,4 +38,14 @@ function onAlbumsSaved(artistId: string){
       router.push('/albums')
     },
   })
+}
+
+function onScrapingFailed(errorMessage: string) {
+  const toast = useToast()
+
+  toast.add({
+    title: "Scraping failed",
+    description: errorMessage,
+    color: 'error'
+  });
 }

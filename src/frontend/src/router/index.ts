@@ -9,6 +9,7 @@ const router = createRouter({
     {
       path: '/',
       component: LayoutView,
+      redirect: '/artists',
       children: [
         {
           path: '/artists',
@@ -19,21 +20,21 @@ const router = createRouter({
           path: '/artists/:id',
           name: 'ArtistsDetails',
           component: () => import('../views/ArtistDetailsView.vue'),
-          props: true
+          props: true,
         },
         {
           path: '/albums/:id',
           name: 'Albums',
           component: () => import('../views/AlbumView.vue'),
-          props: true
+          props: true,
         },
-      ]
+      ],
     },
     {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
-      component: NotFoundView
-    }
+      component: NotFoundView,
+    },
   ],
 })
 

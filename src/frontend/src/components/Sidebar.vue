@@ -75,17 +75,6 @@ const loggedInBottomItems: NavigationMenuItem = [
         class="mt-auto"
       />
     </template>
-
-    <!--  TODO remove in the future    -->
-    <template #footer="{ collapsed }">
-      <UButton
-        :label="collapsed ? undefined : 'Footer'"
-        color="neutral"
-        variant="ghost"
-        class="w-full"
-        :block="collapsed"
-      />
-    </template>
   </UDashboardSidebar>
 </template>
 

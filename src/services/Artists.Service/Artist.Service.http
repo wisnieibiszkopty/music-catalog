@@ -99,7 +99,7 @@ Authorization: Bearer {{adminToken}}
 
 ### Get Eminem Albums
 
-POST http://localhost:8080/api/scraper/albums/4Z8W4fKeB5YxbusRsdQVPb
+POST http://localhost:8080/api/scraper/albums/3yY2gUcIsjMr8hjo51PoJ8
 Authorization: Bearer {{adminToken}}
 
 ### Get Wisp Albums
@@ -120,3 +120,7 @@ GET http://localhost:8080/api/catalog/albums/songs/47rlABSBChwZC7qxAKzOWw
 
 DELETE http://localhost:8080/api/catalog/2cWBwpqMsDJC1ZUwz813lo
 Authorization: Bearer {{adminToken}}
+
+###
+
+GET https://api.spotify.com/v1/artists/3yY2gUcIsjMr8hjo51PoJ8/albums?*

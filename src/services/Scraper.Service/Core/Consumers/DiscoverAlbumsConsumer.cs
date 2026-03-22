@@ -16,8 +16,14 @@ public class DiscoverAlbumsConsumer : IConsumer<DiscoverAlbums>
     public async Task Consume(ConsumeContext<DiscoverAlbums> context)
     {
         var artistId = context.Message.ArtistId;
-        var albums = await _client.GetAlbumsByArtistId(artistId);
-
-        await context.Publish(new AlbumsDiscovered(context.Message.CorrelationId, albums));
+        try
+        {
+            var albums = await _client.GetAlbumsByArtistId(artistId);
+            await context.Publish(new AlbumsDiscovered(context.Message.CorrelationId, albums));
+        }
+        catch (MusicServiceRateLimitException exception)
+        {
+            await context.Publish(new ScrapingFailed(context.Message.CorrelationId, exception.Message));
+        }
     }
 }
