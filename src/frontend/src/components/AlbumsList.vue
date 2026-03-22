@@ -23,7 +23,7 @@ const props = defineProps<{
           :src="album.imageUrl"
           :alt="album.name"
           width="200"
-          class="w-[300px] h-auto object-cover self-end lg:justify-self-end"
+          class="w-[256px] h-auto object-cover self-end lg:justify-self-end"
         />
       </UPageCard>
     </li>

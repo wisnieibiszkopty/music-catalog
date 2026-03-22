@@ -25,7 +25,7 @@ const loadArtists = async () => {
         v-slot="{ navigate }"
       >
         <TransitionGroup name="list" tag="ul">
-          <li @click="navigate">
+          <li @click="navigate" >
             <img :src="artist.imageUrl" :alt="artist.name" />
             <p>{{ artist.name }}</p>
           </li>
