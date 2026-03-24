@@ -7,7 +7,7 @@ let connection: HubConnection | null = null;
 function getConnection(){
   if(!connection){
     connection = new HubConnectionBuilder()
-      .withUrl(`${baseUrl}/notifications`)
+      .withUrl(`${baseUrl}/api/notifications`)
       .withAutomaticReconnect()
       .build();
   }
