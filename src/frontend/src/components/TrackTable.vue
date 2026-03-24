@@ -24,9 +24,6 @@ const columns: TableColumn<Track>[] = [
     accessorKey: 'durationMs',
     header: 'Duration',
     cell: ({ row }) => formatDuration(row.getValue('durationMs')),
-    meta: {
-      class: 'text-right',
-    },
   },
 ]
 

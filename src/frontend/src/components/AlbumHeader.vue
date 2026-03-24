@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Album } from '@/services/api/catalog-service.ts'
+import keycloak from '@/services/core/keycloak.ts'
 
 const props = defineProps<{
   album: Album,
@@ -25,7 +26,7 @@ const props = defineProps<{
         <span>{{ props.album.totalTracks }} tracks</span>
       </div>
 
-      <div class="flex gap-3">
+      <div v-if="keycloak.isAdmin()" class="flex gap-3">
         <UButton color="error" icon="i-lucide-trash-2">Delete</UButton>
       </div>
     </div>

@@ -40,8 +40,7 @@ services:
       context: ../src/frontend
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://localhost:8080/api
-        - VITE_KEYCLOAK_URL=http://localhost:8080/auth
+        - VITE_API_URL=http://localhost:8080
   
   keycloak-db:
     image: postgres:18-alpine

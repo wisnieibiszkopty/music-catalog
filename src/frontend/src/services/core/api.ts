@@ -2,10 +2,10 @@ import axios from 'axios';
 import keycloak from './keycloak';
 import { useToast } from '@nuxt/ui/composables'
 
-export const baseUrl = 'http://localhost:8080/api';
+export const baseUrl = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
-  baseURL: baseUrl
+  baseURL: `${baseUrl}/api`
 });
 
 api.interceptors.request.use(async (config) => {

@@ -1,7 +1,7 @@
 FROM node:22-alpine AS build-stage
 
 ARG VITE_API_URL
-ARG VITE_KEYCLOAK_URL
+ENV VITE_API_URL=$VITE_API_URL
 
 RUN npm install -g pnpm
 
@@ -13,7 +13,7 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-RUN VITE_API_URL=$VITE_API_URL VITE_KEYCLOAK_URL=$VITE_KEYCLOAK_URL npm run build
+RUN VITE_API_URL=$VITE_API_URL npm run build
 
 FROM joseluisq/static-web-server:2.21-alpine AS production-stage
 
