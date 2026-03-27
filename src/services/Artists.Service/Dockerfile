@@ -1,18 +1,24 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
 COPY ["src/services/Artists.Service/Artists.Service.csproj", "src/services/Artists.Service/"]
 COPY ["src/shared/Shared/Shared.csproj", "src/shared/Shared/"]
 COPY ["src/shared/Contracts/Contracts.csproj", "src/shared/Contracts/"]
-RUN dotnet restore "src/services/Artists.Service/Artists.Service.csproj"
+
+RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
+    dotnet restore "src/services/Artists.Service/Artists.Service.csproj"
+
 COPY . .
 WORKDIR "/src/src/services/Artists.Service"
-RUN dotnet build "./Artists.Service.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
+    dotnet build "Artists.Service.csproj" -c $BUILD_CONFIGURATION -o /app/build --no-restore
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release

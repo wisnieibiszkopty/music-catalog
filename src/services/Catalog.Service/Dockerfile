@@ -1,17 +1,24 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
 COPY ["src/services/Catalog.Service/Catalog.Service.csproj", "src/services/Catalog.Service/"]
+COPY ["src/shared/Shared/Shared.csproj", "src/shared/Shared/"]
 COPY ["src/shared/Contracts/Contracts.csproj", "src/shared/Contracts/"]
-RUN dotnet restore "src/services/Catalog.Service/Catalog.Service.csproj"
+
+RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
+    dotnet restore "src/services/Catalog.Service/Catalog.Service.csproj"
+    
 COPY . .
 WORKDIR "/src/src/services/Catalog.Service"
-RUN dotnet build "./Catalog.Service.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
+    dotnet build "./Catalog.Service.csproj" -c $BUILD_CONFIGURATION -o /app/build --no-restore
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
