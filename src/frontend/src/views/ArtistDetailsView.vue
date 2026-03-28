@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useArtistsStore } from '@/stores/artists-store.ts'
 import { type Artist, ArtistsService } from '@/services/api/artists-service.ts'
 import { type Album, CatalogService } from '@/services/api/catalog-service.ts'
-import AlbumsList from '@/components/AlbumsList.vue'
+import AlbumsList from '@/components/Album/AlbumsList.vue'
 import { useToast } from '@nuxt/ui/composables'
 import keycloak from '@/services/core/keycloak.ts'
 import { ScraperService } from '@/services/api/scraper-service.ts'
@@ -26,16 +26,32 @@ const albums = ref<Album[]>([])
 
 const buttons = ref<ButtonProps[]>([])
 
+const loading = ref(true)
+
 onMounted(async () => {
-  const artistId = route.params.id as string
-  artist.value = artistsStore.getById(artistId)!
+  try {
+    const artistId = route.params.id as string
 
-  const fetchedAlbums = await CatalogService.getAlbumsByArtistId(artist.value.id)
-  albums.value = fetchedAlbums.sort(
-    (a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime(),
-  )
+    const foundArtist = artistsStore.getById(artistId)
+    if (!foundArtist) return
 
-  setupButtons()
+    artist.value = foundArtist
+
+    const minDelay = new Promise((resolve) => setTimeout(resolve, 300))
+
+    const [fetchedAlbums] = await Promise.all([
+      CatalogService.getAlbumsByArtistId(artist.value.id),
+      minDelay,
+    ])
+
+    albums.value = fetchedAlbums.sort(
+      (a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime(),
+    )
+
+    setupButtons()
+  } finally {
+    loading.value = false
+  }
 })
 
 function setupButtons() {
@@ -44,6 +60,7 @@ function setupButtons() {
         {
           label: "Get Album's data",
           icon: 'i-lucide-rocket',
+          loadingAuto: true,
           onClick: searchForAlbums,
         },
         {
@@ -51,6 +68,7 @@ function setupButtons() {
           color: 'error',
           variant: 'solid',
           icon: 'i-lucide-trash-2',
+          loadingAuto: true,
           onClick: deleteArtist,
         },
       ]
@@ -59,6 +77,11 @@ function setupButtons() {
 
 async function searchForAlbums() {
   await ScraperService.searchForAlbums(artist.value.id)
+
+  toast.add({
+    title: 'Search started',
+    color: 'primary'
+  })
 }
 
 function deleteArtist() {
@@ -83,7 +106,18 @@ function deleteArtist() {
       <UPageHeader :title="artist.name" headline="Artist" :links="buttons" />
     </div>
 
-    <template v-if="albums.length === 0">
+    <template v-if="loading">
+      <div class="empty">
+        <USkeleton class="h-6 w-[300px] mb-4" />
+        <USkeleton class="h-6 w-[200px] mb-8" />
+
+        <div class="grid gap-4">
+          <USkeleton v-for="i in 5" :key="i" class="h-20 w-full rounded-lg" />
+        </div>
+      </div>
+    </template>
+
+    <template v-else-if="albums.length === 0">
       <div class="empty">
         <UEmpty
           icon="i-lucide-music"
@@ -92,6 +126,7 @@ function deleteArtist() {
         />
       </div>
     </template>
+
     <template v-else>
       <AlbumsList :albums="albums" />
     </template>

@@ -7,8 +7,8 @@ import { useToast } from '@nuxt/ui/composables'
 import { useAlbumStore } from '@/stores/album-store.ts'
 import type { ButtonProps } from '@nuxt/ui/components/Button.vue'
 import TrackTable from '@/components/TrackTable.vue'
-import AlbumHeader from '@/components/AlbumHeader.vue'
 import { useArtistsStore } from '@/stores/artists-store.ts'
+import AlbumHeader from "@/components/Album/AlbumHeader.vue";
 
 const route = useRoute()
 const router = useRouter()
@@ -73,7 +73,7 @@ async function deleteAlbum() {
 
 <template>
   <div class="main">
-    <AlbumHeader :album="album" :artist-name="artistName"/>
+    <AlbumHeader :album="album" :artist-name="artistName" @delete="deleteAlbum"/>
     <div class="h-[1px] w-full my-10"></div>
     <TrackTable :tracks="tracks ?? []" />
   </div>

@@ -4,7 +4,6 @@
 
 <template>
   <UError
-    redirect="/"
     :error="{
       statusCode: 404,
       statusMessage: 'Page not found',

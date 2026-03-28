@@ -35,7 +35,7 @@ function onAlbumsSaved(artistId: string){
     title: 'New albums discovered!',
     onClick: () => {
       console.log('new albums discovered ' + artistId)
-      router.push('/albums')
+      router.push(`/artists/${artistId}`)
     },
   })
 }

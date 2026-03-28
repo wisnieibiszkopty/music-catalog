@@ -33,7 +33,7 @@ services:
       - keycloak
       - artist-service
       - orchestrator-service  
-  
+      
   web-app:
     container_name: web-app
     build:

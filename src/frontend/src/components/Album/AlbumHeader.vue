@@ -3,10 +3,17 @@ import type { Album } from '@/services/api/catalog-service.ts'
 import keycloak from '@/services/core/keycloak.ts'
 
 const props = defineProps<{
-  album: Album,
+  album: Album
   artistName: string
 }>()
 
+const emit = defineEmits<{
+  (e: 'delete'): void
+}>()
+
+function handleDelete() {
+  emit('delete')
+}
 </script>
 
 <template>
@@ -27,7 +34,7 @@ const props = defineProps<{
       </div>
 
       <div v-if="keycloak.isAdmin()" class="flex gap-3">
-        <UButton color="error" icon="i-lucide-trash-2">Delete</UButton>
+        <UButton @click="handleDelete" color="error" icon="i-lucide-trash-2">Delete</UButton>
       </div>
     </div>
 

@@ -23,7 +23,7 @@ COPY --from=build-stage /app/dist .
 
 ENV SERVER_PORT=80
 ENV SERVER_ROOT=/public
-ENV SERVER_ERROR_404=/public/index.html
+ENV SERVER_FALLBACK_PAGE=/index.html
 ENV SERVER_SECURITY_HEADERS=true
 
 USER 1000
