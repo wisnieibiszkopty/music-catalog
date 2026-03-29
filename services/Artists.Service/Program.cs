@@ -6,6 +6,9 @@ using Artists.Service.Core.Services;
 using Artists.Service.Core.Validators;
 using FluentValidation;
 using MassTransit;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Scalar.AspNetCore;
 using Shared;
 using Shared.Auth;
@@ -15,6 +18,35 @@ using Shared.Logging;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.AddLogging("artists-service");
+
+// TODO move to extenstion method
+var otel = builder.Services.AddOpenTelemetry();
+
+otel.ConfigureResource(resource => resource.AddService(builder.Environment.ApplicationName));
+otel.WithMetrics(metrics => metrics
+    .AddAspNetCoreInstrumentation()
+    .AddHttpClientInstrumentation()
+    .AddRuntimeInstrumentation()
+    .AddPrometheusExporter());
+
+otel.WithTracing(tracing =>
+{
+    tracing.AddAspNetCoreInstrumentation(options =>
+        {
+            options.Filter = httpContext => 
+                !httpContext.Request.Path.Value!.Contains("/metrics") && 
+                !httpContext.Request.Path.Value!.Contains("/health");
+            options.RecordException = true;
+        })
+        .AddHttpClientInstrumentation()
+        .AddSource("MassTransit");
+    
+    var endpoint = builder.Configuration["Oltp:Endpoint"];
+    if (!string.IsNullOrEmpty(endpoint))
+    {
+        tracing.AddOtlpExporter(opt => opt.Endpoint = new Uri(endpoint));
+    }
+});
 
 builder.Services.AddMassTransit(x =>
 {
@@ -47,6 +79,8 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 var app = builder.Build();
+
+app.UseOpenTelemetryPrometheusScrapingEndpoint();
 
 app.MapOpenApi();
 app.MapScalarApiReference();

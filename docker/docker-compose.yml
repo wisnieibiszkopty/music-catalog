@@ -56,7 +56,7 @@ services:
     image: postgres:18-alpine
     container_name: keycloak-db
     environment:
-      POSTGRES_DB: keycloakkye
+      POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: keycloak
     volumes:
@@ -83,7 +83,7 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
     volumes:
-      - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
+      - ./config/realm-export.json:/opt/keycloak/data/import/realm-export.json
     restart: unless-stopped
     depends_on:
       - keycloak-db
@@ -101,6 +101,8 @@ services:
       Redis__InstanceName: ScrapperService
       Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
       Keycloak__Realm: ${KEYCLOAK_REALM}
+    networks:
+      - default
     depends_on:
       - rabbitmq
       - redis
@@ -117,6 +119,8 @@ services:
       ASPNETCORE_URLS: ${ASPNETCORE_URLS}
       ConnectionStrings__RabbitMq: ${RABBIT_URL}
       ConnectionStrings__Redis: ${REDIS_URL},abortConnect=false
+    networks:
+      - default
     depends_on:
       - rabbitmq
       - redis
@@ -132,6 +136,8 @@ services:
       ConnectionStrings__RabbitMq: ${RABBIT_URL}
       Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
       Keycloak__Realm: ${KEYCLOAK_REALM}
+    networks:
+      - default
     depends_on:
       - rabbitmq
 
@@ -172,6 +178,9 @@ services:
       ConnectionStrings__RabbitMq: ${RABBIT_URL}
       Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
       Keycloak__Realm: ${KEYCLOAK_REALM}
+      Otlp__Endpoint: ${OTLP_ENDPOINT_URL}
+    networks:
+      - default
     depends_on:
       artist-db:
         condition: service_healthy
@@ -213,6 +222,8 @@ services:
       ConnectionStrings__RabbitMq: ${RABBIT_URL}
       Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
       Keycloak__Realm: ${KEYCLOAK_REALM}
+    networks:
+      - default
     depends_on:
       catalog-db:
         condition: service_healthy
@@ -261,6 +272,30 @@ services:
       - logging
       - default
   
+  prometheus:
+    image: prom/prometheus:v3.10.0
+    container_name: prometheus
+    volumes:
+      - ./config/prometheus.yaml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks: 
+      - default
+      - logging
+  
+  tempo:
+    image: grafana/tempo:latest
+    container_name: tempo
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./config/tempo.yaml:/etc/tempo.yaml
+      - tempo-data:/var/tempo
+    networks:
+      - logging
+      - default
+  
 networks:
   default:
   logging:
@@ -276,3 +311,5 @@ volumes:
   rabbitmq-log:
   loki-data:
   grafana-data:
+  prometheus-data:
+  tempo-data:

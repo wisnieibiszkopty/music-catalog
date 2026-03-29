@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Enrichers.Span;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
 
@@ -13,6 +14,7 @@ public static class LoggingExtension
             .MinimumLevel.Information()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
             .Enrich.FromLogContext()
+            .Enrich.WithSpan()
             .Enrich.WithProperty("Service", serviceName)
             .WriteTo.Console(new RenderedCompactJsonFormatter())
         );
