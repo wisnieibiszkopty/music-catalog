@@ -49,14 +49,14 @@ services:
       context: ..
       dockerfile: frontend/Dockerfile
       args:
-        - VITE_API_URL=http://localhost:8080
+        - VITE_API_URL=${GATEWAY_URL}
   
   # identity provider
   keycloak-db:
     image: postgres:18-alpine
     container_name: keycloak-db
     environment:
-      POSTGRES_DB: keycloak
+      POSTGRES_DB: keycloakkye
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: keycloak
     volumes:
