@@ -2,8 +2,11 @@ using MassTransit;
 using Notification.Service.Core.Consumers;
 using Notification.Service.Core.Hubs;
 using Shared.Auth;
+using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.AddLogging("notification-service");
 
 builder.Services.AddMassTransit(x =>
 {

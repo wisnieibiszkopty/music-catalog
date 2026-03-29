@@ -2,8 +2,11 @@ using MassTransit;
 using Orchestrator.Service;
 using Orchestrator.Service.Core.Saga;
 using Shared.Auth;
+using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.AddLogging("orchestrator-service");
 
 builder.Services.AddMassTransit(x =>
 {

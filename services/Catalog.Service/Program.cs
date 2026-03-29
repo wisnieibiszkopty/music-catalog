@@ -8,8 +8,11 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Shared.Auth;
 using Shared.Errors;
+using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.AddLogging("catalog-service");
 
 builder.Services.AddDbContext<CatalogDbContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))

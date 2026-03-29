@@ -1,8 +1,11 @@
 using MassTransit;
 using Scraper.Service.Core.Consumers;
 using Scraper.Service.Core.MusicServiceClient;
+using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.AddLogging("scraper-service");
 
 builder.Services.AddHttpClient<IMusicServiceClient, SpotifyClient>(client =>
 {
