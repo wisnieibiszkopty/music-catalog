@@ -28,7 +28,12 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - ASPNETCORE_URLS=http://+:8080
+      ASPNETCORE_URLS: ${ASPNETCORE_URLS}
+      Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
+      Keycloak__ExternalUrl: ${KEYCLOAK_EXTERNAL_URL}
+      Keycloak__Realm: ${KEYCLOAK_REALM}
+      Keycloak__Audience: ${KEYCLOAK_AUDIENCE}
+      AllowedOrigins__0: ${GATEWAY_URL}
     depends_on:
       - keycloak
       - artist-service
@@ -60,8 +65,8 @@ services:
     container_name: keycloak
     command: start --import-realm
     environment:
-      KC_HOSTNAME_URL: http://localhost:8080/auth
-      KC_HOSTNAME_ADMIN_URL: http://localhost:8080/auth
+      KC_HOSTNAME_URL: ${KEYCLOAK_EXTERNAL_URL}
+      KC_HOSTNAME_ADMIN_URL: ${KEYCLOAK_EXTERNAL_URL}
       KC_HOSTNAME_STRICT: "false"
       KC_HOSTNAME_STRICT_HTTPS: "false"
       KC_HTTP_ENABLED: "true"
@@ -87,10 +92,12 @@ services:
       context: ..
       dockerfile: services/Orchestrator.Service/Dockerfile
     environment:
-      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
-      ConnectionStrings__Redis: redis:6379
+      ASPNETCORE_URLS: ${ASPNETCORE_URLS}
+      ConnectionStrings__RabbitMq: ${RABBIT_URL}
+      ConnectionStrings__Redis: ${REDIS_URL}
       Redis__InstanceName: ScrapperService
-      ASPNETCORE_URLS: http://+:8080
+      Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
+      Keycloak__Realm: ${KEYCLOAK_REALM}
     depends_on:
       - rabbitmq
       - redis
@@ -100,12 +107,13 @@ services:
     build:
       context: ..
       dockerfile: services/Scraper.Service/Dockerfile
+    env_file:
+      - .env
+      - .env.secrets
     environment:
-      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
-      ConnectionStrings__Redis: redis:6379,abortConnect=false
-      ASPNETCORE_URLS: http://+:8080
-      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
-      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
+      ASPNETCORE_URLS: ${ASPNETCORE_URLS}
+      ConnectionStrings__RabbitMq: ${RABBIT_URL}
+      ConnectionStrings__Redis: ${REDIS_URL},abortConnect=false
     depends_on:
       - rabbitmq
       - redis
@@ -117,8 +125,10 @@ services:
       context: ..
       dockerfile: services/Notification.Service/Dockerfile
     environment:
-      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
-      ASPNETCORE_URLS: http://+:8080
+      ASPNETCORE_URLS: ${ASPNETCORE_URLS}
+      ConnectionStrings__RabbitMq: ${RABBIT_URL}
+      Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
+      Keycloak__Realm: ${KEYCLOAK_REALM}
     depends_on:
       - rabbitmq
 
@@ -154,9 +164,11 @@ services:
       context: ..
       dockerfile: services/Artists.Service/Dockerfile
     environment:
+      ASPNETCORE_URLS: ${ASPNETCORE_URLS}
       ConnectionStrings__DefaultConnection: Host=artist-db;Port=5432;Database=artist_db;Username=admin;Password=123
-      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
-      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__RabbitMq: ${RABBIT_URL}
+      Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
+      Keycloak__Realm: ${KEYCLOAK_REALM}
     depends_on:
       artist-db:
         condition: service_healthy
@@ -193,9 +205,11 @@ services:
       context: ..
       dockerfile: services/Catalog.Service/Dockerfile
     environment:
+      ASPNETCORE_URLS: ${ASPNETCORE_URLS}
       ConnectionStrings__DefaultConnection: Host=catalog-db;Port=5432;Database=catalog_db;Username=admin;Password=123
-      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
-      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__RabbitMq: ${RABBIT_URL}
+      Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
+      Keycloak__Realm: ${KEYCLOAK_REALM}
     depends_on:
       catalog-db:
         condition: service_healthy

@@ -26,7 +26,9 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
-builder.Services.AddKeycloakAuthentication("http://keycloak:8080/auth/realms/music-catalog");
+builder.Services.AddKeycloakAuthentication(
+    $"{builder.Configuration["Keycloak:InternalUrl"]}/realms/{builder.Configuration["Keycloak:Realm"]}"
+);
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
