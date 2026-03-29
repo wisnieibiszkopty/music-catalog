@@ -14,7 +14,7 @@ COPY ["src/shared/Shared/Shared.csproj", "src/shared/Shared/"]
 COPY ["src/shared/Contracts/Contracts.csproj", "src/shared/Contracts/"]
 
 RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
-    dotnet restore "src/services/Catalog.Service/Catalog.Service.csproj"--platform=$BUILDPLATFORM
+    dotnet restore "src/services/Catalog.Service/Catalog.Service.csproj" -a $TARGETARCH
     
 COPY . .
 WORKDIR "/src/src/services/Catalog.Service"
