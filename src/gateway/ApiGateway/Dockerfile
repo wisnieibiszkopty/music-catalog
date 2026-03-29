@@ -40,5 +40,11 @@ RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
 
 FROM base AS final
 WORKDIR /app
+
+LABEL \
+    org.opencontainers.image.title="api-gateway" \
+    org.opencontainers.image.description="Api gateway" \
+    org.opencontainers.image.source="https://github.com/wisnieibiszkopty/music-catalog"
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["./ApiGateway"]

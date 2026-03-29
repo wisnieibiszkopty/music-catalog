@@ -28,6 +28,12 @@ RUN dotnet publish "./Notification.Service.csproj" -c $BUILD_CONFIGURATION -o /a
 
 FROM base AS final
 WORKDIR /app
+
+LABEL \
+    org.opencontainers.image.title="notification-service" \
+    org.opencontainers.image.description="Notification microservice" \
+    org.opencontainers.image.source="https://github.com/wisnieibiszkopty/music-catalog"
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Notification.Service.dll"]
 

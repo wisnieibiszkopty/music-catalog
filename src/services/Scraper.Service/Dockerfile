@@ -28,5 +28,11 @@ RUN dotnet publish "./Scraper.Service.csproj" -c $BUILD_CONFIGURATION -o /app/pu
 
 FROM base AS final
 WORKDIR /app
+
+LABEL \
+    org.opencontainers.image.title="scraper-service" \
+    org.opencontainers.image.description="Scraper microservice" \
+    org.opencontainers.image.source="https://github.com/wisnieibiszkopty/music-catalog"
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Scraper.Service.dll"]

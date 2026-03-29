@@ -28,5 +28,11 @@ RUN dotnet publish "./Catalog.Service.csproj" -c $BUILD_CONFIGURATION -o /app/pu
 
 FROM base AS final
 WORKDIR /app
+
+LABEL \
+    org.opencontainers.image.title="catalog-service" \
+    org.opencontainers.image.description="Catalog microservice" \
+    org.opencontainers.image.source="https://github.com/twoje-repo"
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Catalog.Service.dll"]

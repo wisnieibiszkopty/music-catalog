@@ -28,5 +28,11 @@ RUN dotnet publish "./Orchestrator.Service.csproj" -c $BUILD_CONFIGURATION -o /a
 
 FROM base AS final
 WORKDIR /app
+
+LABEL \
+    org.opencontainers.image.title="orchestrator-service" \
+    org.opencontainers.image.description="Orchestrator microservice" \
+    org.opencontainers.image.source="https://github.com/wisnieibiszkopty/music-catalog"
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Orchestrator.Service.dll"]
