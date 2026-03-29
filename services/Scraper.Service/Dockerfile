@@ -9,22 +9,23 @@ ARG TARGETARCH
 
 WORKDIR /src
 
-COPY ["src/services/Scraper.Service/Scraper.Service.csproj", "src/services/Scraper.Service/"]
-COPY ["src/shared/Shared/Shared.csproj", "src/shared/Shared/"]
-COPY ["src/shared/Contracts/Contracts.csproj", "src/shared/Contracts/"]
+COPY ["services/Scraper.Service/Scraper.Service.csproj", "services/Scraper.Service/"]
+COPY ["shared/Shared/Shared.csproj", "shared/Shared/"]
+COPY ["shared/Contracts/Contracts.csproj", "shared/Contracts/"]
 
 RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
-    dotnet restore "src/services/Scraper.Service/Scraper.Service.csproj" -a $TARGETARCH
-    
-COPY . .
-WORKDIR "/src/src/services/Scraper.Service"
+    dotnet restore "services/Scraper.Service/Scraper.Service.csproj" -a $TARGETARCH
 
+COPY services/Scraper.Service/ services/Scraper.Service/
+COPY shared/ shared/
+
+WORKDIR "/src/services/Scraper.Service"
 RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
-    dotnet build "./Scraper.Service.csproj" -c $BUILD_CONFIGURATION -o /app/build --no-restore -a $TARGETARCH
+    dotnet build ./ -c $BUILD_CONFIGURATION -o /app/build --no-restore -a $TARGETARCH
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Scraper.Service.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false -a $TARGETARCH
+RUN dotnet publish ./ -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false -a $TARGETARCH
 
 FROM base AS final
 WORKDIR /app

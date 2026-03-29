@@ -9,22 +9,23 @@ ARG TARGETARCH
 
 WORKDIR /src
 
-COPY ["src/services/Orchestrator.Service/Orchestrator.Service.csproj", "src/services/Orchestrator.Service/"]
-COPY ["src/shared/Shared/Shared.csproj", "src/shared/Shared/"]
-COPY ["src/shared/Contracts/Contracts.csproj", "src/shared/Contracts/"]
+COPY ["services/Orchestrator.Service/Orchestrator.Service.csproj", "services/Orchestrator.Service/"]
+COPY ["shared/Shared/Shared.csproj", "shared/Shared/"]
+COPY ["shared/Contracts/Contracts.csproj", "shared/Contracts/"]
 
 RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
-    dotnet restore "src/services/Orchestrator.Service/Orchestrator.Service.csproj" -a $TARGETARCH
-    
-COPY . .
-WORKDIR "/src/src/services/Orchestrator.Service"
+    dotnet restore "services/Orchestrator.Service/Orchestrator.Service.csproj" -a $TARGETARCH
 
+COPY services/Orchestrator.Service/ services/Orchestrator.Service/
+COPY shared/ shared/
+
+WORKDIR "/src/services/Orchestrator.Service"
 RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
-    dotnet build "./Orchestrator.Service.csproj" -c $BUILD_CONFIGURATION -o /app/build --no-restore -a $TARGETARCH
+    dotnet build ./ -c $BUILD_CONFIGURATION -o /app/build --no-restore -a $TARGETARCH
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Orchestrator.Service.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false -a $TARGETARCH
+RUN dotnet publish ./ -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false -a $TARGETARCH
 
 FROM base AS final
 WORKDIR /app

@@ -4,11 +4,11 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-COPY pnpm-lock.yaml package.json ./
+COPY ["frontend/package.json", "frontend/pnpm-lock.yaml", "./"]
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
-COPY . .
+COPY frontend/ .
 
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL

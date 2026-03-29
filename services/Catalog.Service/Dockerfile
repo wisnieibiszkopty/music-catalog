@@ -9,22 +9,23 @@ ARG TARGETARCH
 
 WORKDIR /src
 
-COPY ["src/services/Catalog.Service/Catalog.Service.csproj", "src/services/Catalog.Service/"]
-COPY ["src/shared/Shared/Shared.csproj", "src/shared/Shared/"]
-COPY ["src/shared/Contracts/Contracts.csproj", "src/shared/Contracts/"]
+COPY ["services/Catalog.Service/Catalog.Service.csproj", "services/Catalog.Service/"]
+COPY ["shared/Shared/Shared.csproj", "shared/Shared/"]
+COPY ["shared/Contracts/Contracts.csproj", "shared/Contracts/"]
 
 RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
-    dotnet restore "src/services/Catalog.Service/Catalog.Service.csproj" -a $TARGETARCH
+    dotnet restore "services/Catalog.Service/Catalog.Service.csproj" -a $TARGETARCH
     
-COPY . .
-WORKDIR "/src/src/services/Catalog.Service"
+COPY services/Catalog.Service/ services/Catalog.Service/
+COPY shared/ shared/
 
+WORKDIR "/src/services/Catalog.Service"
 RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
-    dotnet build "./Catalog.Service.csproj" -c $BUILD_CONFIGURATION -o /app/build --no-restore -a $TARGETARCH
+    dotnet build ./ -c $BUILD_CONFIGURATION -o /app/build --no-restore -a $TARGETARCH
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Catalog.Service.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false -a $TARGETARCH
+RUN dotnet publish ./ -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false -a $TARGETARCH
 
 FROM base AS final
 WORKDIR /app
@@ -32,7 +33,7 @@ WORKDIR /app
 LABEL \
     org.opencontainers.image.title="catalog-service" \
     org.opencontainers.image.description="Catalog microservice" \
-    org.opencontainers.image.source="https://github.com/twoje-repo"
+    org.opencontainers.image.source="https://github.com/wisnieibiszkopty/music-catalog"
 
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Catalog.Service.dll"]
