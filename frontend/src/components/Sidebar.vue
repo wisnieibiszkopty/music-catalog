@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import keycloak from '@/services/core/keycloak';
+import keycloak from '@/services/core/keycloak'
 import type { NavigationMenuItem } from '@nuxt/ui'
 import ArtistScraper from '@/components/ArtistScraper.vue'
+import { baseUrl } from '@/services/core/api.ts'
 
 const items: NavigationMenuItem[] = [
   {
@@ -9,7 +10,17 @@ const items: NavigationMenuItem[] = [
     icon: 'i-lucide-inbox',
     to: '/artists',
   },
-];
+]
+
+const adminItems: NavigationMenuItem[] = [
+  ...items,
+  {
+    label: 'Grafana dashboard',
+    icon: 'i-lucide-chart-line',
+    href: `${baseUrl}/grafana/`,
+    target: '_blank'
+  },
+]
 
 const notLoggedInBottomItems: NavigationMenuItem = [
   {
@@ -17,38 +28,37 @@ const notLoggedInBottomItems: NavigationMenuItem = [
     icon: 'i-lucide-log-in',
     onSelect: () => {
       keycloak.login({
-        redirectUri: window.location.origin
-      });
-    }
+        redirectUri: window.location.origin,
+      })
+    },
   },
   {
     label: 'Register',
     icon: 'i-lucide-user-plus',
     onSelect: () => {
       keycloak.register({
-        redirectUri: window.location.origin
-      });
-    }
+        redirectUri: window.location.origin,
+      })
+    },
   },
-];
+]
 
 const loggedInBottomItems: NavigationMenuItem = [
   {
     label: `Welcome ${keycloak.tokenParsed?.preferred_username}`,
     icon: 'i-lucide-user',
-    active: false
+    active: false,
   },
   {
     label: 'Logout',
     icon: 'i-lucide-log-out',
     onSelect: () => {
       keycloak.logout({
-        redirectUri: window.location.origin
+        redirectUri: window.location.origin,
       })
-    }
-  }
-];
-
+    },
+  },
+]
 </script>
 
 <template>
@@ -60,11 +70,11 @@ const loggedInBottomItems: NavigationMenuItem = [
     </template>
 
     <template #default="{ collapsed }">
-      <ArtistScraper :collapsed="collapsed"/>
+      <ArtistScraper :collapsed="collapsed" />
 
       <UNavigationMenu
         :collapsed="collapsed"
-        :items="items"
+        :items="keycloak.authenticated ? adminItems : items"
         orientation="vertical"
       />
 
@@ -78,6 +88,4 @@ const loggedInBottomItems: NavigationMenuItem = [
   </UDashboardSidebar>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

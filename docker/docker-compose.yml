@@ -34,6 +34,9 @@ services:
       Keycloak__Realm: ${KEYCLOAK_REALM}
       Keycloak__Audience: ${KEYCLOAK_AUDIENCE}
       AllowedOrigins__0: ${GATEWAY_URL}
+      AllowedOrigins__1: ${GATEWAY_URL_2}
+    networks:
+      - default
     depends_on:
       - keycloak
       - artist-service
@@ -215,6 +218,54 @@ services:
         condition: service_healthy
   
   # observability
+  loki:
+    container_name: loki
+    image: grafana/loki:3.7
+    expose:
+      - "3100"
+    volumes:
+      - ./config/loki-config.yaml:/etc/loki/local-config.yaml
+      - loki-data:/loki
+    networks:
+      - logging
+    command: -config.file=/etc/loki/local-config.yaml
+  
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:3.6
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro 
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./config/promtail-config.yaml:/etc/promtail/config.yaml
+    networks:
+      - logging
+    command: -config.file=/etc/promtail/config.yaml
+  
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:12.3.6
+    volumes:
+      - ./config/grafana-ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=123
+      - GF_ANALYTICS_REPORTING_ENABLED=false
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_SECURITY_COOKIE_SAMESITE=lax
+      - GF_SERVER_ENABLE_GZIP=true
+    networks:
+      - logging
+      - default
+  
+networks:
+  default:
+  logging:
+    driver: bridge
+    internal: false
   
 volumes:
   keycloak-data:
@@ -223,3 +274,5 @@ volumes:
   redis-data:
   rabbitmq-data:
   rabbitmq-log:
+  loki-data:
+  grafana-data:

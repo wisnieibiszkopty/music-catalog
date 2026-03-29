@@ -6,10 +6,12 @@ using Shared.Errors;
 
 namespace Catalog.Service.Core.Services;
 
-public class CatalogService(CatalogDbContext db) : ICatalogService
+public class CatalogService(CatalogDbContext db, ILogger<CatalogService> logger) : ICatalogService
 {
     public async Task<List<AlbumDto>> GetAlbumsByArtistId(string artistId)
     {
+        logger.LogInformation("Fetching albums for artist {ArtistId}", artistId);
+        
         return await db.Albums
             .AsNoTracking()
             .Where(a => a.ArtistId == artistId)
