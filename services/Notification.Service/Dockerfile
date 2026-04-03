@@ -13,20 +13,20 @@ COPY ["services/Notification.Service/Notification.Service.csproj", "services/Not
 COPY ["shared/Shared/Shared.csproj", "shared/Shared/"]
 COPY ["shared/Contracts/Contracts.csproj", "shared/Contracts/"]
 
-RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
+RUN --mount=type=cache,id=nuget-Notification-$TARGETARCH,target=/root/.nuget/packages \
     dotnet restore "services/Notification.Service/Notification.Service.csproj" -a $TARGETARCH
 
 COPY services/Notification.Service/ services/Notification.Service/
 COPY shared/ shared/
 
 WORKDIR "/src/services/Notification.Service"
-RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
+RUN --mount=type=cache,id=nuget-Notification-$TARGETARCH,target=/root/.nuget/packages \
     dotnet build ./ -c $BUILD_CONFIGURATION -o /app/build --no-restore -a $TARGETARCH
 
 FROM build AS publish
 ARG TARGETARCH
 ARG BUILD_CONFIGURATION=Release
-RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
+RUN --mount=type=cache,id=nuget-Notification-$TARGETARCH,target=/root/.nuget/packages \
     dotnet publish "Notification.Service.csproj" -c $BUILD_CONFIGURATION -a $TARGETARCH -o /app/publish /p:UseAppHost=false --no-restore
 
 FROM base AS final

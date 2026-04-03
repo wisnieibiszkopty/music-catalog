@@ -13,20 +13,20 @@ COPY ["services/Orchestrator.Service/Orchestrator.Service.csproj", "services/Orc
 COPY ["shared/Shared/Shared.csproj", "shared/Shared/"]
 COPY ["shared/Contracts/Contracts.csproj", "shared/Contracts/"]
 
-RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
+RUN --mount=type=cache,id=nuget-Orchestrator-$TARGETARCH,target=/root/.nuget/packages \
     dotnet restore "services/Orchestrator.Service/Orchestrator.Service.csproj" -a $TARGETARCH
 
 COPY services/Orchestrator.Service/ services/Orchestrator.Service/
 COPY shared/ shared/
 
 WORKDIR "/src/services/Orchestrator.Service"
-RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
+RUN --mount=type=cache,id=nuget-Orchestrator-$TARGETARCH,target=/root/.nuget/packages \
     dotnet build ./ -c $BUILD_CONFIGURATION -o /app/build --no-restore -a $TARGETARCH
 
 FROM build AS publish
 ARG TARGETARCH
 ARG BUILD_CONFIGURATION=Release
-RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
+RUN --mount=type=cache,id=nuget-Orchestrator-$TARGETARCH,target=/root/.nuget/packages \
     dotnet publish "Orchestrator.Service.csproj" -c $BUILD_CONFIGURATION -a $TARGETARCH -o /app/publish /p:UseAppHost=false --no-restore
 
 FROM base AS final

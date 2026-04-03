@@ -11,3 +11,7 @@
 ## Albums scraper event flow
 
 ![Architecture overview](docs/albums-scraper-flow.png)
+
+## Docker compose schema
+
+![Docker compose schema](docs/docker-compse-schema.svg)

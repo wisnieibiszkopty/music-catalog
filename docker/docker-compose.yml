@@ -9,6 +9,8 @@ services:
       RABBITMQ_LOGS: "-"
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - internal
     deploy:
       resources:
         limits:
@@ -26,6 +28,8 @@ services:
     command: [ "redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}" ]
     volumes:
       - redis-data:/data
+    networks:
+      - internal
     deploy:
       resources:
         limits:
@@ -46,13 +50,14 @@ services:
       Keycloak__Audience: ${KEYCLOAK_AUDIENCE}
       AllowedOrigins__0: ${GATEWAY_URL}
       AllowedOrigins__1: ${GATEWAY_URL_2}
+    networks:
+      - frontend
+      - internal
     deploy:
       resources:
         limits:
           cpus: '0.5'
           memory: 80M
-    networks:
-      - default
     depends_on:
       - keycloak
 
@@ -64,6 +69,8 @@ services:
       dockerfile: frontend/Dockerfile
       args:
         - VITE_API_URL=${GATEWAY_URL}
+    networks:
+      - frontend
     deploy:
       resources:
         limits:
@@ -75,11 +82,18 @@ services:
     image: postgres:18-alpine
     container_name: keycloak-db
     environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: keycloak
+      POSTGRES_DB: ${KEYCLOAK_DB_NAME}
+      POSTGRES_USER: ${KEYCLOAK_DB_USER}
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASS}
     volumes:
       - keycloak-data:/var/lib/postgresql/data
+    networks:
+      - keycloak
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 100M
     restart: unless-stopped
 
   keycloak:
@@ -99,14 +113,23 @@ services:
       KC_DB: postgres
       KC_DB_SCHEMA: public
       KC_DB_URL_HOST: keycloak-db
-      KC_DB_URL_DATABASE: keycloak
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: keycloak
+      KC_DB_URL_DATABASE: ${KEYCLOAK_DB_NAME}
+      KC_DB_USERNAME: ${KEYCLOAK_DB_USER}
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASS}
       # Admin
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASS}
     volumes:
       - ./config/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    networks:
+      - keycloak
+      - internal
+      - frontend
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1.5GB
     restart: unless-stopped
     depends_on:
       - keycloak-db
@@ -124,7 +147,13 @@ services:
       Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
       Keycloak__Realm: ${KEYCLOAK_REALM}
     networks:
-      - default
+      - internal
+      - logging
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 80M
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -141,7 +170,13 @@ services:
       ConnectionStrings__RabbitMq: ${RABBIT_URL}
       ConnectionStrings__Redis: ${REDIS_URL},abortConnect=false
     networks:
-      - default
+      - internal
+      - logging
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 80M
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -157,7 +192,13 @@ services:
       Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
       Keycloak__Realm: ${KEYCLOAK_REALM}
     networks:
-      - default
+      - internal
+      - logging
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 80M
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -167,11 +208,18 @@ services:
     image: postgres:18-alpine
     container_name: artist-db
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=123
-      - POSTGRES_DB=artist_db
+      POSTGRES_USER: ${ARTIST_DB_USER}
+      POSTGRES_PASSWORD: ${ARTIST_DB_PASS}
+      POSTGRES_DB: ${ARTIST_DB_NAME}
     volumes:
       - artist-data:/var/lib/postgresql
+    networks:
+      - artists
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 100M
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U admin -d artist_db" ]
       interval: 5s
@@ -183,10 +231,12 @@ services:
     container_name: artist-db-migrator
     volumes:
       - ../services/Artists.Service/migrations:/flyway/sql
+    networks:
+      - artists
     depends_on:
       artist-db:
         condition: service_healthy
-    command: -url=jdbc:postgresql://artist-db:5432/artist_db -user=admin -password=123 -connectRetries=60 migrate
+    command: -url=${ARTIST_DB_URL} -user=${ARTIST_DB_USER} -password=${ARTIST_DB_PASS} -connectRetries=60 migrate
 
   artist-service:
     container_name: artist-service
@@ -194,14 +244,21 @@ services:
       context: ..
       dockerfile: services/Artists.Service/Dockerfile
     environment:
-      ConnectionStrings__DefaultConnection: Host=artist-db;Port=5432;Database=artist_db;Username=admin;Password=123
+      ConnectionStrings__DefaultConnection: Host=artist-db;Port=5432;Database=${ARTIST_DB_NAME};Username=${ARTIST_DB_USER};Password=${ARTIST_DB_PASS}
       ConnectionStrings__RabbitMq: ${RABBIT_URL}
       Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
       Keycloak__Realm: ${KEYCLOAK_REALM}
       Otlp__Endpoint: ${OTLP_ENDPOINT_URL}
       NPGSQL_GSSAPI_LIBRARIES: ""
     networks:
-      - default
+      - artists
+      - internal
+      - logging
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 80M
     depends_on:
       artist-db:
         condition: service_healthy
@@ -213,13 +270,20 @@ services:
     image: postgres:18-alpine
     container_name: catalog-db
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=123
-      - POSTGRES_DB=catalog_db
+      POSTGRES_USER: ${CATALOG_DB_USER}
+      POSTGRES_PASSWORD: ${CATALOG_DB_PASS}
+      POSTGRES_DB: ${CATALOG_DB_NAME}
     volumes:
       - catalog-data:/var/lib/postgresql
+    networks:
+      - catalog
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 100M
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U admin -d catalog_db" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${CATALOG_DB_USER} -d ${CATALOG_DB_NAME}" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -229,10 +293,12 @@ services:
     container_name: catalog-db-migrator
     volumes:
       - ../services/Catalog.Service/migrations:/flyway/sql
+    networks:
+      - catalog
     depends_on:
-      artist-db:
+      catalog-db:
         condition: service_healthy
-    command: -url=jdbc:postgresql://catalog-db:5432/catalog_db -user=admin -password=123 -connectRetries=60 migrate
+    command: -url=${CATALOG_DB_URL} -user=${CATALOG_DB_USER} -password=${CATALOG_DB_PASS} -connectRetries=60 migrate
 
   catalog-service:
     container_name: catalog-service
@@ -240,12 +306,19 @@ services:
       context: ..
       dockerfile: services/Catalog.Service/Dockerfile
     environment:
-      ConnectionStrings__DefaultConnection: Host=catalog-db;Port=5432;Database=catalog_db;Username=admin;Password=123
+      ConnectionStrings__DefaultConnection: Host=catalog-db;Port=5432;Database=${CATALOG_DB_NAME};Username=${CATALOG_DB_USER};Password=${CATALOG_DB_PASS}
       ConnectionStrings__RabbitMq: ${RABBIT_URL}
       Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
       Keycloak__Realm: ${KEYCLOAK_REALM}
     networks:
-      - default
+      - catalog
+      - internal
+      - logging
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 80M
     depends_on:
       catalog-db:
         condition: service_healthy
@@ -256,13 +329,16 @@ services:
   loki:
     container_name: loki
     image: grafana/loki:3.7
-    expose:
-      - "3100"
     volumes:
       - ./config/loki-config.yaml:/etc/loki/local-config.yaml
       - loki-data:/loki
     networks:
       - logging
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
     command: -config.file=/etc/loki/local-config.yaml
   
   promtail:
@@ -274,6 +350,11 @@ services:
       - ./config/promtail-config.yaml:/etc/promtail/config.yaml
     networks:
       - logging
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 128M
     command: -config.file=/etc/promtail/config.yaml
   
   grafana:
@@ -282,6 +363,9 @@ services:
     volumes:
       - ./config/grafana-ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
       - grafana-data:/var/lib/grafana
+    networks:
+      - logging
+      - frontend
     environment:
       - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana/
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
@@ -292,9 +376,11 @@ services:
       - GF_SECURITY_ALLOW_EMBEDDING=true
       - GF_SECURITY_COOKIE_SAMESITE=lax
       - GF_SERVER_ENABLE_GZIP=true
-    networks:
-      - logging
-      - default
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
   
   prometheus:
     image: prom/prometheus:v3.10.0
@@ -302,12 +388,16 @@ services:
     volumes:
       - ./config/prometheus.yaml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
+    networks:
+      - logging
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
-    networks: 
-      - default
-      - logging
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 80M
   
   tempo:
     image: grafana/tempo:2.6.1
@@ -318,13 +408,11 @@ services:
       - tempo-data:/var/lib/tempo
     networks:
       - logging
-      - default
-  
-networks:
-  default:
-  logging:
-    driver: bridge
-    internal: false
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
   
 volumes:
   rabbitmq-data:
@@ -336,3 +424,17 @@ volumes:
   grafana-data:
   prometheus-data:
   tempo-data:
+    
+networks:
+  frontend:
+    driver: bridge
+  internal:
+    driver: bridge
+  logging:
+    driver: bridge
+  artists:
+    internal: true
+  catalog:
+    internal: true
+  keycloak:
+    internal: true
