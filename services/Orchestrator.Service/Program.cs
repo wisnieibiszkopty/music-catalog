@@ -1,12 +1,17 @@
 using MassTransit;
+using Microsoft.AspNetCore.DataProtection;
 using Orchestrator.Service;
 using Orchestrator.Service.Core.Saga;
 using Shared.Auth;
+using Shared.Constants;
 using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.AddLogging("orchestrator-service");
+
+builder.Services.AddDataProtection()
+    .UseEphemeralDataProtectionProvider();
 
 builder.Services.AddMassTransit(x =>
 {
@@ -22,8 +27,12 @@ builder.Services.AddMassTransit(x =>
     {
         var connectionString = builder.Configuration.GetConnectionString("RabbitMq")!;
         config.Host(new Uri(connectionString));
-        config.UseMessageRetry(r => r.Interval(5, TimeSpan.FromSeconds(10)));
         
+        config.UseMessageRetry(r => r.Incremental(
+            BrokerConnection.RetryLimit,
+            TimeSpan.FromSeconds(BrokerConnection.InitialInterval),
+            TimeSpan.FromSeconds(BrokerConnection.IntervalIncrement))
+        );
         config.ConfigureEndpoints(context);
     });
 });

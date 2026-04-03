@@ -6,6 +6,7 @@ using Artists.Service.Core.Services;
 using Artists.Service.Core.Validators;
 using FluentValidation;
 using MassTransit;
+using Microsoft.AspNetCore.DataProtection;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -13,12 +14,16 @@ using OpenTelemetry.Trace;
 using Scalar.AspNetCore;
 using Shared;
 using Shared.Auth;
+using Shared.Constants;
 using Shared.Errors;
 using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.AddLogging("artists-service");
+
+builder.Services.AddDataProtection()
+    .UseEphemeralDataProtectionProvider();
 
 // TODO move to extenstion method
 var otel = builder.Services.AddOpenTelemetry();
@@ -42,7 +47,7 @@ otel.WithTracing(tracing =>
         .AddHttpClientInstrumentation()
         .AddSource("MassTransit");
     
-    var endpoint = builder.Configuration["Oltp:Endpoint"];
+    var endpoint = builder.Configuration["Otlp:Endpoint"];
     if (!string.IsNullOrEmpty(endpoint))
     {
         tracing.AddOtlpExporter(opt =>
@@ -62,6 +67,11 @@ builder.Services.AddMassTransit(x =>
         var connectionString = builder.Configuration.GetConnectionString("RabbitMq")!;
         config.Host(new Uri(connectionString));
         
+        config.UseMessageRetry(r => r.Incremental(
+            BrokerConnection.RetryLimit,
+            TimeSpan.FromSeconds(BrokerConnection.InitialInterval),
+            TimeSpan.FromSeconds(BrokerConnection.IntervalIncrement))
+        );
         config.ConfigureEndpoints(context);
     });
 });

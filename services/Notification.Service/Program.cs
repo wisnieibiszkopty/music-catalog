@@ -1,12 +1,17 @@
 using MassTransit;
+using Microsoft.AspNetCore.DataProtection;
 using Notification.Service.Core.Consumers;
 using Notification.Service.Core.Hubs;
 using Shared.Auth;
+using Shared.Constants;
 using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.AddLogging("notification-service");
+
+builder.Services.AddDataProtection()
+    .UseEphemeralDataProtectionProvider();
 
 builder.Services.AddMassTransit(x =>
 {
@@ -19,6 +24,11 @@ builder.Services.AddMassTransit(x =>
         var connectionString = builder.Configuration.GetConnectionString("RabbitMq");
         config.Host(new Uri(connectionString!));
         
+        config.UseMessageRetry(r => r.Incremental(
+            BrokerConnection.RetryLimit,
+            TimeSpan.FromSeconds(BrokerConnection.InitialInterval),
+            TimeSpan.FromSeconds(BrokerConnection.IntervalIncrement))
+        );
         config.ConfigureEndpoints(context);
     });
 });

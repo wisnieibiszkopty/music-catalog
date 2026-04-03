@@ -1,24 +1,36 @@
 services:
   rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: rabbitmq
-    expose:
-      - "5672"  
+    image: rabbitmq:3-alpine
+    container_name: rabbitmq  
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_NODENAME: rabbit@rabbitmq
+      RABBITMQ_LOGS: "-"
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
-      - rabbitmq-log:/var/log/rabbitmq
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:8.6-alpine
     container_name: redis
-    ports:
-      - "6379:6379"
+    command: [ "redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}" ]
     volumes:
       - redis-data:/data
-    command: [ "redis-server", "--appendonly", "yes" ]
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 256M
 
   api-gateway:
     container_name: api-gateway
@@ -28,19 +40,21 @@ services:
     ports:
       - "8080:8080"
     environment:
-      ASPNETCORE_URLS: ${ASPNETCORE_URLS}
       Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
       Keycloak__ExternalUrl: ${KEYCLOAK_EXTERNAL_URL}
       Keycloak__Realm: ${KEYCLOAK_REALM}
       Keycloak__Audience: ${KEYCLOAK_AUDIENCE}
       AllowedOrigins__0: ${GATEWAY_URL}
       AllowedOrigins__1: ${GATEWAY_URL_2}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 80M
     networks:
       - default
     depends_on:
       - keycloak
-      - artist-service
-      - orchestrator-service  
 
   # frontend      
   web-app:
@@ -50,6 +64,11 @@ services:
       dockerfile: frontend/Dockerfile
       args:
         - VITE_API_URL=${GATEWAY_URL}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 80M
   
   # identity provider
   keycloak-db:
@@ -68,18 +87,22 @@ services:
     container_name: keycloak
     command: start --import-realm
     environment:
+      # Proxy / hostname
       KC_HOSTNAME_URL: ${KEYCLOAK_EXTERNAL_URL}
       KC_HOSTNAME_ADMIN_URL: ${KEYCLOAK_EXTERNAL_URL}
+      KC_PROXY_HEADERS: xforwarded
+      KC_HTTP_ENABLED: "true"
       KC_HOSTNAME_STRICT: "false"
       KC_HOSTNAME_STRICT_HTTPS: "false"
-      KC_HTTP_ENABLED: "true"
-      KC_PROXY_HEADERS: xforwarded
       KC_HTTP_RELATIVE_PATH: /auth
+      # Database
       KC_DB: postgres
+      KC_DB_SCHEMA: public
       KC_DB_URL_HOST: keycloak-db
       KC_DB_URL_DATABASE: keycloak
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: keycloak
+      # Admin
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
     volumes:
@@ -95,7 +118,6 @@ services:
       context: ..
       dockerfile: services/Orchestrator.Service/Dockerfile
     environment:
-      ASPNETCORE_URLS: ${ASPNETCORE_URLS}
       ConnectionStrings__RabbitMq: ${RABBIT_URL}
       ConnectionStrings__Redis: ${REDIS_URL}
       Redis__InstanceName: ScrapperService
@@ -104,8 +126,8 @@ services:
     networks:
       - default
     depends_on:
-      - rabbitmq
-      - redis
+      rabbitmq:
+        condition: service_healthy
     
   scraper-service:
     container_name: scraper-service
@@ -116,14 +138,13 @@ services:
       - .env
       - .env.secrets
     environment:
-      ASPNETCORE_URLS: ${ASPNETCORE_URLS}
       ConnectionStrings__RabbitMq: ${RABBIT_URL}
       ConnectionStrings__Redis: ${REDIS_URL},abortConnect=false
     networks:
       - default
     depends_on:
-      - rabbitmq
-      - redis
+      rabbitmq:
+        condition: service_healthy
 
   # notifications
   notification-service:
@@ -132,14 +153,14 @@ services:
       context: ..
       dockerfile: services/Notification.Service/Dockerfile
     environment:
-      ASPNETCORE_URLS: ${ASPNETCORE_URLS}
       ConnectionStrings__RabbitMq: ${RABBIT_URL}
       Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
       Keycloak__Realm: ${KEYCLOAK_REALM}
     networks:
       - default
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
 
   # artists
   artist-db:
@@ -173,16 +194,18 @@ services:
       context: ..
       dockerfile: services/Artists.Service/Dockerfile
     environment:
-      ASPNETCORE_URLS: ${ASPNETCORE_URLS}
       ConnectionStrings__DefaultConnection: Host=artist-db;Port=5432;Database=artist_db;Username=admin;Password=123
       ConnectionStrings__RabbitMq: ${RABBIT_URL}
       Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
       Keycloak__Realm: ${KEYCLOAK_REALM}
       Otlp__Endpoint: ${OTLP_ENDPOINT_URL}
+      NPGSQL_GSSAPI_LIBRARIES: ""
     networks:
       - default
     depends_on:
       artist-db:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
   
   # catalog
@@ -217,7 +240,6 @@ services:
       context: ..
       dockerfile: services/Catalog.Service/Dockerfile
     environment:
-      ASPNETCORE_URLS: ${ASPNETCORE_URLS}
       ConnectionStrings__DefaultConnection: Host=catalog-db;Port=5432;Database=catalog_db;Username=admin;Password=123
       ConnectionStrings__RabbitMq: ${RABBIT_URL}
       Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
@@ -226,6 +248,8 @@ services:
       - default
     depends_on:
       catalog-db:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
   
   # observability
@@ -303,12 +327,11 @@ networks:
     internal: false
   
 volumes:
+  rabbitmq-data:
+  redis-data:
   keycloak-data:
   artist-data:
   catalog-data:
-  redis-data:
-  rabbitmq-data:
-  rabbitmq-log:
   loki-data:
   grafana-data:
   prometheus-data:

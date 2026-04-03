@@ -1,6 +1,7 @@
 using MassTransit;
 using Scraper.Service.Core.Consumers;
 using Scraper.Service.Core.MusicServiceClient;
+using Shared.Constants;
 using Shared.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +34,11 @@ builder.Services.AddMassTransit(x =>
         var connectionString = builder.Configuration.GetConnectionString("RabbitMq");
         config.Host(new Uri(connectionString!));
         
+        config.UseMessageRetry(r => r.Incremental(
+            BrokerConnection.RetryLimit,
+            TimeSpan.FromSeconds(BrokerConnection.InitialInterval),
+            TimeSpan.FromSeconds(BrokerConnection.IntervalIncrement))
+        );
         config.ConfigureEndpoints(context);
     });
 });

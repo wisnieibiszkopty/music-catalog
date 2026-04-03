@@ -41,6 +41,7 @@ WORKDIR /app
 
 LABEL \
     org.opencontainers.image.title="api-gateway" \
+    org.opencontainers.image.version="0.1.0" \
     org.opencontainers.image.description="Api gateway" \
     org.opencontainers.image.source="https://github.com/wisnieibiszkopty/music-catalog"
 

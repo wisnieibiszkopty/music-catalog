@@ -1,6 +1,7 @@
 {
   "realm": "music-catalog",
   "enabled": true,
+  "sslRequired": "none",
   "registrationAllowed": true,      
   "registrationEmailAsUsername": false,
   "rememberMe": true,
@@ -10,7 +11,6 @@
   "clients": [
     {
       "clientId": "api-client",
-      
       "enabled": true,
       "protocol": "openid-connect",
       "publicClient": true,
@@ -24,8 +24,7 @@
       ],
       "webOrigins": [
         "http://localhost:8080",
-        "http://localhost:5173",
-        "+"
+        "http://localhost:5173"
       ],
       "protocolMappers": [
         {
