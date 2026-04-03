@@ -286,12 +286,12 @@ services:
       - logging
   
   tempo:
-    image: grafana/tempo:latest
+    image: grafana/tempo:2.6.1
     container_name: tempo
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./config/tempo.yaml:/etc/tempo.yaml
-      - tempo-data:/var/tempo
+      - tempo-data:/var/lib/tempo
     networks:
       - logging
       - default

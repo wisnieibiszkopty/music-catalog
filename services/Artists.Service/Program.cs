@@ -6,6 +6,7 @@ using Artists.Service.Core.Services;
 using Artists.Service.Core.Validators;
 using FluentValidation;
 using MassTransit;
+using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -44,7 +45,11 @@ otel.WithTracing(tracing =>
     var endpoint = builder.Configuration["Oltp:Endpoint"];
     if (!string.IsNullOrEmpty(endpoint))
     {
-        tracing.AddOtlpExporter(opt => opt.Endpoint = new Uri(endpoint));
+        tracing.AddOtlpExporter(opt =>
+        {
+            opt.Endpoint = new Uri(endpoint);
+            opt.Protocol = OtlpExportProtocol.Grpc;
+        });
     }
 });
 
