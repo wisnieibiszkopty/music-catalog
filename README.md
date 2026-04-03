@@ -1,5 +1,6 @@
 # music-catalog
 
+```
 music-catalog/
 ├── docker/
 │   └── docker-compose.yaml
@@ -25,6 +26,7 @@ music-catalog/
 ├── .gitignore
 ├── MusicCatalog.slnx
 └── README.md
+```
 
 ## Architecture overview
 
