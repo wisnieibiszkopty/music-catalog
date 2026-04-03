@@ -75,7 +75,7 @@ public class CatalogService(CatalogDbContext db, ILogger<CatalogService> logger)
         
         album.Tracks.ForEach(track =>
         {
-            if (track.Id != 0)
+            if (track.Id == Guid.Empty)
             {
                 var existingTrack = existingAlbum.Tracks.FirstOrDefault(t => t.Id == track.Id);
                 if (existingTrack != null)

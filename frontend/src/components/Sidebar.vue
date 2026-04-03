@@ -18,7 +18,7 @@ const adminItems: NavigationMenuItem[] = [
     label: 'Grafana dashboard',
     icon: 'i-lucide-chart-line',
     href: `${baseUrl}/grafana/`,
-    target: '_blank'
+    target: '_blank',
   },
 ]
 
@@ -63,10 +63,14 @@ const loggedInBottomItems: NavigationMenuItem = [
 
 <template>
   <UDashboardSidebar resizable :min-size="15" :default-size="25" :max-size="30" mode="drawer">
-    <!--  TODO add real logo    -->
-    <template #header="{ collapsed }">
-      <Logo v-if="!collapsed" class="h-5 w-auto shrink-0" />
-      <UIcon v-else name="i-simple-icons-nuxtdotjs" class="size-5 text-primary mx-auto" />
+    <template #header>
+      <div class="flex items-center gap-2 px-2">
+        <UIcon name="i-lucide-music" class="w-6 h-6 text-primary" />
+
+        <p class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+          Music <span class="text-primary">Catalog</span>
+        </p>
+      </div>
     </template>
 
     <template #default="{ collapsed }">
@@ -78,12 +82,16 @@ const loggedInBottomItems: NavigationMenuItem = [
         orientation="vertical"
       />
 
-      <UNavigationMenu
-        :collapsed="collapsed"
-        :items="keycloak.authenticated ? loggedInBottomItems : notLoggedInBottomItems"
-        orientation="vertical"
-        class="mt-auto"
-      />
+      <div class="mt-auto flex flex-col gap-4 p-2">
+
+        <UColorModeSelect v-if="!collapsed" class="w-full" />
+
+        <UNavigationMenu
+          :collapsed="collapsed"
+          :items="keycloak.authenticated ? loggedInBottomItems : notLoggedInBottomItems"
+          orientation="vertical"
+        />
+      </div>
     </template>
   </UDashboardSidebar>
 </template>

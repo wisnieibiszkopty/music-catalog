@@ -1,7 +1,7 @@
 namespace Catalog.Service.Core.Dto;
 
 public record TrackDto(
-    int Id,
+    Guid Id,
     string Name,
     int DurationMs,
     int TrackNumber

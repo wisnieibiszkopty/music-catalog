@@ -2,7 +2,7 @@ namespace Catalog.Service.Core.Models;
 
 public class Track
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     
     public required string AlbumId { get; set; }
     public Album Album { get; set; }

@@ -8,7 +8,7 @@ CREATE TABLE albums (
 );
 
 CREATE TABLE tracks (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     album_id TEXT NOT NULL,
     name TEXT NOT NULL,
     duration_ms INT NOT NULL,
