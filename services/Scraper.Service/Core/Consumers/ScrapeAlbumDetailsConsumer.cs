@@ -6,10 +6,12 @@ namespace Scraper.Service.Core.Consumers;
 
 public class ScrapeAlbumDetailsConsumer : IConsumer<ScrapeAlbumDetails>
 {
+    private readonly ILogger<ScrapeAlbumDetailsConsumer> _logger;
     private readonly IMusicServiceClient _client;
     
-    public ScrapeAlbumDetailsConsumer(IMusicServiceClient client)
+    public ScrapeAlbumDetailsConsumer(IMusicServiceClient client, ILogger<ScrapeAlbumDetailsConsumer> logger)
     {
+        _logger = logger;
         _client = client;
     }
     
@@ -21,11 +23,23 @@ public class ScrapeAlbumDetailsConsumer : IConsumer<ScrapeAlbumDetails>
 
         if (album == null)
         {
+            _logger.LogError(
+                "Failed consuming ScrapeAlbumDetails event. AlbumId: {AlbumId}, ArtistId: {ArtistId}",
+                albumId,
+                artistId
+            );
+            
             await context.Publish(new ScrapingFailed(context.Message.CorrelationId,
                 $"Cannot scrap data for album with id: {albumId}"));
         }
         else
         {
+            _logger.LogInformation(
+                "Consumed ScrapeAlbumDetails event. AlbumId: {AlbumId}, ArtistId: {ArtistId}",
+                albumId,
+                artistId
+            );
+            
             await context.Publish(new SaveAlbumData(context.Message.CorrelationId, album));   
         }
     }

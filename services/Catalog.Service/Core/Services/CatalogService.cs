@@ -39,6 +39,7 @@ public class CatalogService(CatalogDbContext db, ILogger<CatalogService> logger)
             var existing = await db.Albums.FindAsync(album.Id);
             if (existing is not null)
             {
+                logger.LogWarning("Conflict: Album with ID {AlbumId} already exists", album.Id);
                 throw new ResourceAlreadyExistsException();
             }
         }
@@ -50,6 +51,7 @@ public class CatalogService(CatalogDbContext db, ILogger<CatalogService> logger)
         db.Albums.Add(album);
         await db.SaveChangesAsync();
 
+        logger.LogInformation("Successfully created album {AlbumId}", album.Id);
         return album;
     }
 
@@ -65,6 +67,7 @@ public class CatalogService(CatalogDbContext db, ILogger<CatalogService> logger)
             .FirstOrDefaultAsync(a => a.Id == album.Id);
         if (existingAlbum is null)
         {
+            logger.LogWarning("Update aborted: Album {AlbumId} not found", album.Id);
             return null;
         }
 
@@ -86,11 +89,13 @@ public class CatalogService(CatalogDbContext db, ILogger<CatalogService> logger)
                 }
                 else
                 {
+                    logger.LogError("Invalid track reference {TrackId} for album {AlbumId}", track.Id, album.Id);
                     throw new Exception("Invalid track ID");
                 }
             }
             else
             {
+                logger.LogDebug("Adding new track {TrackName} to album {AlbumId}", track.Name, album.Id);
                 existingAlbum.Tracks.Add(new Track
                 {
                     Name = track.Name,
@@ -108,6 +113,8 @@ public class CatalogService(CatalogDbContext db, ILogger<CatalogService> logger)
         db.Tracks.RemoveRange(tracksToRemove);
 
         await db.SaveChangesAsync();
+        logger.LogInformation("Removing {TrackCount} tracks from album {AlbumId}", tracksToRemove.Count, album.Id);
+        
         return existingAlbum;
     }
 
@@ -116,17 +123,27 @@ public class CatalogService(CatalogDbContext db, ILogger<CatalogService> logger)
         var album = await db.Albums.FindAsync(albumId);
         if (album is null)
         {
+            logger.LogWarning("Delete failed: Album {AlbumId} does not exist", albumId);
             return false;
         }
 
         db.Albums.Remove(album);
 
-        var deletedCount = await db.SaveChangesAsync();
-        return deletedCount > 0;
+        var affectedRows = await db.SaveChangesAsync();
+        
+        var success = affectedRows > 0;
+        if (success)
+        {
+            logger.LogInformation("Successfully deleted album {AlbumId}", albumId);
+        }
+
+        return success;
     }
 
     public async Task DeleteAlbumsByArtistId(string artistId)
     {
+        logger.LogWarning("Bulk delete requested for artist {ArtistId}", artistId);
+        
         await db.Albums
             .Where(a => a.ArtistId == artistId)
             .ExecuteDeleteAsync();

@@ -23,43 +23,79 @@ public class SpotifyClient : IMusicServiceClient
 
     private async Task SetBearerToken()
     {
-        var token = await _bearerTokenProvider.GetTokenAsync();
-        _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        try
+        {
+            var token = await _bearerTokenProvider.GetTokenAsync();
+            _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogCritical(ex, "Failed to retrieve Spotify Bearer Token. Authentication is impossible.");
+            throw;
+        }
     }
     
     public async Task<ArtistDetails> GetArtistByName(string name)
     {
-        await SetBearerToken();
+        try
+        {
+            await SetBearerToken();
+            var artistId = await GetArtistId(name);
 
-        var artistId = await GetArtistId(name);
-        var artistDetails = await GetArtistDetails(artistId!);
-        
-        return artistDetails;
+            if (string.IsNullOrEmpty(artistId))
+            {
+                _logger.LogWarning("Artist search returned no results for name: {ArtistName}", name);
+                throw new KeyNotFoundException($"Artist '{name}' not found on Spotify.");
+            }
+
+            return await GetArtistDetails(artistId);
+        }
+        catch (Exception ex) when (ex is not KeyNotFoundException)
+        {
+            _logger.LogError(ex, "Unexpected error while fetching artist by name: {ArtistName}", name);
+            throw;
+        }
     }
 
     private async Task<string?> GetArtistId(string artistName)
     {
         var url = $"search?q={Uri.EscapeDataString(artistName)}&type=artist&limit=1";
+        
+        _logger.LogDebug("Calling Spotify Search API for: {ArtistName}", artistName);
         var response = await _http.GetAsync(url);
+        
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Spotify Search API failed. Status: {StatusCode}, Artist: {ArtistName}", 
+                (int)response.StatusCode, artistName);
+        }
+        
         response.EnsureSuccessStatusCode();
         
         var body = await response.Content.ReadAsStringAsync();
-
-        var extractor = new ArtistExtractor();
-        var artistId = extractor.ExtractArtistId(body);
+        var artistId = new ArtistExtractor().ExtractArtistId(body);
+        
         return artistId;
     }
 
     private async Task<ArtistDetails> GetArtistDetails(string artistId)
     {
         var url = $"artists/{Uri.EscapeDataString(artistId)}";
+        
+        _logger.LogDebug("Calling Spotify Artist Details API. ArtistId: {ArtistId}", artistId);
         var response = await _http.GetAsync(url);
+        
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Spotify Artist Details API failed. Status: {StatusCode}, ArtistId: {ArtistId}", 
+                (int)response.StatusCode, artistId);
+        }
+        
         response.EnsureSuccessStatusCode();
         
         var body = await response.Content.ReadAsStringAsync();
+        var artistDetails = new ArtistExtractor().ExtractArtistDetails(body);
         
-        var extractor = new ArtistExtractor();
-        var artistDetails = extractor.ExtractArtistDetails(body);
         return artistDetails;
     }
     
@@ -72,6 +108,8 @@ public class SpotifyClient : IMusicServiceClient
         const int limit = 10;
         int total = 0;
         
+        _logger.LogInformation("Starting to fetch albums for ArtistId: {ArtistId}", artistId);
+        
         do
         {
             var url = $"artists/{Uri.EscapeDataString(artistId)}/albums?include_groups=album&limit={limit}&offset={offset}";
@@ -83,10 +121,16 @@ public class SpotifyClient : IMusicServiceClient
                                  ?? (response.Headers.RetryAfter?.Date - DateTimeOffset.UtcNow)?.TotalSeconds
                                  ?? 1;
 
-                _logger.LogWarning("Rate limited. Retry-After: {Seconds} seconds", retryAfter);
+                _logger.LogCritical("Rate limited. Retry-After: {Seconds} seconds", retryAfter);
                 throw new MusicServiceRateLimitException(retryAfter);
             }
 
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError("Spotify Albums API failed. Status: {StatusCode}, ArtistId: {ArtistId}, Offset: {Offset}", 
+                    (int)response.StatusCode, artistId, offset);
+            }
+            
             var body = await response.Content.ReadAsStringAsync();
             var extractor = new AlbumExtractor();
             var (ids, apiTotal) = extractor.ParseAlbumsPage(body);
@@ -99,6 +143,9 @@ public class SpotifyClient : IMusicServiceClient
 
         } while (allAlbumIds.Count < total);
 
+        _logger.LogInformation("Successfully fetched all {Total} albums for ArtistId {ArtistId}", 
+            allAlbumIds.Count, artistId);
+        
         return allAlbumIds;
     }
 
@@ -107,7 +154,16 @@ public class SpotifyClient : IMusicServiceClient
         await SetBearerToken();
 
         var url = $"albums/{Uri.EscapeDataString(albumId)}";
+        
+        _logger.LogDebug("Calling Spotify Album Details API. AlbumId: {AlbumId}", albumId);
         var response = await _http.GetAsync(url);
+        
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Spotify Album API failed. Status: {StatusCode}, AlbumId: {AlbumId}, ArtistId: {ArtistId}", 
+                (int)response.StatusCode, albumId, artistId);
+        }
+        
         response.EnsureSuccessStatusCode();
         
         var body = await response.Content.ReadAsStringAsync();
@@ -115,7 +171,8 @@ public class SpotifyClient : IMusicServiceClient
         var extractor = new AlbumExtractor();
         var albumDetails = extractor.ExtractFullAlbumInfo(body, artistId);
         
-        _logger.LogInformation("Fetched album details for album with id {AlbumId}", albumId);
+        _logger.LogInformation("Successfully fetched album details. AlbumId: {AlbumId}, Name: {AlbumName}", 
+            albumId, albumDetails.Name);
         
         return albumDetails;
     }

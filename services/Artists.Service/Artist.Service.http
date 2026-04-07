@@ -89,7 +89,7 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:8080/api/artists/7dGJo4pcD2V6oG8kP0tJRR
+DELETE http://localhost:8080/api/artists/3TJZG17pjOKXwx1ELKJPfm
 Authorization: Bearer {{adminToken}}
 
 ###

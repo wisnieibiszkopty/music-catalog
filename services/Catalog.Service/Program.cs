@@ -10,11 +10,11 @@ using Microsoft.EntityFrameworkCore;
 using Shared.Auth;
 using Shared.Constants;
 using Shared.Errors;
-using Shared.Logging;
+using Shared.Observability;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.AddLogging("catalog-service");
+builder.Host.AddObservability(builder.Environment.ApplicationName);
 
 builder.Services.AddDataProtection()
     .UseEphemeralDataProtectionProvider();

@@ -5,7 +5,7 @@ using MassTransit;
 
 namespace Artists.Service.Core.Consumers;
 
-public class SaveArtistDataConsumer(IArtistsService artistsService) : IConsumer<SaveArtistData>
+public class SaveArtistDataConsumer(ILogger<SaveArtistDataConsumer> logger, IArtistsService artistsService) : IConsumer<SaveArtistData>
 {
     public async Task Consume(ConsumeContext<SaveArtistData> context)
     {
@@ -18,6 +18,9 @@ public class SaveArtistDataConsumer(IArtistsService artistsService) : IConsumer<
         };
         
         var savedArtist = await artistsService.Create(artistDto);
+        logger.LogInformation(
+            "Consuming SaveArtistData event. Id: {Id}, name: {Name}", savedArtist.Id, savedArtist.Name
+        );
         
         await context.Publish(new ArtistSaved(artistDetails));
     }

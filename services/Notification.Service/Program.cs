@@ -4,11 +4,11 @@ using Notification.Service.Core.Consumers;
 using Notification.Service.Core.Hubs;
 using Shared.Auth;
 using Shared.Constants;
-using Shared.Logging;
+using Shared.Observability;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.AddLogging("notification-service");
+builder.Host.AddObservability(builder.Environment.ApplicationName);
 
 builder.Services.AddDataProtection()
     .UseEphemeralDataProtectionProvider();

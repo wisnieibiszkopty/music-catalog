@@ -4,11 +4,11 @@ using Serilog.Enrichers.Span;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
 
-namespace Shared.Logging;
+namespace Shared.Observability;
 
-public static class LoggingExtension
+public static class SerilogExtension
 {
-    public static void AddLogging(this IHostBuilder host, string serviceName)
+    public static IHostBuilder UseCustomSerilog(this IHostBuilder host, string serviceName)
     {
         host.UseSerilog((context, configuration) => configuration
             .MinimumLevel.Information()
@@ -18,5 +18,7 @@ public static class LoggingExtension
             .Enrich.WithProperty("Service", serviceName)
             .WriteTo.Console(new RenderedCompactJsonFormatter())
         );
+        
+        return host;
     }
 }

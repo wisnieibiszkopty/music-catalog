@@ -2,7 +2,7 @@ using Contracts;
 using MassTransit;
 using Shared.Auth;
 
-namespace Orchestrator.Service;
+namespace Orchestrator.Service.Core;
 
 public static class ScrappingEndpoints
 {
@@ -17,7 +17,9 @@ public static class ScrappingEndpoints
         return builder;
     }
     
-    private static async Task<IResult> ScrapArtistByName(string artistName, IPublishEndpoint publishEndpoint)
+    private static async Task<IResult> ScrapArtistByName(
+        string artistName,
+        IPublishEndpoint publishEndpoint)
     {
         await publishEndpoint.Publish(new DiscoverArtist(artistName));
         return Results.Accepted();

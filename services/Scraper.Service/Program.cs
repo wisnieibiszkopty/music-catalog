@@ -2,11 +2,11 @@ using MassTransit;
 using Scraper.Service.Core.Consumers;
 using Scraper.Service.Core.MusicServiceClient;
 using Shared.Constants;
-using Shared.Logging;
+using Shared.Observability;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.AddLogging("scraper-service");
+builder.Host.AddObservability(builder.Environment.ApplicationName);
 
 builder.Services.AddHttpClient<IMusicServiceClient, SpotifyClient>(client =>
 {
@@ -18,7 +18,6 @@ builder.Services.AddHttpClient<IMusicServiceClient, SpotifyClient>(client =>
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
-    options.InstanceName = "ScrapperService";
 });
 
 builder.Services.AddSingleton<BearerTokenProvider>();

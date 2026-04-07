@@ -7,56 +7,19 @@ using Artists.Service.Core.Validators;
 using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.DataProtection;
-using OpenTelemetry.Exporter;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using Scalar.AspNetCore;
 using Shared;
 using Shared.Auth;
 using Shared.Constants;
 using Shared.Errors;
-using Shared.Logging;
+using Shared.Observability;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Host.AddLogging("artists-service");
 
 builder.Services.AddDataProtection()
     .UseEphemeralDataProtectionProvider();
 
-// TODO move to extenstion method
-var otel = builder.Services.AddOpenTelemetry();
-
-otel.ConfigureResource(resource => resource.AddService(builder.Environment.ApplicationName));
-otel.WithMetrics(metrics => metrics
-    .AddAspNetCoreInstrumentation()
-    .AddHttpClientInstrumentation()
-    .AddRuntimeInstrumentation()
-    .AddPrometheusExporter());
-
-otel.WithTracing(tracing =>
-{
-    tracing.AddAspNetCoreInstrumentation(options =>
-        {
-            options.Filter = httpContext => 
-                !httpContext.Request.Path.Value!.Contains("/metrics") && 
-                !httpContext.Request.Path.Value!.Contains("/health");
-            options.RecordException = true;
-        })
-        .AddHttpClientInstrumentation()
-        .AddSource("MassTransit");
-    
-    var endpoint = builder.Configuration["Otlp:Endpoint"];
-    if (!string.IsNullOrEmpty(endpoint))
-    {
-        tracing.AddOtlpExporter(opt =>
-        {
-            opt.Endpoint = new Uri(endpoint);
-            opt.Protocol = OtlpExportProtocol.Grpc;
-        });
-    }
-});
+builder.Host.AddObservability(builder.Environment.ApplicationName);
 
 builder.Services.AddMassTransit(x =>
 {

@@ -8,7 +8,11 @@ using Shared.Errors;
 
 namespace Artists.Service.Core.Services;
 
-public class ArtistsService(IArtistsRepository repository, IPublishEndpoint publishEndpoint): IArtistsService
+public class ArtistsService(
+    ILogger<ArtistsService> logger,
+    IArtistsRepository repository,
+    IPublishEndpoint publishEndpoint
+    ): IArtistsService 
 {
     public async Task<IEnumerable<ArtistBaseDto>> GetAll()
     {
@@ -35,7 +39,9 @@ public class ArtistsService(IArtistsRepository repository, IPublishEndpoint publ
             artistDto.Id = IdGenerator.Generate();
         }
         
-        return await repository.Create(artistDto);
+        var createdArtist = await repository.Create(artistDto);
+        logger.LogInformation("Created artist with Id: {Id}", createdArtist.Id);
+        return createdArtist;
     }
     
     public async Task<Artist?> Update(ArtistDto artistDto)
@@ -48,10 +54,13 @@ public class ArtistsService(IArtistsRepository repository, IPublishEndpoint publ
         var existing = await repository.GetById(artistDto.Id);
         if (existing is null)
         {
+            logger.LogError("Failure during artist update. Artist with Id: {Id} doesn't exist", artistDto.Id);
             return null;
         }
         
-        return await repository.Update(artistDto);
+        var updatedArtist = await repository.Update(artistDto);
+        logger.LogInformation("Updated artist with id: {Id}", updatedArtist.Id);
+        return updatedArtist;
     }
     
     public async Task<bool> Delete(string id)
@@ -60,7 +69,12 @@ public class ArtistsService(IArtistsRepository repository, IPublishEndpoint publ
 
         if (deleted)
         {
+            logger.LogInformation("Deleted artist with Id: {Id}", id);
             await publishEndpoint.Publish(new ArtistDeleted(id));   
+        }
+        else
+        {
+            logger.LogError("Cannot delete artist with Id: {Id}", id);
         }
         
         return deleted;

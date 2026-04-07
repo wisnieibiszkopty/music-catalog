@@ -1,14 +1,14 @@
 using MassTransit;
 using Microsoft.AspNetCore.DataProtection;
-using Orchestrator.Service;
+using Orchestrator.Service.Core;
 using Orchestrator.Service.Core.Saga;
 using Shared.Auth;
 using Shared.Constants;
-using Shared.Logging;
+using Shared.Observability;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.AddLogging("orchestrator-service");
+builder.Host.AddObservability(builder.Environment.ApplicationName);
 
 builder.Services.AddDataProtection()
     .UseEphemeralDataProtectionProvider();
