@@ -4,7 +4,7 @@ services:
     container_name: rabbitmq  
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
       RABBITMQ_NODENAME: rabbit@rabbitmq
       RABBITMQ_LOGS: "-"
     volumes:
@@ -94,7 +94,7 @@ services:
         limits:
           cpus: '0.5'
           memory: 100M
-
+    
   keycloak:
     image: quay.io/keycloak/keycloak:24.0
     container_name: keycloak
@@ -151,7 +151,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 80M
+          memory: 128M
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -174,7 +174,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 80M
+          memory: 128M
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -196,7 +196,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 80M
+          memory: 128M
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -256,7 +256,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 80M
+          memory: 128M
     depends_on:
       artist-db:
         condition: service_healthy
@@ -316,7 +316,7 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 80M
+          memory: 128M
     depends_on:
       catalog-db:
         condition: service_healthy
