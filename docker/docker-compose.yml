@@ -64,11 +64,7 @@ services:
   # frontend      
   web-app:
     container_name: web-app
-    build:
-      context: ..
-      dockerfile: frontend/Dockerfile
-      args:
-        - VITE_API_URL=${GATEWAY_URL}
+    image: wisnieibiszkopty/music-catalog-web-app:0.1.0
     networks:
       - frontend
     deploy:
@@ -135,9 +131,7 @@ services:
   # scraping
   orchestrator-service:
     container_name: orchestrator-service
-    build:
-      context: ..
-      dockerfile: services/Orchestrator.Service/Dockerfile
+    image: wisnieibiszkopty/music-catalog-orchestrator-service:0.1.0
     environment:
       ConnectionStrings__RabbitMq: ${RABBIT_URL}
       ConnectionStrings__Redis: ${REDIS_URL}
@@ -158,9 +152,7 @@ services:
     
   scraper-service:
     container_name: scraper-service
-    build:
-      context: ..
-      dockerfile: services/Scraper.Service/Dockerfile
+    image: wisnieibiszkopty/music-catalog-scraper-service:0.1.0
     env_file:
       - .env
       - .env.secrets
@@ -182,9 +174,7 @@ services:
   # notifications
   notification-service:
     container_name: notification-service
-    build:
-      context: ..
-      dockerfile: services/Notification.Service/Dockerfile
+    image: wisnieibiszkopty/music-catalog-notification-service:0.1.0
     environment:
       ConnectionStrings__RabbitMq: ${RABBIT_URL}
       Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
@@ -238,9 +228,7 @@ services:
 
   artist-service:
     container_name: artist-service
-    build:
-      context: ..
-      dockerfile: services/Artists.Service/Dockerfile
+    image: wisnieibiszkopty/music-catalog-artist-service:0.1.0
     environment:
       ConnectionStrings__DefaultConnection: Host=artist-db;Port=5432;Database=${ARTIST_DB_NAME};Username=${ARTIST_DB_USER};Password=${ARTIST_DB_PASS}
       ConnectionStrings__RabbitMq: ${RABBIT_URL}
@@ -300,9 +288,7 @@ services:
 
   catalog-service:
     container_name: catalog-service
-    build:
-      context: ..
-      dockerfile: services/Catalog.Service/Dockerfile
+    image: wisnieibiszkopty/music-catalog-catalog-service:0.1.0
     environment:
       ConnectionStrings__DefaultConnection: Host=catalog-db;Port=5432;Database=${CATALOG_DB_NAME};Username=${CATALOG_DB_USER};Password=${CATALOG_DB_PASS}
       ConnectionStrings__RabbitMq: ${RABBIT_URL}

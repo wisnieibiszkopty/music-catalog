@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
+    <GenerateBillOfMaterials>true</GenerateBillOfMaterials>
     <PublishAot>false</PublishAot>
     <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
     <UserSecretsId>3430de71-f74b-4536-97d3-491e6c8256f3</UserSecretsId>

@@ -1,0 +1,32 @@
+services:
+  web-app:
+    build:
+      context: ..
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_API_URL: ${GATEWAY_URL}
+        
+  orchestrator-service:
+    build:
+      context: ..
+      dockerfile: services/Orchestrator.Service/Dockerfile
+      
+  scraper-service:
+    build:
+      context: ..
+      dockerfile: services/Scraper.Service/Dockerfile
+      
+  notification-service:
+    build:
+      context: ..
+      dockerfile: services/Notification.Service/Dockerfile
+      
+  artist-service:
+    build:
+      context: ..
+      dockerfile: services/Artists.Service/Dockerfile
+  
+  catalog-service:
+    build:
+      context: ..
+      dockerfile: services/Catalog.Service/Dockerfile

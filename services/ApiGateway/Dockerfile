@@ -3,7 +3,7 @@ USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
+FROM --platform=$TARGETPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 ARG BUILD_CONFIGURATION=Release
 ARG TARGETARCH
 
@@ -29,6 +29,7 @@ RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
+ARG TARGETARCH
 
 RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
     dotnet publish ./ -c $BUILD_CONFIGURATION -o /app/publish --no-restore \
