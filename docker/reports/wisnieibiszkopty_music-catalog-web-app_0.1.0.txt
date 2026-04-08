@@ -1,0 +1,224 @@
+
+Report Summary
+
+┌──────────────────────────────────────────────────────────────┬────────┬─────────────────┬─────────┐
+│                            Target                            │  Type  │ Vulnerabilities │ Secrets │
+├──────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤
+│ wisnieibiszkopty/music-catalog-web-app:0.1.0 (alpine 3.17.5) │ alpine │       58        │    -    │
+└──────────────────────────────────────────────────────────────┴────────┴─────────────────┴─────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+wisnieibiszkopty/music-catalog-web-app:0.1.0 (alpine 3.17.5)
+============================================================
+Total: 58 (UNKNOWN: 0, LOW: 6, MEDIUM: 40, HIGH: 10, CRITICAL: 2)
+
+┌───────────────┬────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│    Library    │ Vulnerability  │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                             │
+├───────────────┼────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ busybox       │ CVE-2023-42363 │ MEDIUM   │ fixed  │ 1.35.0-r29        │ 1.35.0-r31    │ busybox: use-after-free in awk                               │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-42363                   │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-42364 │          │        │                   │               │ busybox: use-after-free                                      │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-42364                   │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-42365 │          │        │                   │               │ busybox: use-after-free                                      │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-42365                   │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-42366 │          │        │                   │ 1.35.0-r30    │ busybox: A heap-buffer-overflow                              │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-42366                   │
+├───────────────┼────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│ busybox-binsh │ CVE-2023-42363 │          │        │                   │ 1.35.0-r31    │ busybox: use-after-free in awk                               │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-42363                   │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-42364 │          │        │                   │               │ busybox: use-after-free                                      │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-42364                   │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-42365 │          │        │                   │               │ busybox: use-after-free                                      │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-42365                   │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-42366 │          │        │                   │ 1.35.0-r30    │ busybox: A heap-buffer-overflow                              │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-42366                   │
+├───────────────┼────────────────┼──────────┤        ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ libcrypto3    │ CVE-2025-15467 │ CRITICAL │        │ 3.0.10-r0         │ 3.0.19-r0     │ openssl: OpenSSL: Remote code execution or Denial of Service │
+│               │                │          │        │                   │               │ via oversized Initialization...                              │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-15467                   │
+│               ├────────────────┼──────────┤        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-5363  │ HIGH     │        │                   │ 3.0.12-r0     │ openssl: Incorrect cipher key and IV length processing       │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-5363                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2024-6119  │          │        │                   │ 3.0.15-r0     │ openssl: Possible denial of service in X.509 name checks     │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-6119                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2025-69419 │          │        │                   │ 3.0.19-r0     │ openssl: OpenSSL: Arbitrary code execution due to            │
+│               │                │          │        │                   │               │ out-of-bounds write in PKCS#12 processing...                 │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-69419                   │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2025-69421 │          │        │                   │               │ openssl: OpenSSL: Denial of Service via malformed PKCS#12    │
+│               │                │          │        │                   │               │ file processing                                              │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-69421                   │
+│               ├────────────────┼──────────┤        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-5678  │ MEDIUM   │        │                   │ 3.0.12-r1     │ openssl: Generating excessively long X9.42 DH keys or        │
+│               │                │          │        │                   │               │ checking excessively long X9.42...                           │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-5678                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-6129  │          │        │                   │ 3.0.12-r2     │ openssl: POLY1305 MAC implementation corrupts vector         │
+│               │                │          │        │                   │               │ registers on PowerPC                                         │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-6129                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-6237  │          │        │                   │ 3.0.12-r3     │ openssl: Excessive time spent checking invalid RSA public    │
+│               │                │          │        │                   │               │ keys                                                         │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-6237                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2024-0727  │          │        │                   │ 3.0.12-r4     │ openssl: denial of service via null dereference              │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-0727                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2024-13176 │          │        │                   │ 3.0.19-r0     │ openssl: Timing side-channel in ECDSA signature computation  │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-13176                   │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2024-4603  │          │        │                   │ 3.0.13-r0     │ openssl: Excessive time spent checking DSA keys and          │
+│               │                │          │        │                   │               │ parameters                                                   │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-4603                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2024-4741  │          │        │                   │ 3.0.14-r0     │ openssl: Use After Free with SSL_free_buffers                │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-4741                    │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2024-5535  │          │        │                   │               │ openssl: SSL_select_next_proto buffer overread               │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-5535                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2025-68160 │          │        │                   │ 3.0.19-r0     │ openssl: OpenSSL: Denial of Service due to out-of-bounds     │
+│               │                │          │        │                   │               │ write in BIO filter...                                       │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-68160                   │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2025-69418 │          │        │                   │               │ openssl: OpenSSL: Information disclosure and data tampering  │
+│               │                │          │        │                   │               │ via specific low-level OCB encryption/decryption...          │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-69418                   │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2025-69420 │          │        │                   │               │ openssl: OpenSSL: Denial of Service via malformed TimeStamp  │
+│               │                │          │        │                   │               │ Response                                                     │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-69420                   │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2025-9230  │          │        │                   │               │ openssl: Out-of-bounds read & write in RFC 3211 KEK Unwrap   │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-9230                    │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2026-22795 │          │        │                   │               │ openssl: OpenSSL: Denial of Service due to type confusion in │
+│               │                │          │        │                   │               │ PKCS#12 file...                                              │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-22795                   │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2026-22796 │          │        │                   │               │ openssl: OpenSSL: Denial of Service via type confusion in    │
+│               │                │          │        │                   │               │ PKCS#7 signature verification...                             │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-22796                   │
+│               ├────────────────┼──────────┤        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2024-2511  │ LOW      │        │                   │ 3.0.12-r5     │ openssl: Unbounded memory growth with session handling in    │
+│               │                │          │        │                   │               │ TLSv1.3                                                      │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-2511                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2024-9143  │          │        │                   │ 3.0.15-r1     │ openssl: Low-level invalid GF(2^m) parameters lead to OOB    │
+│               │                │          │        │                   │               │ memory access                                                │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-9143                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2025-9232  │          │        │                   │ 3.0.19-r0     │ openssl: Out-of-bounds read in HTTP client no_proxy handling │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-9232                    │
+├───────────────┼────────────────┼──────────┤        │                   │               ├──────────────────────────────────────────────────────────────┤
+│ libssl3       │ CVE-2025-15467 │ CRITICAL │        │                   │               │ openssl: OpenSSL: Remote code execution or Denial of Service │
+│               │                │          │        │                   │               │ via oversized Initialization...                              │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-15467                   │
+│               ├────────────────┼──────────┤        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-5363  │ HIGH     │        │                   │ 3.0.12-r0     │ openssl: Incorrect cipher key and IV length processing       │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-5363                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2024-6119  │          │        │                   │ 3.0.15-r0     │ openssl: Possible denial of service in X.509 name checks     │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-6119                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2025-69419 │          │        │                   │ 3.0.19-r0     │ openssl: OpenSSL: Arbitrary code execution due to            │
+│               │                │          │        │                   │               │ out-of-bounds write in PKCS#12 processing...                 │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-69419                   │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2025-69421 │          │        │                   │               │ openssl: OpenSSL: Denial of Service via malformed PKCS#12    │
+│               │                │          │        │                   │               │ file processing                                              │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-69421                   │
+│               ├────────────────┼──────────┤        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-5678  │ MEDIUM   │        │                   │ 3.0.12-r1     │ openssl: Generating excessively long X9.42 DH keys or        │
+│               │                │          │        │                   │               │ checking excessively long X9.42...                           │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-5678                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-6129  │          │        │                   │ 3.0.12-r2     │ openssl: POLY1305 MAC implementation corrupts vector         │
+│               │                │          │        │                   │               │ registers on PowerPC                                         │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-6129                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-6237  │          │        │                   │ 3.0.12-r3     │ openssl: Excessive time spent checking invalid RSA public    │
+│               │                │          │        │                   │               │ keys                                                         │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-6237                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2024-0727  │          │        │                   │ 3.0.12-r4     │ openssl: denial of service via null dereference              │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-0727                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2024-13176 │          │        │                   │ 3.0.19-r0     │ openssl: Timing side-channel in ECDSA signature computation  │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-13176                   │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2024-4603  │          │        │                   │ 3.0.13-r0     │ openssl: Excessive time spent checking DSA keys and          │
+│               │                │          │        │                   │               │ parameters                                                   │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-4603                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2024-4741  │          │        │                   │ 3.0.14-r0     │ openssl: Use After Free with SSL_free_buffers                │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-4741                    │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2024-5535  │          │        │                   │               │ openssl: SSL_select_next_proto buffer overread               │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-5535                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2025-68160 │          │        │                   │ 3.0.19-r0     │ openssl: OpenSSL: Denial of Service due to out-of-bounds     │
+│               │                │          │        │                   │               │ write in BIO filter...                                       │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-68160                   │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2025-69418 │          │        │                   │               │ openssl: OpenSSL: Information disclosure and data tampering  │
+│               │                │          │        │                   │               │ via specific low-level OCB encryption/decryption...          │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-69418                   │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2025-69420 │          │        │                   │               │ openssl: OpenSSL: Denial of Service via malformed TimeStamp  │
+│               │                │          │        │                   │               │ Response                                                     │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-69420                   │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2025-9230  │          │        │                   │               │ openssl: Out-of-bounds read & write in RFC 3211 KEK Unwrap   │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-9230                    │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2026-22795 │          │        │                   │               │ openssl: OpenSSL: Denial of Service due to type confusion in │
+│               │                │          │        │                   │               │ PKCS#12 file...                                              │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-22795                   │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2026-22796 │          │        │                   │               │ openssl: OpenSSL: Denial of Service via type confusion in    │
+│               │                │          │        │                   │               │ PKCS#7 signature verification...                             │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-22796                   │
+│               ├────────────────┼──────────┤        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2024-2511  │ LOW      │        │                   │ 3.0.12-r5     │ openssl: Unbounded memory growth with session handling in    │
+│               │                │          │        │                   │               │ TLSv1.3                                                      │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-2511                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2024-9143  │          │        │                   │ 3.0.15-r1     │ openssl: Low-level invalid GF(2^m) parameters lead to OOB    │
+│               │                │          │        │                   │               │ memory access                                                │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2024-9143                    │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2025-9232  │          │        │                   │ 3.0.19-r0     │ openssl: Out-of-bounds read in HTTP client no_proxy handling │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-9232                    │
+├───────────────┼────────────────┼──────────┤        ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ musl          │ CVE-2025-26519 │ HIGH     │        │ 1.2.3-r5          │ 1.2.3-r6      │ musl libc 0.9.13 through 1.2.5 before 1.2.6 has an           │
+│               │                │          │        │                   │               │ out-of-bounds write ......                                   │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2025-26519                   │
+├───────────────┤                │          │        │                   │               │                                                              │
+│ musl-utils    │                │          │        │                   │               │                                                              │
+│               │                │          │        │                   │               │                                                              │
+│               │                │          │        │                   │               │                                                              │
+├───────────────┼────────────────┼──────────┤        ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ ssl_client    │ CVE-2023-42363 │ MEDIUM   │        │ 1.35.0-r29        │ 1.35.0-r31    │ busybox: use-after-free in awk                               │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-42363                   │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-42364 │          │        │                   │               │ busybox: use-after-free                                      │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-42364                   │
+│               ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-42365 │          │        │                   │               │ busybox: use-after-free                                      │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-42365                   │
+│               ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│               │ CVE-2023-42366 │          │        │                   │ 1.35.0-r30    │ busybox: A heap-buffer-overflow                              │
+│               │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2023-42366                   │
+└───────────────┴────────────────┴──────────┴────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
