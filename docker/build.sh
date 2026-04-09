@@ -32,9 +32,36 @@ build_service(){
     .
 }
 
+build_api_gateway_multiarch(){
+  local IMAGE_NAME="api-gateway"
+
+  docker buildx build \
+    --platform linux/amd64 \
+    -t "${DOCKERHUB_USER}/music-catalog-${IMAGE_NAME}:${TAG}-amd64" \
+    -f "services/ApiGateway/Dockerfile" \
+    --sbom=true \
+    --provenance=mode=max \
+    --push \
+    .
+
+  docker buildx build \
+    --platform linux/arm64 \
+    -t "${DOCKERHUB_USER}/music-catalog-${IMAGE_NAME}:${TAG}-arm64" \
+    -f "services/ApiGateway/Dockerfile_arm" \
+    --sbom=true \
+    --provenance=mode=max \
+    --push \
+    .
+
+  docker buildx imagetools create \
+    -t "${DOCKERHUB_USER}/music-catalog-${IMAGE_NAME}:${TAG}" \
+    "${DOCKERHUB_USER}/music-catalog-${IMAGE_NAME}:${TAG}-amd64" \
+    "${DOCKERHUB_USER}/music-catalog-${IMAGE_NAME}:${TAG}-arm64"
+}
+
 build_service "web-app" "frontend/Dockerfile"
 
-# build_service "api-gateway" "services/ApiGateway/Dockerfile"
+build_api_gateway_multiarch
 build_service "artist-service" "services/Artists.Service/Dockerfile"
 build_service "catalog-service" "services/Catalog.Service/Dockerfile"
 build_service "notification-service" "services/Notification.Service/Dockerfile"

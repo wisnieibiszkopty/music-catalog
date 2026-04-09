@@ -38,9 +38,7 @@ services:
 
   api-gateway:
     container_name: api-gateway
-    build:
-      context: ..
-      dockerfile: services/ApiGateway/Dockerfile
+    image: wisnieibiszkopty/music-catalog-api-gateway:0.1.0
     ports:
       - "8080:8080"
     environment:
