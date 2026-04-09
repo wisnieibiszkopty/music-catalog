@@ -1,6 +1,6 @@
 services:
   rabbitmq:
-    image: rabbitmq:3-alpine
+    image: rabbitmq:4.3.0-alpine
     container_name: rabbitmq  
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
@@ -73,7 +73,7 @@ services:
   
   # identity provider
   keycloak-db:
-    image: postgres:18-alpine
+    image: postgres:18.3-alpine
     container_name: keycloak-db
     environment:
       POSTGRES_DB: ${KEYCLOAK_DB_NAME}
@@ -90,7 +90,7 @@ services:
           memory: 100M
     
   keycloak:
-    image: quay.io/keycloak/keycloak:24.0
+    image: quay.io/keycloak/keycloak:26.6
     container_name: keycloak
     command: start --import-realm
     environment:
@@ -191,7 +191,7 @@ services:
 
   # artists
   artist-db:
-    image: postgres:18-alpine
+    image: postgres:18.3-alpine
     container_name: artist-db
     environment:
       POSTGRES_USER: ${ARTIST_DB_USER}
@@ -213,7 +213,7 @@ services:
       retries: 5
 
   artist-db-migrator:
-    image: flyway/flyway:latest-alpine
+    image: flyway/flyway:12.0-alpine
     container_name: artist-db-migrator
     volumes:
       - ../services/Artists.Service/migrations:/flyway/sql
@@ -251,7 +251,7 @@ services:
   
   # catalog
   catalog-db:
-    image: postgres:18-alpine
+    image: postgres:18.3-alpine
     container_name: catalog-db
     environment:
       POSTGRES_USER: ${CATALOG_DB_USER}
@@ -273,7 +273,7 @@ services:
       retries: 5
 
   catalog-db-migrator:
-    image: flyway/flyway:latest-alpine
+    image: flyway/flyway:12.0-alpine
     container_name: catalog-db-migrator
     volumes:
       - ../services/Catalog.Service/migrations:/flyway/sql
@@ -341,7 +341,7 @@ services:
   
   grafana:
     container_name: grafana
-    image: grafana/grafana:12.3.6
+    image: grafana/grafana:13.0.0
     volumes:
       - ./config/grafana-ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
       - grafana-data:/var/lib/grafana
@@ -365,7 +365,7 @@ services:
           memory: 256M
   
   prometheus:
-    image: prom/prometheus:v3.10.0
+    image: prom/prometheus:v3.11.1
     container_name: prometheus
     volumes:
       - ./config/prometheus.yaml:/etc/prometheus/prometheus.yml
