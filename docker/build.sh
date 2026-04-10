@@ -26,6 +26,7 @@ build_service(){
     --platform "$PLATFORMS" \
     -t "${DOCKERHUB_USER}/music-catalog-${IMAGE_NAME}:${TAG}" \
     -f "${DOCKERFILE_PATH}" \
+    --no-cache \
     --sbom=true \
     --provenance=mode=max \
     --push \
@@ -39,6 +40,7 @@ build_api_gateway_multiarch(){
     --platform linux/amd64 \
     -t "${DOCKERHUB_USER}/music-catalog-${IMAGE_NAME}:${TAG}-amd64" \
     -f "services/ApiGateway/Dockerfile" \
+    --no-cache \
     --sbom=true \
     --provenance=mode=max \
     --push \
@@ -48,6 +50,7 @@ build_api_gateway_multiarch(){
     --platform linux/arm64 \
     -t "${DOCKERHUB_USER}/music-catalog-${IMAGE_NAME}:${TAG}-arm64" \
     -f "services/ApiGateway/Dockerfile_arm" \
+    --no-cache \
     --sbom=true \
     --provenance=mode=max \
     --push \

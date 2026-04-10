@@ -1,6 +1,6 @@
 services:
   rabbitmq:
-    image: rabbitmq:4.3.0-alpine
+    image: rabbitmq:4.2-alpine
     container_name: rabbitmq  
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
@@ -341,7 +341,7 @@ services:
   
   grafana:
     container_name: grafana
-    image: grafana/grafana:13.0.0
+    image: grafana/grafana:12.4
     volumes:
       - ./config/grafana-ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
       - grafana-data:/var/lib/grafana
