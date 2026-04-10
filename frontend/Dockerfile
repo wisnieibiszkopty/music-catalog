@@ -15,7 +15,7 @@ ENV VITE_API_URL=$VITE_API_URL
 
 RUN pnpm run build
 
-FROM joseluisq/static-web-server:2.21-alpine AS production-stage
+FROM joseluisq/static-web-server:2.42-alpine AS production-stage
 
 WORKDIR /public
 
