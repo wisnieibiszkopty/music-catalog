@@ -2,6 +2,8 @@
 
 Zbudowane obrazy na Docker Hub: https://hub.docker.com/repositories/wisnieibiszkopty
 
+Uzasadnienie użycia obrazów z wysokimi lub krytycznymi podatnościami znajduje się w pliku docker/reports/reports.md
+
 ## Uruchomienie projektu
 
 Aby zbudować obrazy kontenerów lokalnie i uruchomić aplikacje należy użyć polecenia: `docker compose up --build`
@@ -24,6 +26,8 @@ music-catalog/
 ├── docker/
 │   └── docker-compose.yaml
 │   └── docker-compose.override.yaml
+│   └── reports
+│       └── reports.md
 ├── docs/
 ├── frontend/
 │   └── Dockerfile

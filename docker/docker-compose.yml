@@ -381,21 +381,6 @@ services:
           cpus: '0.5'
           memory: 80M
   
-  tempo:
-    image: grafana/tempo:2.6.1
-    container_name: tempo
-    command: [ "-config.file=/etc/tempo.yaml" ]
-    volumes:
-      - ./config/tempo.yaml:/etc/tempo.yaml
-      - tempo-data:/var/lib/tempo
-    networks:
-      - logging
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
-  
 volumes:
   rabbitmq-data:
   redis-data:

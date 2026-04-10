@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style>
+      * {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      h1 {
+        text-align: center;
+      }
+      .group-header th {
+        font-size: 200%;
+      }
+      .sub-header th {
+        font-size: 150%;
+      }
+      table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        white-space: nowrap;
+        padding: .3em;
+      }
+      table {
+        margin: 0 auto;
+      }
+      .severity {
+        text-align: center;
+        font-weight: bold;
+        color: #fafafa;
+      }
+      .severity-LOW .severity { background-color: #5fbb31; }
+      .severity-MEDIUM .severity { background-color: #e9c600; }
+      .severity-HIGH .severity { background-color: #ff8800; }
+      .severity-CRITICAL .severity { background-color: #e40000; }
+      .severity-UNKNOWN .severity { background-color: #747474; }
+      .severity-LOW { background-color: #5fbb3160; }
+      .severity-MEDIUM { background-color: #e9c60060; }
+      .severity-HIGH { background-color: #ff880060; }
+      .severity-CRITICAL { background-color: #e4000060; }
+      .severity-UNKNOWN { background-color: #74747460; }
+      table tr td:first-of-type {
+        font-weight: bold;
+      }
+      .links a,
+      .links[data-more-links=on] a {
+        display: block;
+      }
+      .links[data-more-links=off] a:nth-of-type(1n+5) {
+        display: none;
+      }
+      a.toggle-more-links { cursor: pointer; }
+    </style>
+    <title>grafana/grafana:12.4 (alpine 3.23.3) - Trivy Report - 2026-04-10 21:07:17.260534209 +0200 CEST m=+1.129258765 </title>
+    <script>
+      window.onload = function() {
+        document.querySelectorAll('td.links').forEach(function(linkCell) {
+          var links = [].concat.apply([], linkCell.querySelectorAll('a'));
+          [].sort.apply(links, function(a, b) {
+            return a.href > b.href ? 1 : -1;
+          });
+          links.forEach(function(link, idx) {
+            if (links.length > 3 && 3 === idx) {
+              var toggleLink = document.createElement('a');
+              toggleLink.innerText = "Toggle more links";
+              toggleLink.href = "#toggleMore";
+              toggleLink.setAttribute("class", "toggle-more-links");
+              linkCell.appendChild(toggleLink);
+            }
+            linkCell.appendChild(link);
+          });
+        });
+        document.querySelectorAll('a.toggle-more-links').forEach(function(toggleLink) {
+          toggleLink.onclick = function() {
+            var expanded = toggleLink.parentElement.getAttribute("data-more-links");
+            toggleLink.parentElement.setAttribute("data-more-links", "on" === expanded ? "off" : "on");
+            return false;
+          };
+        });
+      };
+    </script>
+  </head>
+  <body>
+    <h1>grafana/grafana:12.4 (alpine 3.23.3) - Trivy Report - 2026-04-10 21:07:17.260587009 +0200 CEST m=+1.129311555</h1>
+    <table>
+      <tr class="group-header"><th colspan="6">alpine</th></tr>
+      <tr class="sub-header">
+        <th>Package</th>
+        <th>Vulnerability ID</th>
+        <th>Severity</th>
+        <th>Installed Version</th>
+        <th>Fixed Version</th>
+        <th>Links</th>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">libcrypto3</td>
+        <td>CVE-2026-28390</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">3.5.5-r0</td>
+        <td>3.5.6-r0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-28390">https://access.redhat.com/security/cve/CVE-2026-28390</a>
+          <a href="https://github.com/openssl/openssl/commit/01194a8f1941115cd0383bfa91c736dd3993c8bc">https://github.com/openssl/openssl/commit/01194a8f1941115cd0383bfa91c736dd3993c8bc</a>
+          <a href="https://github.com/openssl/openssl/commit/2e39b7a6993be445fddb9fbce316fa756e0397b6">https://github.com/openssl/openssl/commit/2e39b7a6993be445fddb9fbce316fa756e0397b6</a>
+          <a href="https://github.com/openssl/openssl/commit/af2a5fecd3e71a29e7568f9c1453dec5cebbaff4">https://github.com/openssl/openssl/commit/af2a5fecd3e71a29e7568f9c1453dec5cebbaff4</a>
+          <a href="https://github.com/openssl/openssl/commit/ea7b4ea4f9f853521ba34830cbcadc970d2e0788">https://github.com/openssl/openssl/commit/ea7b4ea4f9f853521ba34830cbcadc970d2e0788</a>
+          <a href="https://github.com/openssl/openssl/commit/fd2f1a6cf53b9ceeca723a001aa4b825d7c7ee75">https://github.com/openssl/openssl/commit/fd2f1a6cf53b9ceeca723a001aa4b825d7c7ee75</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-28390">https://nvd.nist.gov/vuln/detail/CVE-2026-28390</a>
+          <a href="https://openssl-library.org/news/secadv/20260407.txt">https://openssl-library.org/news/secadv/20260407.txt</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-1">https://ubuntu.com/security/notices/USN-8155-1</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-2">https://ubuntu.com/security/notices/USN-8155-2</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-28390">https://www.cve.org/CVERecord?id=CVE-2026-28390</a>
+          <a href="https://www.openwall.com/lists/oss-security/2026/04/07/11">https://www.openwall.com/lists/oss-security/2026/04/07/11</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">libcrypto3</td>
+        <td>CVE-2026-31790</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">3.5.5-r0</td>
+        <td>3.5.6-r0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-31790">https://access.redhat.com/security/cve/CVE-2026-31790</a>
+          <a href="https://github.com/openssl/openssl/commit/001e01db3e996e13ffc72386fe79d03a6683b5ac">https://github.com/openssl/openssl/commit/001e01db3e996e13ffc72386fe79d03a6683b5ac</a>
+          <a href="https://github.com/openssl/openssl/commit/abd8b2eec7e3f3fda60ecfb68498b246b52af482">https://github.com/openssl/openssl/commit/abd8b2eec7e3f3fda60ecfb68498b246b52af482</a>
+          <a href="https://github.com/openssl/openssl/commit/b922e24e5b23ffb9cb9e14cadff23d91e9f7e406">https://github.com/openssl/openssl/commit/b922e24e5b23ffb9cb9e14cadff23d91e9f7e406</a>
+          <a href="https://github.com/openssl/openssl/commit/d5f8e71cd0a54e961d0c3b174348f8308486f790">https://github.com/openssl/openssl/commit/d5f8e71cd0a54e961d0c3b174348f8308486f790</a>
+          <a href="https://github.com/openssl/openssl/commit/eed200f58cd8645ed77e46b7e9f764e284df379e">https://github.com/openssl/openssl/commit/eed200f58cd8645ed77e46b7e9f764e284df379e</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-31790">https://nvd.nist.gov/vuln/detail/CVE-2026-31790</a>
+          <a href="https://openssl-library.org/news/secadv/20260407.txt">https://openssl-library.org/news/secadv/20260407.txt</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-1">https://ubuntu.com/security/notices/USN-8155-1</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-31790">https://www.cve.org/CVERecord?id=CVE-2026-31790</a>
+          <a href="https://www.openwall.com/lists/oss-security/2026/04/07/11">https://www.openwall.com/lists/oss-security/2026/04/07/11</a>
+        </td>
+      </tr>
+      <tr class="severity-LOW">
+        <td class="pkg-name">libcrypto3</td>
+        <td>CVE-2026-2673</td>
+        <td class="severity">LOW</td>
+        <td class="pkg-version">3.5.5-r0</td>
+        <td>3.5.6-r0</td>
+        <td class="links" data-more-links="off">
+          <a href="http://www.openwall.com/lists/oss-security/2026/03/13/3">http://www.openwall.com/lists/oss-security/2026/03/13/3</a>
+          <a href="https://access.redhat.com/security/cve/CVE-2026-2673">https://access.redhat.com/security/cve/CVE-2026-2673</a>
+          <a href="https://github.com/openssl/openssl/commit/2157c9d81f7b0bd7dfa25b960e928ec28e8dd63f">https://github.com/openssl/openssl/commit/2157c9d81f7b0bd7dfa25b960e928ec28e8dd63f</a>
+          <a href="https://github.com/openssl/openssl/commit/85977e013f32ceb96aa034c0e741adddc1a05e34">https://github.com/openssl/openssl/commit/85977e013f32ceb96aa034c0e741adddc1a05e34</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-2673">https://nvd.nist.gov/vuln/detail/CVE-2026-2673</a>
+          <a href="https://openssl-library.org/news/secadv/20260313.txt">https://openssl-library.org/news/secadv/20260313.txt</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-1">https://ubuntu.com/security/notices/USN-8155-1</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-2673">https://www.cve.org/CVERecord?id=CVE-2026-2673</a>
+        </td>
+      </tr>
+      <tr class="severity-LOW">
+        <td class="pkg-name">libcrypto3</td>
+        <td>CVE-2026-28387</td>
+        <td class="severity">LOW</td>
+        <td class="pkg-version">3.5.5-r0</td>
+        <td>3.5.6-r0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://github.com/openssl/openssl/commit/07e727d304746edb49a98ee8f6ab00256e1f012b">https://github.com/openssl/openssl/commit/07e727d304746edb49a98ee8f6ab00256e1f012b</a>
+          <a href="https://github.com/openssl/openssl/commit/258a8f63b26995ba357f4326da00e19e29c6acbe">https://github.com/openssl/openssl/commit/258a8f63b26995ba357f4326da00e19e29c6acbe</a>
+          <a href="https://github.com/openssl/openssl/commit/444958deaf450aea819171f97ae69eaedede42c3">https://github.com/openssl/openssl/commit/444958deaf450aea819171f97ae69eaedede42c3</a>
+          <a href="https://github.com/openssl/openssl/commit/7a4e08cee62a728d32e60b0de89e6764339df0a7">https://github.com/openssl/openssl/commit/7a4e08cee62a728d32e60b0de89e6764339df0a7</a>
+          <a href="https://github.com/openssl/openssl/commit/ec03fa050b3346997ed9c5fef3d0e16ad7db8177">https://github.com/openssl/openssl/commit/ec03fa050b3346997ed9c5fef3d0e16ad7db8177</a>
+          <a href="https://openssl-library.org/news/secadv/20260407.txt">https://openssl-library.org/news/secadv/20260407.txt</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-1">https://ubuntu.com/security/notices/USN-8155-1</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-2">https://ubuntu.com/security/notices/USN-8155-2</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-28387">https://www.cve.org/CVERecord?id=CVE-2026-28387</a>
+          <a href="https://www.openwall.com/lists/oss-security/2026/04/07/11">https://www.openwall.com/lists/oss-security/2026/04/07/11</a>
+        </td>
+      </tr>
+      <tr class="severity-LOW">
+        <td class="pkg-name">libcrypto3</td>
+        <td>CVE-2026-28388</td>
+        <td class="severity">LOW</td>
+        <td class="pkg-version">3.5.5-r0</td>
+        <td>3.5.6-r0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://github.com/openssl/openssl/commit/59c3b3158553ab53275bbbccca5cb305d591cf2e">https://github.com/openssl/openssl/commit/59c3b3158553ab53275bbbccca5cb305d591cf2e</a>
+          <a href="https://github.com/openssl/openssl/commit/5a0b4930779cd2408880979db765db919da55139">https://github.com/openssl/openssl/commit/5a0b4930779cd2408880979db765db919da55139</a>
+          <a href="https://github.com/openssl/openssl/commit/602542f2c0c2d5edb47128f93eac10b62aeeefb3">https://github.com/openssl/openssl/commit/602542f2c0c2d5edb47128f93eac10b62aeeefb3</a>
+          <a href="https://github.com/openssl/openssl/commit/a9d187dd1000130100fa7ab915f8513532cb3bb8">https://github.com/openssl/openssl/commit/a9d187dd1000130100fa7ab915f8513532cb3bb8</a>
+          <a href="https://github.com/openssl/openssl/commit/d3a901e8d9f021f3e67d6cfbc12e768129862726">https://github.com/openssl/openssl/commit/d3a901e8d9f021f3e67d6cfbc12e768129862726</a>
+          <a href="https://openssl-library.org/news/secadv/20260407.txt">https://openssl-library.org/news/secadv/20260407.txt</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-1">https://ubuntu.com/security/notices/USN-8155-1</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-2">https://ubuntu.com/security/notices/USN-8155-2</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-28388">https://www.cve.org/CVERecord?id=CVE-2026-28388</a>
+          <a href="https://www.openwall.com/lists/oss-security/2026/04/07/11">https://www.openwall.com/lists/oss-security/2026/04/07/11</a>
+        </td>
+      </tr>
+      <tr class="severity-LOW">
+        <td class="pkg-name">libcrypto3</td>
+        <td>CVE-2026-28389</td>
+        <td class="severity">LOW</td>
+        <td class="pkg-version">3.5.5-r0</td>
+        <td>3.5.6-r0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://github.com/openssl/openssl/commit/16cea4188e0ea567deb4f93f85902247e67384f5">https://github.com/openssl/openssl/commit/16cea4188e0ea567deb4f93f85902247e67384f5</a>
+          <a href="https://github.com/openssl/openssl/commit/785cbf7ea3b5a6f5adf0c1ccb92b79d89c35c616">https://github.com/openssl/openssl/commit/785cbf7ea3b5a6f5adf0c1ccb92b79d89c35c616</a>
+          <a href="https://github.com/openssl/openssl/commit/7b5274e812400cacb6f3be4c2df5340923fa807f">https://github.com/openssl/openssl/commit/7b5274e812400cacb6f3be4c2df5340923fa807f</a>
+          <a href="https://github.com/openssl/openssl/commit/c6725634e089eb2b634b10ede33944be7248172a">https://github.com/openssl/openssl/commit/c6725634e089eb2b634b10ede33944be7248172a</a>
+          <a href="https://github.com/openssl/openssl/commit/f80f83bc5fd036bc47d773e8b15a001e2b4ce686">https://github.com/openssl/openssl/commit/f80f83bc5fd036bc47d773e8b15a001e2b4ce686</a>
+          <a href="https://openssl-library.org/news/secadv/20260407.txt">https://openssl-library.org/news/secadv/20260407.txt</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-1">https://ubuntu.com/security/notices/USN-8155-1</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-2">https://ubuntu.com/security/notices/USN-8155-2</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-28389">https://www.cve.org/CVERecord?id=CVE-2026-28389</a>
+          <a href="https://www.openwall.com/lists/oss-security/2026/04/07/11">https://www.openwall.com/lists/oss-security/2026/04/07/11</a>
+        </td>
+      </tr>
+      <tr class="severity-LOW">
+        <td class="pkg-name">libcrypto3</td>
+        <td>CVE-2026-31789</td>
+        <td class="severity">LOW</td>
+        <td class="pkg-version">3.5.5-r0</td>
+        <td>3.5.6-r0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://github.com/openssl/openssl/commit/364f095b80601db632b0def6a33316967f863bde">https://github.com/openssl/openssl/commit/364f095b80601db632b0def6a33316967f863bde</a>
+          <a href="https://github.com/openssl/openssl/commit/7a9087efd769f362ad9c0e30c7baaa6bbfa65ecf">https://github.com/openssl/openssl/commit/7a9087efd769f362ad9c0e30c7baaa6bbfa65ecf</a>
+          <a href="https://github.com/openssl/openssl/commit/945b935ac66cc7f1a41f1b849c7c25adb5351f49">https://github.com/openssl/openssl/commit/945b935ac66cc7f1a41f1b849c7c25adb5351f49</a>
+          <a href="https://github.com/openssl/openssl/commit/a24216018e1ede8ff01a4ff5afff7dfbd443e2f9">https://github.com/openssl/openssl/commit/a24216018e1ede8ff01a4ff5afff7dfbd443e2f9</a>
+          <a href="https://github.com/openssl/openssl/commit/a91e537d16d74050dbde50bb0dfb1fe9930f0521">https://github.com/openssl/openssl/commit/a91e537d16d74050dbde50bb0dfb1fe9930f0521</a>
+          <a href="https://openssl-library.org/news/secadv/20260407.txt">https://openssl-library.org/news/secadv/20260407.txt</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-1">https://ubuntu.com/security/notices/USN-8155-1</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-31789">https://www.cve.org/CVERecord?id=CVE-2026-31789</a>
+          <a href="https://www.openwall.com/lists/oss-security/2026/04/07/11">https://www.openwall.com/lists/oss-security/2026/04/07/11</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">libssl3</td>
+        <td>CVE-2026-28390</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">3.5.5-r0</td>
+        <td>3.5.6-r0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-28390">https://access.redhat.com/security/cve/CVE-2026-28390</a>
+          <a href="https://github.com/openssl/openssl/commit/01194a8f1941115cd0383bfa91c736dd3993c8bc">https://github.com/openssl/openssl/commit/01194a8f1941115cd0383bfa91c736dd3993c8bc</a>
+          <a href="https://github.com/openssl/openssl/commit/2e39b7a6993be445fddb9fbce316fa756e0397b6">https://github.com/openssl/openssl/commit/2e39b7a6993be445fddb9fbce316fa756e0397b6</a>
+          <a href="https://github.com/openssl/openssl/commit/af2a5fecd3e71a29e7568f9c1453dec5cebbaff4">https://github.com/openssl/openssl/commit/af2a5fecd3e71a29e7568f9c1453dec5cebbaff4</a>
+          <a href="https://github.com/openssl/openssl/commit/ea7b4ea4f9f853521ba34830cbcadc970d2e0788">https://github.com/openssl/openssl/commit/ea7b4ea4f9f853521ba34830cbcadc970d2e0788</a>
+          <a href="https://github.com/openssl/openssl/commit/fd2f1a6cf53b9ceeca723a001aa4b825d7c7ee75">https://github.com/openssl/openssl/commit/fd2f1a6cf53b9ceeca723a001aa4b825d7c7ee75</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-28390">https://nvd.nist.gov/vuln/detail/CVE-2026-28390</a>
+          <a href="https://openssl-library.org/news/secadv/20260407.txt">https://openssl-library.org/news/secadv/20260407.txt</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-1">https://ubuntu.com/security/notices/USN-8155-1</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-2">https://ubuntu.com/security/notices/USN-8155-2</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-28390">https://www.cve.org/CVERecord?id=CVE-2026-28390</a>
+          <a href="https://www.openwall.com/lists/oss-security/2026/04/07/11">https://www.openwall.com/lists/oss-security/2026/04/07/11</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">libssl3</td>
+        <td>CVE-2026-31790</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">3.5.5-r0</td>
+        <td>3.5.6-r0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-31790">https://access.redhat.com/security/cve/CVE-2026-31790</a>
+          <a href="https://github.com/openssl/openssl/commit/001e01db3e996e13ffc72386fe79d03a6683b5ac">https://github.com/openssl/openssl/commit/001e01db3e996e13ffc72386fe79d03a6683b5ac</a>
+          <a href="https://github.com/openssl/openssl/commit/abd8b2eec7e3f3fda60ecfb68498b246b52af482">https://github.com/openssl/openssl/commit/abd8b2eec7e3f3fda60ecfb68498b246b52af482</a>
+          <a href="https://github.com/openssl/openssl/commit/b922e24e5b23ffb9cb9e14cadff23d91e9f7e406">https://github.com/openssl/openssl/commit/b922e24e5b23ffb9cb9e14cadff23d91e9f7e406</a>
+          <a href="https://github.com/openssl/openssl/commit/d5f8e71cd0a54e961d0c3b174348f8308486f790">https://github.com/openssl/openssl/commit/d5f8e71cd0a54e961d0c3b174348f8308486f790</a>
+          <a href="https://github.com/openssl/openssl/commit/eed200f58cd8645ed77e46b7e9f764e284df379e">https://github.com/openssl/openssl/commit/eed200f58cd8645ed77e46b7e9f764e284df379e</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-31790">https://nvd.nist.gov/vuln/detail/CVE-2026-31790</a>
+          <a href="https://openssl-library.org/news/secadv/20260407.txt">https://openssl-library.org/news/secadv/20260407.txt</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-1">https://ubuntu.com/security/notices/USN-8155-1</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-31790">https://www.cve.org/CVERecord?id=CVE-2026-31790</a>
+          <a href="https://www.openwall.com/lists/oss-security/2026/04/07/11">https://www.openwall.com/lists/oss-security/2026/04/07/11</a>
+        </td>
+      </tr>
+      <tr class="severity-LOW">
+        <td class="pkg-name">libssl3</td>
+        <td>CVE-2026-2673</td>
+        <td class="severity">LOW</td>
+        <td class="pkg-version">3.5.5-r0</td>
+        <td>3.5.6-r0</td>
+        <td class="links" data-more-links="off">
+          <a href="http://www.openwall.com/lists/oss-security/2026/03/13/3">http://www.openwall.com/lists/oss-security/2026/03/13/3</a>
+          <a href="https://access.redhat.com/security/cve/CVE-2026-2673">https://access.redhat.com/security/cve/CVE-2026-2673</a>
+          <a href="https://github.com/openssl/openssl/commit/2157c9d81f7b0bd7dfa25b960e928ec28e8dd63f">https://github.com/openssl/openssl/commit/2157c9d81f7b0bd7dfa25b960e928ec28e8dd63f</a>
+          <a href="https://github.com/openssl/openssl/commit/85977e013f32ceb96aa034c0e741adddc1a05e34">https://github.com/openssl/openssl/commit/85977e013f32ceb96aa034c0e741adddc1a05e34</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-2673">https://nvd.nist.gov/vuln/detail/CVE-2026-2673</a>
+          <a href="https://openssl-library.org/news/secadv/20260313.txt">https://openssl-library.org/news/secadv/20260313.txt</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-1">https://ubuntu.com/security/notices/USN-8155-1</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-2673">https://www.cve.org/CVERecord?id=CVE-2026-2673</a>
+        </td>
+      </tr>
+      <tr class="severity-LOW">
+        <td class="pkg-name">libssl3</td>
+        <td>CVE-2026-28387</td>
+        <td class="severity">LOW</td>
+        <td class="pkg-version">3.5.5-r0</td>
+        <td>3.5.6-r0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://github.com/openssl/openssl/commit/07e727d304746edb49a98ee8f6ab00256e1f012b">https://github.com/openssl/openssl/commit/07e727d304746edb49a98ee8f6ab00256e1f012b</a>
+          <a href="https://github.com/openssl/openssl/commit/258a8f63b26995ba357f4326da00e19e29c6acbe">https://github.com/openssl/openssl/commit/258a8f63b26995ba357f4326da00e19e29c6acbe</a>
+          <a href="https://github.com/openssl/openssl/commit/444958deaf450aea819171f97ae69eaedede42c3">https://github.com/openssl/openssl/commit/444958deaf450aea819171f97ae69eaedede42c3</a>
+          <a href="https://github.com/openssl/openssl/commit/7a4e08cee62a728d32e60b0de89e6764339df0a7">https://github.com/openssl/openssl/commit/7a4e08cee62a728d32e60b0de89e6764339df0a7</a>
+          <a href="https://github.com/openssl/openssl/commit/ec03fa050b3346997ed9c5fef3d0e16ad7db8177">https://github.com/openssl/openssl/commit/ec03fa050b3346997ed9c5fef3d0e16ad7db8177</a>
+          <a href="https://openssl-library.org/news/secadv/20260407.txt">https://openssl-library.org/news/secadv/20260407.txt</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-1">https://ubuntu.com/security/notices/USN-8155-1</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-2">https://ubuntu.com/security/notices/USN-8155-2</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-28387">https://www.cve.org/CVERecord?id=CVE-2026-28387</a>
+          <a href="https://www.openwall.com/lists/oss-security/2026/04/07/11">https://www.openwall.com/lists/oss-security/2026/04/07/11</a>
+        </td>
+      </tr>
+      <tr class="severity-LOW">
+        <td class="pkg-name">libssl3</td>
+        <td>CVE-2026-28388</td>
+        <td class="severity">LOW</td>
+        <td class="pkg-version">3.5.5-r0</td>
+        <td>3.5.6-r0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://github.com/openssl/openssl/commit/59c3b3158553ab53275bbbccca5cb305d591cf2e">https://github.com/openssl/openssl/commit/59c3b3158553ab53275bbbccca5cb305d591cf2e</a>
+          <a href="https://github.com/openssl/openssl/commit/5a0b4930779cd2408880979db765db919da55139">https://github.com/openssl/openssl/commit/5a0b4930779cd2408880979db765db919da55139</a>
+          <a href="https://github.com/openssl/openssl/commit/602542f2c0c2d5edb47128f93eac10b62aeeefb3">https://github.com/openssl/openssl/commit/602542f2c0c2d5edb47128f93eac10b62aeeefb3</a>
+          <a href="https://github.com/openssl/openssl/commit/a9d187dd1000130100fa7ab915f8513532cb3bb8">https://github.com/openssl/openssl/commit/a9d187dd1000130100fa7ab915f8513532cb3bb8</a>
+          <a href="https://github.com/openssl/openssl/commit/d3a901e8d9f021f3e67d6cfbc12e768129862726">https://github.com/openssl/openssl/commit/d3a901e8d9f021f3e67d6cfbc12e768129862726</a>
+          <a href="https://openssl-library.org/news/secadv/20260407.txt">https://openssl-library.org/news/secadv/20260407.txt</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-1">https://ubuntu.com/security/notices/USN-8155-1</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-2">https://ubuntu.com/security/notices/USN-8155-2</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-28388">https://www.cve.org/CVERecord?id=CVE-2026-28388</a>
+          <a href="https://www.openwall.com/lists/oss-security/2026/04/07/11">https://www.openwall.com/lists/oss-security/2026/04/07/11</a>
+        </td>
+      </tr>
+      <tr class="severity-LOW">
+        <td class="pkg-name">libssl3</td>
+        <td>CVE-2026-28389</td>
+        <td class="severity">LOW</td>
+        <td class="pkg-version">3.5.5-r0</td>
+        <td>3.5.6-r0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://github.com/openssl/openssl/commit/16cea4188e0ea567deb4f93f85902247e67384f5">https://github.com/openssl/openssl/commit/16cea4188e0ea567deb4f93f85902247e67384f5</a>
+          <a href="https://github.com/openssl/openssl/commit/785cbf7ea3b5a6f5adf0c1ccb92b79d89c35c616">https://github.com/openssl/openssl/commit/785cbf7ea3b5a6f5adf0c1ccb92b79d89c35c616</a>
+          <a href="https://github.com/openssl/openssl/commit/7b5274e812400cacb6f3be4c2df5340923fa807f">https://github.com/openssl/openssl/commit/7b5274e812400cacb6f3be4c2df5340923fa807f</a>
+          <a href="https://github.com/openssl/openssl/commit/c6725634e089eb2b634b10ede33944be7248172a">https://github.com/openssl/openssl/commit/c6725634e089eb2b634b10ede33944be7248172a</a>
+          <a href="https://github.com/openssl/openssl/commit/f80f83bc5fd036bc47d773e8b15a001e2b4ce686">https://github.com/openssl/openssl/commit/f80f83bc5fd036bc47d773e8b15a001e2b4ce686</a>
+          <a href="https://openssl-library.org/news/secadv/20260407.txt">https://openssl-library.org/news/secadv/20260407.txt</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-1">https://ubuntu.com/security/notices/USN-8155-1</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-2">https://ubuntu.com/security/notices/USN-8155-2</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-28389">https://www.cve.org/CVERecord?id=CVE-2026-28389</a>
+          <a href="https://www.openwall.com/lists/oss-security/2026/04/07/11">https://www.openwall.com/lists/oss-security/2026/04/07/11</a>
+        </td>
+      </tr>
+      <tr class="severity-LOW">
+        <td class="pkg-name">libssl3</td>
+        <td>CVE-2026-31789</td>
+        <td class="severity">LOW</td>
+        <td class="pkg-version">3.5.5-r0</td>
+        <td>3.5.6-r0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://github.com/openssl/openssl/commit/364f095b80601db632b0def6a33316967f863bde">https://github.com/openssl/openssl/commit/364f095b80601db632b0def6a33316967f863bde</a>
+          <a href="https://github.com/openssl/openssl/commit/7a9087efd769f362ad9c0e30c7baaa6bbfa65ecf">https://github.com/openssl/openssl/commit/7a9087efd769f362ad9c0e30c7baaa6bbfa65ecf</a>
+          <a href="https://github.com/openssl/openssl/commit/945b935ac66cc7f1a41f1b849c7c25adb5351f49">https://github.com/openssl/openssl/commit/945b935ac66cc7f1a41f1b849c7c25adb5351f49</a>
+          <a href="https://github.com/openssl/openssl/commit/a24216018e1ede8ff01a4ff5afff7dfbd443e2f9">https://github.com/openssl/openssl/commit/a24216018e1ede8ff01a4ff5afff7dfbd443e2f9</a>
+          <a href="https://github.com/openssl/openssl/commit/a91e537d16d74050dbde50bb0dfb1fe9930f0521">https://github.com/openssl/openssl/commit/a91e537d16d74050dbde50bb0dfb1fe9930f0521</a>
+          <a href="https://openssl-library.org/news/secadv/20260407.txt">https://openssl-library.org/news/secadv/20260407.txt</a>
+          <a href="https://ubuntu.com/security/notices/USN-8155-1">https://ubuntu.com/security/notices/USN-8155-1</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-31789">https://www.cve.org/CVERecord?id=CVE-2026-31789</a>
+          <a href="https://www.openwall.com/lists/oss-security/2026/04/07/11">https://www.openwall.com/lists/oss-security/2026/04/07/11</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">zlib</td>
+        <td>CVE-2026-22184</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">1.3.1-r2</td>
+        <td>1.3.2-r0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-22184">https://access.redhat.com/security/cve/CVE-2026-22184</a>
+          <a href="https://github.com/madler/zlib">https://github.com/madler/zlib</a>
+          <a href="https://github.com/madler/zlib/issues/1142">https://github.com/madler/zlib/issues/1142</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-22184">https://nvd.nist.gov/vuln/detail/CVE-2026-22184</a>
+          <a href="https://seclists.org/fulldisclosure/2026/Jan/3">https://seclists.org/fulldisclosure/2026/Jan/3</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-22184">https://www.cve.org/CVERecord?id=CVE-2026-22184</a>
+          <a href="https://www.vulncheck.com/advisories/zlib-untgz-global-buffer-overflow-in-tgzfname">https://www.vulncheck.com/advisories/zlib-untgz-global-buffer-overflow-in-tgzfname</a>
+          <a href="https://zlib.net/">https://zlib.net/</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">zlib</td>
+        <td>CVE-2026-27171</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">1.3.1-r2</td>
+        <td>1.3.2-r0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://7asecurity.com/blog/2026/02/zlib-7asecurity-audit/">https://7asecurity.com/blog/2026/02/zlib-7asecurity-audit/</a>
+          <a href="https://7asecurity.com/reports/pentest-report-zlib-RC1.1.pdf">https://7asecurity.com/reports/pentest-report-zlib-RC1.1.pdf</a>
+          <a href="https://access.redhat.com/security/cve/CVE-2026-27171">https://access.redhat.com/security/cve/CVE-2026-27171</a>
+          <a href="https://github.com/madler/zlib/issues/904">https://github.com/madler/zlib/issues/904</a>
+          <a href="https://github.com/madler/zlib/releases/tag/v1.3.2">https://github.com/madler/zlib/releases/tag/v1.3.2</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-27171">https://nvd.nist.gov/vuln/detail/CVE-2026-27171</a>
+          <a href="https://ostif.org/zlib-audit-complete/">https://ostif.org/zlib-audit-complete/</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-27171">https://www.cve.org/CVERecord?id=CVE-2026-27171</a>
+        </td>
+      </tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
+      <tr class="group-header"><th colspan="6">node-pkg</th></tr>
+      <tr><th colspan="6">No Vulnerabilities found</th></tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
+      <tr class="group-header"><th colspan="6">gobinary</th></tr>
+      <tr class="sub-header">
+        <th>Package</th>
+        <th>Vulnerability ID</th>
+        <th>Severity</th>
+        <th>Installed Version</th>
+        <th>Fixed Version</th>
+        <th>Links</th>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream</td>
+        <td>GHSA-xmrv-pmrh-hhx2</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.6.11</td>
+        <td>1.7.8</td>
+        <td class="links" data-more-links="off">
+          <a href="https://github.com/aws/aws-sdk-go-v2">https://github.com/aws/aws-sdk-go-v2</a>
+          <a href="https://github.com/aws/aws-sdk-go-v2/releases/tag/release-2026-03-23">https://github.com/aws/aws-sdk-go-v2/releases/tag/release-2026-03-23</a>
+          <a href="https://github.com/aws/aws-sdk-go-v2/security/advisories/GHSA-xmrv-pmrh-hhx2">https://github.com/aws/aws-sdk-go-v2/security/advisories/GHSA-xmrv-pmrh-hhx2</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs</td>
+        <td>GHSA-xmrv-pmrh-hhx2</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.51.0</td>
+        <td>1.65.0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://github.com/aws/aws-sdk-go-v2">https://github.com/aws/aws-sdk-go-v2</a>
+          <a href="https://github.com/aws/aws-sdk-go-v2/releases/tag/release-2026-03-23">https://github.com/aws/aws-sdk-go-v2/releases/tag/release-2026-03-23</a>
+          <a href="https://github.com/aws/aws-sdk-go-v2/security/advisories/GHSA-xmrv-pmrh-hhx2">https://github.com/aws/aws-sdk-go-v2/security/advisories/GHSA-xmrv-pmrh-hhx2</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">github.com/aws/aws-sdk-go-v2/service/s3</td>
+        <td>GHSA-xmrv-pmrh-hhx2</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.84.0</td>
+        <td>1.97.3</td>
+        <td class="links" data-more-links="off">
+          <a href="https://github.com/aws/aws-sdk-go-v2">https://github.com/aws/aws-sdk-go-v2</a>
+          <a href="https://github.com/aws/aws-sdk-go-v2/releases/tag/release-2026-03-23">https://github.com/aws/aws-sdk-go-v2/releases/tag/release-2026-03-23</a>
+          <a href="https://github.com/aws/aws-sdk-go-v2/security/advisories/GHSA-xmrv-pmrh-hhx2">https://github.com/aws/aws-sdk-go-v2/security/advisories/GHSA-xmrv-pmrh-hhx2</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">github.com/go-jose/go-jose/v4</td>
+        <td>CVE-2026-34986</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">v4.1.3</td>
+        <td>4.1.4</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-34986">https://access.redhat.com/security/cve/CVE-2026-34986</a>
+          <a href="https://github.com/go-jose/go-jose">https://github.com/go-jose/go-jose</a>
+          <a href="https://github.com/go-jose/go-jose/security/advisories/GHSA-78h2-9frx-2jm8">https://github.com/go-jose/go-jose/security/advisories/GHSA-78h2-9frx-2jm8</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-34986">https://nvd.nist.gov/vuln/detail/CVE-2026-34986</a>
+          <a href="https://pkg.go.dev/github.com/go-jose/go-jose/v4#pkg-constants">https://pkg.go.dev/github.com/go-jose/go-jose/v4#pkg-constants</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-34986">https://www.cve.org/CVERecord?id=CVE-2026-34986</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">github.com/moby/moby</td>
+        <td>CVE-2026-34040</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">v28.0.1+incompatible</td>
+        <td>29.3.1</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-34040">https://access.redhat.com/security/cve/CVE-2026-34040</a>
+          <a href="https://docs.docker.com/engine/extend/plugins_authorization">https://docs.docker.com/engine/extend/plugins_authorization</a>
+          <a href="https://github.com/moby/moby">https://github.com/moby/moby</a>
+          <a href="https://github.com/moby/moby/commit/e89edb19ad7de0407a5d31e3111cb01aa10b5a38">https://github.com/moby/moby/commit/e89edb19ad7de0407a5d31e3111cb01aa10b5a38</a>
+          <a href="https://github.com/moby/moby/releases/tag/docker-v29.3.1">https://github.com/moby/moby/releases/tag/docker-v29.3.1</a>
+          <a href="https://github.com/moby/moby/security/advisories/GHSA-v23v-6jw2-98fq">https://github.com/moby/moby/security/advisories/GHSA-v23v-6jw2-98fq</a>
+          <a href="https://github.com/moby/moby/security/advisories/GHSA-x744-4wpc-v9h2">https://github.com/moby/moby/security/advisories/GHSA-x744-4wpc-v9h2</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-34040">https://nvd.nist.gov/vuln/detail/CVE-2026-34040</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-34040">https://www.cve.org/CVERecord?id=CVE-2026-34040</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">github.com/moby/moby</td>
+        <td>CVE-2026-33997</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v28.0.1+incompatible</td>
+        <td>29.3.1</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-33997">https://access.redhat.com/security/cve/CVE-2026-33997</a>
+          <a href="https://docs.docker.com/engine/extend/legacy_plugins">https://docs.docker.com/engine/extend/legacy_plugins</a>
+          <a href="https://github.com/moby/moby">https://github.com/moby/moby</a>
+          <a href="https://github.com/moby/moby/commit/f4d6f25bf0c3fa12d4968320a45685947756a22a">https://github.com/moby/moby/commit/f4d6f25bf0c3fa12d4968320a45685947756a22a</a>
+          <a href="https://github.com/moby/moby/releases/tag/docker-v29.3.1">https://github.com/moby/moby/releases/tag/docker-v29.3.1</a>
+          <a href="https://github.com/moby/moby/security/advisories/GHSA-pxq6-2prw-chj9">https://github.com/moby/moby/security/advisories/GHSA-pxq6-2prw-chj9</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-33997">https://nvd.nist.gov/vuln/detail/CVE-2026-33997</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-33997">https://www.cve.org/CVERecord?id=CVE-2026-33997</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">github.com/openfga/openfga</td>
+        <td>CVE-2026-33729</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.11.3</td>
+        <td>1.13.1</td>
+        <td class="links" data-more-links="off">
+          <a href="https://github.com/openfga/openfga">https://github.com/openfga/openfga</a>
+          <a href="https://github.com/openfga/openfga/commit/049b50ccd2cc7e163bd897f3d17a7b859ad146f8">https://github.com/openfga/openfga/commit/049b50ccd2cc7e163bd897f3d17a7b859ad146f8</a>
+          <a href="https://github.com/openfga/openfga/releases/tag/v1.13.1">https://github.com/openfga/openfga/releases/tag/v1.13.1</a>
+          <a href="https://github.com/openfga/openfga/security/advisories/GHSA-h6c8-cww8-35hf">https://github.com/openfga/openfga/security/advisories/GHSA-h6c8-cww8-35hf</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-33729">https://nvd.nist.gov/vuln/detail/CVE-2026-33729</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">github.com/openfga/openfga</td>
+        <td>CVE-2026-34972</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.11.3</td>
+        <td>1.14.0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-34972">https://access.redhat.com/security/cve/CVE-2026-34972</a>
+          <a href="https://github.com/openfga/openfga">https://github.com/openfga/openfga</a>
+          <a href="https://github.com/openfga/openfga/security/advisories/GHSA-jwvj-g8pc-cx45">https://github.com/openfga/openfga/security/advisories/GHSA-jwvj-g8pc-cx45</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-34972">https://nvd.nist.gov/vuln/detail/CVE-2026-34972</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-34972">https://www.cve.org/CVERecord?id=CVE-2026-34972</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">github.com/openfga/openfga</td>
+        <td>GHSA-68m9-983m-f3v5</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.11.3</td>
+        <td>1.14.0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://github.com/openfga/openfga">https://github.com/openfga/openfga</a>
+          <a href="https://github.com/openfga/openfga/releases/tag/v1.14.0">https://github.com/openfga/openfga/releases/tag/v1.14.0</a>
+          <a href="https://github.com/openfga/openfga/security/advisories/GHSA-68m9-983m-f3v5">https://github.com/openfga/openfga/security/advisories/GHSA-68m9-983m-f3v5</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp</td>
+        <td>CVE-2026-39882</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v0.12.2</td>
+        <td>0.19.0</td>
+        <td class="links" data-more-links="off">
+          <a href="http://github.com/open-telemetry/opentelemetry-go/releases/tag/v1.43.0">http://github.com/open-telemetry/opentelemetry-go/releases/tag/v1.43.0</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go">https://github.com/open-telemetry/opentelemetry-go</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go/pull/8108">https://github.com/open-telemetry/opentelemetry-go/pull/8108</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-w8rr-5gcm-pp58">https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-w8rr-5gcm-pp58</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39882">https://nvd.nist.gov/vuln/detail/CVE-2026-39882</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp</td>
+        <td>CVE-2026-39882</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.39.0</td>
+        <td>1.43.0</td>
+        <td class="links" data-more-links="off">
+          <a href="http://github.com/open-telemetry/opentelemetry-go/releases/tag/v1.43.0">http://github.com/open-telemetry/opentelemetry-go/releases/tag/v1.43.0</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go">https://github.com/open-telemetry/opentelemetry-go</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go/pull/8108">https://github.com/open-telemetry/opentelemetry-go/pull/8108</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-w8rr-5gcm-pp58">https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-w8rr-5gcm-pp58</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39882">https://nvd.nist.gov/vuln/detail/CVE-2026-39882</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp</td>
+        <td>CVE-2026-39882</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.39.0</td>
+        <td>1.43.0</td>
+        <td class="links" data-more-links="off">
+          <a href="http://github.com/open-telemetry/opentelemetry-go/releases/tag/v1.43.0">http://github.com/open-telemetry/opentelemetry-go/releases/tag/v1.43.0</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go">https://github.com/open-telemetry/opentelemetry-go</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go/pull/8108">https://github.com/open-telemetry/opentelemetry-go/pull/8108</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-w8rr-5gcm-pp58">https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-w8rr-5gcm-pp58</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39882">https://nvd.nist.gov/vuln/detail/CVE-2026-39882</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">go.opentelemetry.io/otel/sdk</td>
+        <td>CVE-2026-24051</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">v1.39.0</td>
+        <td>1.40.0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://github.com/open-telemetry/opentelemetry-go">https://github.com/open-telemetry/opentelemetry-go</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go/commit/d45961bcda453fcbdb6469c22d6e88a1f9970a53">https://github.com/open-telemetry/opentelemetry-go/commit/d45961bcda453fcbdb6469c22d6e88a1f9970a53</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-9h8m-3fm2-qjrq">https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-9h8m-3fm2-qjrq</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-24051">https://nvd.nist.gov/vuln/detail/CVE-2026-24051</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4394">https://pkg.go.dev/vuln/GO-2026-4394</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">go.opentelemetry.io/otel/sdk</td>
+        <td>CVE-2026-39883</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">v1.39.0</td>
+        <td>1.43.0</td>
+        <td class="links" data-more-links="off">
+          <a href="http://github.com/open-telemetry/opentelemetry-go/releases/tag/v1.43.0">http://github.com/open-telemetry/opentelemetry-go/releases/tag/v1.43.0</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go">https://github.com/open-telemetry/opentelemetry-go</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-hfvc-g4fc-pqhx">https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-hfvc-g4fc-pqhx</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39883">https://nvd.nist.gov/vuln/detail/CVE-2026-39883</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32281</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-32281">https://access.redhat.com/security/cve/CVE-2026-32281</a>
+          <a href="https://go.dev/cl/758061">https://go.dev/cl/758061</a>
+          <a href="https://go.dev/issue/78281">https://go.dev/issue/78281</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32281">https://nvd.nist.gov/vuln/detail/CVE-2026-32281</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4946">https://pkg.go.dev/vuln/GO-2026-4946</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-32281">https://www.cve.org/CVERecord?id=CVE-2026-32281</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32288</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-32288">https://access.redhat.com/security/cve/CVE-2026-32288</a>
+          <a href="https://go.dev/cl/763766">https://go.dev/cl/763766</a>
+          <a href="https://go.dev/issue/78301">https://go.dev/issue/78301</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32288">https://nvd.nist.gov/vuln/detail/CVE-2026-32288</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4869">https://pkg.go.dev/vuln/GO-2026-4869</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-32288">https://www.cve.org/CVERecord?id=CVE-2026-32288</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32289</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-32289">https://access.redhat.com/security/cve/CVE-2026-32289</a>
+          <a href="https://go.dev/cl/763762">https://go.dev/cl/763762</a>
+          <a href="https://go.dev/issue/78331">https://go.dev/issue/78331</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32289">https://nvd.nist.gov/vuln/detail/CVE-2026-32289</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4865">https://pkg.go.dev/vuln/GO-2026-4865</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-32289">https://www.cve.org/CVERecord?id=CVE-2026-32289</a>
+        </td>
+      </tr>
+      <tr class="severity-UNKNOWN">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32280</td>
+        <td class="severity">UNKNOWN</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://go.dev/cl/758320">https://go.dev/cl/758320</a>
+          <a href="https://go.dev/issue/78282">https://go.dev/issue/78282</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4947">https://pkg.go.dev/vuln/GO-2026-4947</a>
+        </td>
+      </tr>
+      <tr class="severity-UNKNOWN">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32282</td>
+        <td class="severity">UNKNOWN</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://go.dev/cl/763761">https://go.dev/cl/763761</a>
+          <a href="https://go.dev/issue/78293">https://go.dev/issue/78293</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4864">https://pkg.go.dev/vuln/GO-2026-4864</a>
+        </td>
+      </tr>
+      <tr class="severity-UNKNOWN">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32283</td>
+        <td class="severity">UNKNOWN</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://go.dev/cl/763767">https://go.dev/cl/763767</a>
+          <a href="https://go.dev/issue/78334">https://go.dev/issue/78334</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4870">https://pkg.go.dev/vuln/GO-2026-4870</a>
+        </td>
+      </tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
+      <tr class="group-header"><th colspan="6">gobinary</th></tr>
+      <tr class="sub-header">
+        <th>Package</th>
+        <th>Vulnerability ID</th>
+        <th>Severity</th>
+        <th>Installed Version</th>
+        <th>Fixed Version</th>
+        <th>Links</th>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32281</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-32281">https://access.redhat.com/security/cve/CVE-2026-32281</a>
+          <a href="https://go.dev/cl/758061">https://go.dev/cl/758061</a>
+          <a href="https://go.dev/issue/78281">https://go.dev/issue/78281</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32281">https://nvd.nist.gov/vuln/detail/CVE-2026-32281</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4946">https://pkg.go.dev/vuln/GO-2026-4946</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-32281">https://www.cve.org/CVERecord?id=CVE-2026-32281</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32288</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-32288">https://access.redhat.com/security/cve/CVE-2026-32288</a>
+          <a href="https://go.dev/cl/763766">https://go.dev/cl/763766</a>
+          <a href="https://go.dev/issue/78301">https://go.dev/issue/78301</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32288">https://nvd.nist.gov/vuln/detail/CVE-2026-32288</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4869">https://pkg.go.dev/vuln/GO-2026-4869</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-32288">https://www.cve.org/CVERecord?id=CVE-2026-32288</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32289</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-32289">https://access.redhat.com/security/cve/CVE-2026-32289</a>
+          <a href="https://go.dev/cl/763762">https://go.dev/cl/763762</a>
+          <a href="https://go.dev/issue/78331">https://go.dev/issue/78331</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32289">https://nvd.nist.gov/vuln/detail/CVE-2026-32289</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4865">https://pkg.go.dev/vuln/GO-2026-4865</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-32289">https://www.cve.org/CVERecord?id=CVE-2026-32289</a>
+        </td>
+      </tr>
+      <tr class="severity-UNKNOWN">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32280</td>
+        <td class="severity">UNKNOWN</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://go.dev/cl/758320">https://go.dev/cl/758320</a>
+          <a href="https://go.dev/issue/78282">https://go.dev/issue/78282</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4947">https://pkg.go.dev/vuln/GO-2026-4947</a>
+        </td>
+      </tr>
+      <tr class="severity-UNKNOWN">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32282</td>
+        <td class="severity">UNKNOWN</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://go.dev/cl/763761">https://go.dev/cl/763761</a>
+          <a href="https://go.dev/issue/78293">https://go.dev/issue/78293</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4864">https://pkg.go.dev/vuln/GO-2026-4864</a>
+        </td>
+      </tr>
+      <tr class="severity-UNKNOWN">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32283</td>
+        <td class="severity">UNKNOWN</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://go.dev/cl/763767">https://go.dev/cl/763767</a>
+          <a href="https://go.dev/issue/78334">https://go.dev/issue/78334</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4870">https://pkg.go.dev/vuln/GO-2026-4870</a>
+        </td>
+      </tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
+      <tr class="group-header"><th colspan="6">gobinary</th></tr>
+      <tr class="sub-header">
+        <th>Package</th>
+        <th>Vulnerability ID</th>
+        <th>Severity</th>
+        <th>Installed Version</th>
+        <th>Fixed Version</th>
+        <th>Links</th>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32281</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-32281">https://access.redhat.com/security/cve/CVE-2026-32281</a>
+          <a href="https://go.dev/cl/758061">https://go.dev/cl/758061</a>
+          <a href="https://go.dev/issue/78281">https://go.dev/issue/78281</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32281">https://nvd.nist.gov/vuln/detail/CVE-2026-32281</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4946">https://pkg.go.dev/vuln/GO-2026-4946</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-32281">https://www.cve.org/CVERecord?id=CVE-2026-32281</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32288</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-32288">https://access.redhat.com/security/cve/CVE-2026-32288</a>
+          <a href="https://go.dev/cl/763766">https://go.dev/cl/763766</a>
+          <a href="https://go.dev/issue/78301">https://go.dev/issue/78301</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32288">https://nvd.nist.gov/vuln/detail/CVE-2026-32288</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4869">https://pkg.go.dev/vuln/GO-2026-4869</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-32288">https://www.cve.org/CVERecord?id=CVE-2026-32288</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32289</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-32289">https://access.redhat.com/security/cve/CVE-2026-32289</a>
+          <a href="https://go.dev/cl/763762">https://go.dev/cl/763762</a>
+          <a href="https://go.dev/issue/78331">https://go.dev/issue/78331</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32289">https://nvd.nist.gov/vuln/detail/CVE-2026-32289</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4865">https://pkg.go.dev/vuln/GO-2026-4865</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-32289">https://www.cve.org/CVERecord?id=CVE-2026-32289</a>
+        </td>
+      </tr>
+      <tr class="severity-UNKNOWN">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32280</td>
+        <td class="severity">UNKNOWN</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://go.dev/cl/758320">https://go.dev/cl/758320</a>
+          <a href="https://go.dev/issue/78282">https://go.dev/issue/78282</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4947">https://pkg.go.dev/vuln/GO-2026-4947</a>
+        </td>
+      </tr>
+      <tr class="severity-UNKNOWN">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32282</td>
+        <td class="severity">UNKNOWN</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://go.dev/cl/763761">https://go.dev/cl/763761</a>
+          <a href="https://go.dev/issue/78293">https://go.dev/issue/78293</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4864">https://pkg.go.dev/vuln/GO-2026-4864</a>
+        </td>
+      </tr>
+      <tr class="severity-UNKNOWN">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32283</td>
+        <td class="severity">UNKNOWN</td>
+        <td class="pkg-version">v1.25.8</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://go.dev/cl/763767">https://go.dev/cl/763767</a>
+          <a href="https://go.dev/issue/78334">https://go.dev/issue/78334</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4870">https://pkg.go.dev/vuln/GO-2026-4870</a>
+        </td>
+      </tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
+    </table>
+  </body>
+</html>
