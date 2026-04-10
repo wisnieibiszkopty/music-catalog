@@ -1,0 +1,44 @@
+services:
+  api-gateway:
+    build:
+      context: ..
+      dockerfile: services/ApiGateway/Dockerfile
+    image: ""
+    
+  web-app:
+    build:
+      context: ..
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_API_URL: ${GATEWAY_URL}
+    image: ""
+        
+  orchestrator-service:
+    build:
+      context: ..
+      dockerfile: services/Orchestrator.Service/Dockerfile
+    image: ""
+      
+  scraper-service:
+    build:
+      context: ..
+      dockerfile: services/Scraper.Service/Dockerfile
+    image: ""
+      
+  notification-service:
+    build:
+      context: ..
+      dockerfile: services/Notification.Service/Dockerfile
+    image: ""
+      
+  artist-service:
+    build:
+      context: ..
+      dockerfile: services/Artists.Service/Dockerfile
+    image: ""
+  
+  catalog-service:
+    build:
+      context: ..
+      dockerfile: services/Catalog.Service/Dockerfile
+    image: ""

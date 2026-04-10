@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <GenerateBillOfMaterials>true</GenerateBillOfMaterials>
+    <PublishAot>false</PublishAot>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+    <UserSecretsId>3430de71-f74b-4536-97d3-491e6c8256f3</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\shared\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\..\shared\Shared\Shared.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.3.0" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.3" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="..\..\..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
+  </ItemGroup>
+  
+</Project>

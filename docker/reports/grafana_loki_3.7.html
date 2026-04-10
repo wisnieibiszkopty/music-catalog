@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style>
+      * {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      h1 {
+        text-align: center;
+      }
+      .group-header th {
+        font-size: 200%;
+      }
+      .sub-header th {
+        font-size: 150%;
+      }
+      table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        white-space: nowrap;
+        padding: .3em;
+      }
+      table {
+        margin: 0 auto;
+      }
+      .severity {
+        text-align: center;
+        font-weight: bold;
+        color: #fafafa;
+      }
+      .severity-LOW .severity { background-color: #5fbb31; }
+      .severity-MEDIUM .severity { background-color: #e9c600; }
+      .severity-HIGH .severity { background-color: #ff8800; }
+      .severity-CRITICAL .severity { background-color: #e40000; }
+      .severity-UNKNOWN .severity { background-color: #747474; }
+      .severity-LOW { background-color: #5fbb3160; }
+      .severity-MEDIUM { background-color: #e9c60060; }
+      .severity-HIGH { background-color: #ff880060; }
+      .severity-CRITICAL { background-color: #e4000060; }
+      .severity-UNKNOWN { background-color: #74747460; }
+      table tr td:first-of-type {
+        font-weight: bold;
+      }
+      .links a,
+      .links[data-more-links=on] a {
+        display: block;
+      }
+      .links[data-more-links=off] a:nth-of-type(1n+5) {
+        display: none;
+      }
+      a.toggle-more-links { cursor: pointer; }
+    </style>
+    <title>grafana/loki:3.7 (debian 13.4) - Trivy Report - 2026-04-10 21:54:25.825416903 +0200 CEST m=+1.106979258 </title>
+    <script>
+      window.onload = function() {
+        document.querySelectorAll('td.links').forEach(function(linkCell) {
+          var links = [].concat.apply([], linkCell.querySelectorAll('a'));
+          [].sort.apply(links, function(a, b) {
+            return a.href > b.href ? 1 : -1;
+          });
+          links.forEach(function(link, idx) {
+            if (links.length > 3 && 3 === idx) {
+              var toggleLink = document.createElement('a');
+              toggleLink.innerText = "Toggle more links";
+              toggleLink.href = "#toggleMore";
+              toggleLink.setAttribute("class", "toggle-more-links");
+              linkCell.appendChild(toggleLink);
+            }
+            linkCell.appendChild(link);
+          });
+        });
+        document.querySelectorAll('a.toggle-more-links').forEach(function(toggleLink) {
+          toggleLink.onclick = function() {
+            var expanded = toggleLink.parentElement.getAttribute("data-more-links");
+            toggleLink.parentElement.setAttribute("data-more-links", "on" === expanded ? "off" : "on");
+            return false;
+          };
+        });
+      };
+    </script>
+  </head>
+  <body>
+    <h1>grafana/loki:3.7 (debian 13.4) - Trivy Report - 2026-04-10 21:54:25.825474642 +0200 CEST m=+1.107036987</h1>
+    <table>
+      <tr class="group-header"><th colspan="6">debian</th></tr>
+      <tr><th colspan="6">No Vulnerabilities found</th></tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
+      <tr class="group-header"><th colspan="6">gobinary</th></tr>
+      <tr class="sub-header">
+        <th>Package</th>
+        <th>Vulnerability ID</th>
+        <th>Severity</th>
+        <th>Installed Version</th>
+        <th>Fixed Version</th>
+        <th>Links</th>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream</td>
+        <td>GHSA-xmrv-pmrh-hhx2</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.7.7</td>
+        <td>1.7.8</td>
+        <td class="links" data-more-links="off">
+          <a href="https://github.com/aws/aws-sdk-go-v2">https://github.com/aws/aws-sdk-go-v2</a>
+          <a href="https://github.com/aws/aws-sdk-go-v2/releases/tag/release-2026-03-23">https://github.com/aws/aws-sdk-go-v2/releases/tag/release-2026-03-23</a>
+          <a href="https://github.com/aws/aws-sdk-go-v2/security/advisories/GHSA-xmrv-pmrh-hhx2">https://github.com/aws/aws-sdk-go-v2/security/advisories/GHSA-xmrv-pmrh-hhx2</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">github.com/aws/aws-sdk-go-v2/service/s3</td>
+        <td>GHSA-xmrv-pmrh-hhx2</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.97.1</td>
+        <td>1.97.3</td>
+        <td class="links" data-more-links="off">
+          <a href="https://github.com/aws/aws-sdk-go-v2">https://github.com/aws/aws-sdk-go-v2</a>
+          <a href="https://github.com/aws/aws-sdk-go-v2/releases/tag/release-2026-03-23">https://github.com/aws/aws-sdk-go-v2/releases/tag/release-2026-03-23</a>
+          <a href="https://github.com/aws/aws-sdk-go-v2/security/advisories/GHSA-xmrv-pmrh-hhx2">https://github.com/aws/aws-sdk-go-v2/security/advisories/GHSA-xmrv-pmrh-hhx2</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">github.com/go-jose/go-jose/v4</td>
+        <td>CVE-2026-34986</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">v4.1.3</td>
+        <td>4.1.4</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-34986">https://access.redhat.com/security/cve/CVE-2026-34986</a>
+          <a href="https://github.com/go-jose/go-jose">https://github.com/go-jose/go-jose</a>
+          <a href="https://github.com/go-jose/go-jose/security/advisories/GHSA-78h2-9frx-2jm8">https://github.com/go-jose/go-jose/security/advisories/GHSA-78h2-9frx-2jm8</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-34986">https://nvd.nist.gov/vuln/detail/CVE-2026-34986</a>
+          <a href="https://pkg.go.dev/github.com/go-jose/go-jose/v4#pkg-constants">https://pkg.go.dev/github.com/go-jose/go-jose/v4#pkg-constants</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-34986">https://www.cve.org/CVERecord?id=CVE-2026-34986</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp</td>
+        <td>CVE-2026-39882</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v0.15.0</td>
+        <td>0.19.0</td>
+        <td class="links" data-more-links="off">
+          <a href="http://github.com/open-telemetry/opentelemetry-go/releases/tag/v1.43.0">http://github.com/open-telemetry/opentelemetry-go/releases/tag/v1.43.0</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go">https://github.com/open-telemetry/opentelemetry-go</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go/pull/8108">https://github.com/open-telemetry/opentelemetry-go/pull/8108</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-w8rr-5gcm-pp58">https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-w8rr-5gcm-pp58</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39882">https://nvd.nist.gov/vuln/detail/CVE-2026-39882</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp</td>
+        <td>CVE-2026-39882</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.39.0</td>
+        <td>1.43.0</td>
+        <td class="links" data-more-links="off">
+          <a href="http://github.com/open-telemetry/opentelemetry-go/releases/tag/v1.43.0">http://github.com/open-telemetry/opentelemetry-go/releases/tag/v1.43.0</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go">https://github.com/open-telemetry/opentelemetry-go</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go/pull/8108">https://github.com/open-telemetry/opentelemetry-go/pull/8108</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-w8rr-5gcm-pp58">https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-w8rr-5gcm-pp58</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39882">https://nvd.nist.gov/vuln/detail/CVE-2026-39882</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp</td>
+        <td>CVE-2026-39882</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.40.0</td>
+        <td>1.43.0</td>
+        <td class="links" data-more-links="off">
+          <a href="http://github.com/open-telemetry/opentelemetry-go/releases/tag/v1.43.0">http://github.com/open-telemetry/opentelemetry-go/releases/tag/v1.43.0</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go">https://github.com/open-telemetry/opentelemetry-go</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go/pull/8108">https://github.com/open-telemetry/opentelemetry-go/pull/8108</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-w8rr-5gcm-pp58">https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-w8rr-5gcm-pp58</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39882">https://nvd.nist.gov/vuln/detail/CVE-2026-39882</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">go.opentelemetry.io/otel/sdk</td>
+        <td>CVE-2026-39883</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">v1.42.0</td>
+        <td>1.43.0</td>
+        <td class="links" data-more-links="off">
+          <a href="http://github.com/open-telemetry/opentelemetry-go/releases/tag/v1.43.0">http://github.com/open-telemetry/opentelemetry-go/releases/tag/v1.43.0</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go">https://github.com/open-telemetry/opentelemetry-go</a>
+          <a href="https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-hfvc-g4fc-pqhx">https://github.com/open-telemetry/opentelemetry-go/security/advisories/GHSA-hfvc-g4fc-pqhx</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39883">https://nvd.nist.gov/vuln/detail/CVE-2026-39883</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32281</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.26.1</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-32281">https://access.redhat.com/security/cve/CVE-2026-32281</a>
+          <a href="https://go.dev/cl/758061">https://go.dev/cl/758061</a>
+          <a href="https://go.dev/issue/78281">https://go.dev/issue/78281</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32281">https://nvd.nist.gov/vuln/detail/CVE-2026-32281</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4946">https://pkg.go.dev/vuln/GO-2026-4946</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-32281">https://www.cve.org/CVERecord?id=CVE-2026-32281</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32288</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.26.1</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-32288">https://access.redhat.com/security/cve/CVE-2026-32288</a>
+          <a href="https://go.dev/cl/763766">https://go.dev/cl/763766</a>
+          <a href="https://go.dev/issue/78301">https://go.dev/issue/78301</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32288">https://nvd.nist.gov/vuln/detail/CVE-2026-32288</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4869">https://pkg.go.dev/vuln/GO-2026-4869</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-32288">https://www.cve.org/CVERecord?id=CVE-2026-32288</a>
+        </td>
+      </tr>
+      <tr class="severity-MEDIUM">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32289</td>
+        <td class="severity">MEDIUM</td>
+        <td class="pkg-version">v1.26.1</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2026-32289">https://access.redhat.com/security/cve/CVE-2026-32289</a>
+          <a href="https://go.dev/cl/763762">https://go.dev/cl/763762</a>
+          <a href="https://go.dev/issue/78331">https://go.dev/issue/78331</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32289">https://nvd.nist.gov/vuln/detail/CVE-2026-32289</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4865">https://pkg.go.dev/vuln/GO-2026-4865</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2026-32289">https://www.cve.org/CVERecord?id=CVE-2026-32289</a>
+        </td>
+      </tr>
+      <tr class="severity-UNKNOWN">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32280</td>
+        <td class="severity">UNKNOWN</td>
+        <td class="pkg-version">v1.26.1</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://go.dev/cl/758320">https://go.dev/cl/758320</a>
+          <a href="https://go.dev/issue/78282">https://go.dev/issue/78282</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4947">https://pkg.go.dev/vuln/GO-2026-4947</a>
+        </td>
+      </tr>
+      <tr class="severity-UNKNOWN">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32282</td>
+        <td class="severity">UNKNOWN</td>
+        <td class="pkg-version">v1.26.1</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://go.dev/cl/763761">https://go.dev/cl/763761</a>
+          <a href="https://go.dev/issue/78293">https://go.dev/issue/78293</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4864">https://pkg.go.dev/vuln/GO-2026-4864</a>
+        </td>
+      </tr>
+      <tr class="severity-UNKNOWN">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-32283</td>
+        <td class="severity">UNKNOWN</td>
+        <td class="pkg-version">v1.26.1</td>
+        <td>1.25.9, 1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://go.dev/cl/763767">https://go.dev/cl/763767</a>
+          <a href="https://go.dev/issue/78334">https://go.dev/issue/78334</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4870">https://pkg.go.dev/vuln/GO-2026-4870</a>
+        </td>
+      </tr>
+      <tr class="severity-UNKNOWN">
+        <td class="pkg-name">stdlib</td>
+        <td>CVE-2026-33810</td>
+        <td class="severity">UNKNOWN</td>
+        <td class="pkg-version">v1.26.1</td>
+        <td>1.26.2</td>
+        <td class="links" data-more-links="off">
+          <a href="https://go.dev/cl/763763">https://go.dev/cl/763763</a>
+          <a href="https://go.dev/issue/78332">https://go.dev/issue/78332</a>
+          <a href="https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU">https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU</a>
+          <a href="https://pkg.go.dev/vuln/GO-2026-4866">https://pkg.go.dev/vuln/GO-2026-4866</a>
+        </td>
+      </tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+server:
+  http_listen_port: 3200
+
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+        http:
+
+ingester:
+  max_block_duration: 5m
+
+storage:
+  trace:
+    backend: local
+    local:
+      path: /var/lib/tempo/traces
+    wal:
+      path: /var/lib/tempo/wal
+
+compactor:
+  compaction:
+    block_retention: 336h
+
+metrics_generator:
+  storage:
+    path: /var/lib/tempo/generator/wal
+
+overrides:
+  defaults:
+    metrics_generator:
+      processors: [service-graphs, span-metrics]

@@ -1,204 +1,407 @@
 services:
   rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: rabbitmq
-    expose:
-      - "5672"  
+    image: rabbitmq:4.2-alpine
+    container_name: rabbitmq  
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_NODENAME: rabbit@rabbitmq
+      RABBITMQ_LOGS: "-"
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
-      - rabbitmq-log:/var/log/rabbitmq
+    networks:
+      - internal
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:8.6-alpine
     container_name: redis
-    ports:
-      - "6379:6379"
+    command: [ "redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}" ]
     volumes:
       - redis-data:/data
-    command: [ "redis-server", "--appendonly", "yes" ]
+    networks:
+      - internal
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 256M
 
   api-gateway:
     container_name: api-gateway
-    build:
-      context: ..
-      dockerfile: src/gateway/ApiGateway/Dockerfile
+    image: wisnieibiszkopty/music-catalog-api-gateway:0.1.0
     ports:
       - "8080:8080"
     environment:
-      - ASPNETCORE_URLS=http://+:8080
+      Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
+      Keycloak__ExternalUrl: ${KEYCLOAK_EXTERNAL_URL}
+      Keycloak__Realm: ${KEYCLOAK_REALM}
+      Keycloak__Audience: ${KEYCLOAK_AUDIENCE}
+      AllowedOrigins__0: ${GATEWAY_URL}
+      AllowedOrigins__1: ${GATEWAY_URL_2}
+    networks:
+      - frontend
+      - internal
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 80M
     depends_on:
       - keycloak
-      - artist-service
-      - orchestrator-service  
-  
+
+  # frontend      
   web-app:
     container_name: web-app
-    build:
-      context: ../src/frontend
-      dockerfile: Dockerfile
-      args:
-        - VITE_API_URL=http://localhost:8080/api
-        - VITE_KEYCLOAK_URL=http://localhost:8080/auth
+    image: wisnieibiszkopty/music-catalog-web-app:0.1.0
+    networks:
+      - frontend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 80M
   
+  # identity provider
   keycloak-db:
-    image: postgres:18-alpine
+    image: postgres:18.3-alpine
     container_name: keycloak-db
     environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: keycloak
+      POSTGRES_DB: ${KEYCLOAK_DB_NAME}
+      POSTGRES_USER: ${KEYCLOAK_DB_USER}
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASS}
     volumes:
       - keycloak-data:/var/lib/postgresql/data
-    restart: unless-stopped
-
+    networks:
+      - keycloak
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 100M
+    
   keycloak:
-    image: quay.io/keycloak/keycloak:24.0
+    image: quay.io/keycloak/keycloak:26.6
     container_name: keycloak
     command: start --import-realm
     environment:
-      KC_HOSTNAME_URL: http://localhost:8080/auth
-      KC_HOSTNAME_ADMIN_URL: http://localhost:8080/auth
+      # Proxy / hostname
+      KC_HOSTNAME_URL: ${KEYCLOAK_EXTERNAL_URL}
+      KC_HOSTNAME_ADMIN_URL: ${KEYCLOAK_EXTERNAL_URL}
+      KC_PROXY_HEADERS: xforwarded
+      KC_HTTP_ENABLED: "true"
       KC_HOSTNAME_STRICT: "false"
       KC_HOSTNAME_STRICT_HTTPS: "false"
-      KC_HTTP_ENABLED: "true"
-      KC_PROXY_HEADERS: xforwarded
       KC_HTTP_RELATIVE_PATH: /auth
+      # Database
       KC_DB: postgres
+      KC_DB_SCHEMA: public
       KC_DB_URL_HOST: keycloak-db
-      KC_DB_URL_DATABASE: keycloak
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: keycloak
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB_URL_DATABASE: ${KEYCLOAK_DB_NAME}
+      KC_DB_USERNAME: ${KEYCLOAK_DB_USER}
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASS}
+      # Admin
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASS}
     volumes:
-      - ./realm-export.json:/opt/keycloak/data/import/realm-export.json
-    restart: unless-stopped
+      - ./config/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    networks:
+      - keycloak
+      - internal
+      - frontend
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1.5GB
     depends_on:
       - keycloak-db
 
+  # scraping
   orchestrator-service:
     container_name: orchestrator-service
-    build:
-      context: ..
-      dockerfile: src/services/Orchestrator.Service/Dockerfile
+    image: wisnieibiszkopty/music-catalog-orchestrator-service:0.1.0
     environment:
-      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
-      ConnectionStrings__Redis: redis:6379
+      ConnectionStrings__RabbitMq: ${RABBIT_URL}
+      ConnectionStrings__Redis: ${REDIS_URL}
       Redis__InstanceName: ScrapperService
-      ASPNETCORE_URLS: http://+:8080
+      Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
+      Keycloak__Realm: ${KEYCLOAK_REALM}
+    networks:
+      - internal
+      - logging
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
     depends_on:
-      - rabbitmq
-      - redis
+      rabbitmq:
+        condition: service_healthy
     
   scraper-service:
     container_name: scraper-service
-    build:
-      context: ..
-      dockerfile: src/services/Scraper.Service/Dockerfile
+    image: wisnieibiszkopty/music-catalog-scraper-service:0.1.0
+    env_file:
+      - .env
+      - .env.secrets
     environment:
-      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
-      ConnectionStrings__Redis: redis:6379,abortConnect=false
-      ASPNETCORE_URLS: http://+:8080
-      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
-      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
+      ConnectionStrings__RabbitMq: ${RABBIT_URL}
+      ConnectionStrings__Redis: ${REDIS_URL}
+    networks:
+      - internal
+      - logging
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
     depends_on:
-      - rabbitmq
-      - redis
+      rabbitmq:
+        condition: service_healthy
 
+  # notifications
   notification-service:
     container_name: notification-service
-    build: 
-      context: ..
-      dockerfile: src/services/Notification.Service/Dockerfile
+    image: wisnieibiszkopty/music-catalog-notification-service:0.1.0
     environment:
-      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
-      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__RabbitMq: ${RABBIT_URL}
+      Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
+      Keycloak__Realm: ${KEYCLOAK_REALM}
+    networks:
+      - internal
+      - logging
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
 
+  # artists
   artist-db:
-    image: postgres:18-alpine
+    image: postgres:18.3-alpine
     container_name: artist-db
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=123
-      - POSTGRES_DB=artist_db
+      POSTGRES_USER: ${ARTIST_DB_USER}
+      POSTGRES_PASSWORD: ${ARTIST_DB_PASS}
+      POSTGRES_DB: ${ARTIST_DB_NAME}
     volumes:
       - artist-data:/var/lib/postgresql
+    networks:
+      - artists
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 100M
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U admin -d artist-db" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${ARTIST_DB_USER} -d ${ARTIST_DB_NAME}" ]
       interval: 5s
       timeout: 5s
       retries: 5
 
   artist-db-migrator:
-    image: flyway/flyway:latest-alpine
+    image: flyway/flyway:12.0-alpine
     container_name: artist-db-migrator
     volumes:
-      - ../src/services/Artists.Service/migrations:/flyway/sql
+      - ../services/Artists.Service/migrations:/flyway/sql
+    networks:
+      - artists
     depends_on:
       artist-db:
         condition: service_healthy
-    command: -url=jdbc:postgresql://artist-db:5432/artist_db -user=admin -password=123 -connectRetries=60 migrate
+    command: -url=${ARTIST_DB_URL} -user=${ARTIST_DB_USER} -password=${ARTIST_DB_PASS} -connectRetries=60 migrate
 
   artist-service:
     container_name: artist-service
-    build:
-      context: ..
-      dockerfile: src/services/Artists.Service/Dockerfile
+    image: wisnieibiszkopty/music-catalog-artist-service:0.1.0
     environment:
-      ConnectionStrings__DefaultConnection: Host=artist-db;Port=5432;Database=artist_db;Username=admin;Password=123
-      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
-      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Host=artist-db;Port=5432;Database=${ARTIST_DB_NAME};Username=${ARTIST_DB_USER};Password=${ARTIST_DB_PASS}
+      ConnectionStrings__RabbitMq: ${RABBIT_URL}
+      Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
+      Keycloak__Realm: ${KEYCLOAK_REALM}
+      Otlp__Endpoint: ${OTLP_ENDPOINT_URL}
+      NPGSQL_GSSAPI_LIBRARIES: ""
+    networks:
+      - artists
+      - internal
+      - logging
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
     depends_on:
       artist-db:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
   
+  # catalog
   catalog-db:
-    image: postgres:18-alpine
+    image: postgres:18.3-alpine
     container_name: catalog-db
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=123
-      - POSTGRES_DB=catalog_db
+      POSTGRES_USER: ${CATALOG_DB_USER}
+      POSTGRES_PASSWORD: ${CATALOG_DB_PASS}
+      POSTGRES_DB: ${CATALOG_DB_NAME}
     volumes:
       - catalog-data:/var/lib/postgresql
+    networks:
+      - catalog
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 100M
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U admin -d catalog-db" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${CATALOG_DB_USER} -d ${CATALOG_DB_NAME}" ]
       interval: 5s
       timeout: 5s
       retries: 5
 
   catalog-db-migrator:
-    image: flyway/flyway:latest-alpine
+    image: flyway/flyway:12.0-alpine
     container_name: catalog-db-migrator
     volumes:
-      - ../src/services/Catalog.Service/migrations:/flyway/sql
-    depends_on:
-      artist-db:
-        condition: service_healthy
-    command: -url=jdbc:postgresql://catalog-db:5432/catalog_db -user=admin -password=123 -connectRetries=60 migrate
-
-  catalog-service:
-    container_name: catalog-service
-    build:
-      context: ..
-      dockerfile: src/services/Catalog.Service/Dockerfile
-    environment:
-      ConnectionStrings__DefaultConnection: Host=catalog-db;Port=5432;Database=catalog_db;Username=admin;Password=123
-      ConnectionStrings__RabbitMq: rabbitmq://guest:guest@rabbitmq
-      ASPNETCORE_URLS: http://+:8080
+      - ../services/Catalog.Service/migrations:/flyway/sql
+    networks:
+      - catalog
     depends_on:
       catalog-db:
         condition: service_healthy
+    command: -url=${CATALOG_DB_URL} -user=${CATALOG_DB_USER} -password=${CATALOG_DB_PASS} -connectRetries=60 migrate
+
+  catalog-service:
+    container_name: catalog-service
+    image: wisnieibiszkopty/music-catalog-catalog-service:0.1.0
+    environment:
+      ConnectionStrings__DefaultConnection: Host=catalog-db;Port=5432;Database=${CATALOG_DB_NAME};Username=${CATALOG_DB_USER};Password=${CATALOG_DB_PASS}
+      ConnectionStrings__RabbitMq: ${RABBIT_URL}
+      Keycloak__InternalUrl: ${KEYCLOAK_INTERNAL_URL}
+      Keycloak__Realm: ${KEYCLOAK_REALM}
+    networks:
+      - catalog
+      - internal
+      - logging
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+    depends_on:
+      catalog-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+  
+  # observability
+  loki:
+    container_name: loki
+    image: grafana/loki:3.7
+    volumes:
+      - ./config/loki-config.yaml:/etc/loki/local-config.yaml
+      - loki-data:/loki
+    networks:
+      - logging
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+    command: -config.file=/etc/loki/local-config.yaml
+  
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:3.6
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro 
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./config/promtail-config.yaml:/etc/promtail/config.yaml
+    networks:
+      - logging
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 128M
+    command: -config.file=/etc/promtail/config.yaml
+  
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:12.4
+    volumes:
+      - ./config/grafana-ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
+      - grafana-data:/var/lib/grafana
+    networks:
+      - logging
+      - frontend
+    environment:
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=123
+      - GF_ANALYTICS_REPORTING_ENABLED=false
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_SECURITY_COOKIE_SAMESITE=lax
+      - GF_SERVER_ENABLE_GZIP=true
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+  
+  prometheus:
+    image: prom/prometheus:v3.11.1
+    container_name: prometheus
+    volumes:
+      - ./config/prometheus.yaml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    networks:
+      - logging
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 80M
   
 volumes:
+  rabbitmq-data:
+  redis-data:
   keycloak-data:
   artist-data:
   catalog-data:
-  redis-data:
-  rabbitmq-data:
-  rabbitmq-log:
+  loki-data:
+  grafana-data:
+  prometheus-data:
+  tempo-data:
+    
+networks:
+  frontend:
+    driver: bridge
+  internal:
+    driver: bridge
+  logging:
+    driver: bridge
+  artists:
+    internal: true
+  catalog:
+    internal: true
+  keycloak:
+    internal: true
