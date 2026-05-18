@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: artists-service
+  namespace: music-catalog
+  labels:
+    app: artists-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: artists-service
+  template:
+    metadata:
+      name: artists-service
+      labels:
+        app: artists-service
+    spec:
+      containers:
+        - name: artists-service
+          image: wisnieibiszkopty/music-catalog-artist-service:0.1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+      restartPolicy: Always
+      # TODO add config
+      
