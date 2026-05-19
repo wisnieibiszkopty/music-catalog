@@ -12,7 +12,6 @@ spec:
       app: artists-service
   template:
     metadata:
-      name: artists-service
       labels:
         app: artists-service
     spec:
@@ -22,6 +21,42 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+          env:
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: artists-service-secret
+                  key: connection-string
+            - name: ConnectionStrings__RabbitMq
+              valueFrom:
+                secretKeyRef:
+                  name: artists-service-secret
+                  key: rabbitmq-url
+            - name: Keycloak__InternalUrl
+              valueFrom:
+                configMapKeyRef:
+                  name: artists-service-config
+                  key: Keycloak__InternalUrl
+            - name: Keycloak__Realm
+              valueFrom:
+                configMapKeyRef:
+                  name: artists-service-config
+                  key: Keycloak__Realm
+            - name: Otlp__Endpoint
+              valueFrom:
+                configMapKeyRef:
+                  name: artists-service-config
+                  key: Otlp__Endpoint
+            - name: NPGSQL_GSSAPI_LIBRARIES
+              valueFrom:
+                configMapKeyRef:
+                  name: artists-service-config
+                  key: NPGSQL_GSSAPI_LIBRARIES
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
       restartPolicy: Always
-      # TODO add config
-      
