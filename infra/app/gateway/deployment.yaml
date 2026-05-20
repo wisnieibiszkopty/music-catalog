@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: music-catalog
+  labels:
+    app: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: wisnieibiszkopty/music-catalog-api-gateway:0.1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: Keycloak__InternalUrl
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: Keycloak__InternalUrl
+            - name: Keycloak__ExternalUrl
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: Keycloak__ExternalUrl
+            - name: Keycloak__Realm
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: Keycloak__Realm
+            - name: Keycloak__Audience
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: Keycloak__Audience
+            - name: AllowedOrigins__0
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: AllowedOrigins__0
+            - name: AllowedOrigins__1
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: AllowedOrigins__1
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "80Mi"
+            requests:
+              cpu: "100m"
+              memory: "40Mi"

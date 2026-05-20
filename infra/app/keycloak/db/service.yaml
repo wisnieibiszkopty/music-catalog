@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: rabbitmq
+  name: keycloak-db
   namespace: music-catalog
 spec:
   selector:
-    app: rabbitmq
+    app: keycloak-db
   ports:
-    - port: 5672
-      targetPort: 5672
+    - port: 5432
+      targetPort: 5432
   clusterIP: None

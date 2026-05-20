@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: artists-service-config
+  name: artist-service-config
   namespace: music-catalog
 data:
   Keycloak__Realm: "music-catalog"

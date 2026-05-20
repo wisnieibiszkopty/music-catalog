@@ -1,26 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: title
-  labels:
-    app: title
+  name: web-app
+  namespace: music-catalog
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: title
+      app: web-app
   template:
     metadata:
-      name: title
       labels:
-        app: title
+        app: web-app
     spec:
       containers:
-        - name: title
-          image: nginx
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 80
-              protocol: TCP
-      restartPolicy: Always
-      
+        - name: web-app
+          image: wisnieibiszkopty/music-catalog-web-app:0.1.0
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "80Mi"

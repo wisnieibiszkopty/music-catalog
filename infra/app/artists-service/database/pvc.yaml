@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: artists-data
+  name: artist-data
   namespace: music-catalog
 spec:
   accessModes:

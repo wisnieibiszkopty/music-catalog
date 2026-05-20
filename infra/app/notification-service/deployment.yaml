@@ -1,26 +1,40 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: title
+  name: notification-service
+  namespace: music-catalog
   labels:
-    app: title
+    app: notification-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: title
+      app: notification-service
   template:
     metadata:
-      name: title
       labels:
-        app: title
+        app: notification-service
     spec:
       containers:
-        - name: title
-          image: nginx
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 80
-              protocol: TCP
-      restartPolicy: Always
-      
+        - name: notification-service
+          image: wisnieibiszkopty/music-catalog-notification-service:0.1.0
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+          env:
+            - name: ConnectionStrings__RabbitMq
+              valueFrom:
+                secretKeyRef:
+                  name: notification-service-secret
+                  key: rabbitmq-url
+            - name: Keycloak__InternalUrl
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-service-config
+                  key: Keycloak__InternalUrl
+            - name: Keycloak__Realm
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-service-config
+                  key: Keycloak__Realm

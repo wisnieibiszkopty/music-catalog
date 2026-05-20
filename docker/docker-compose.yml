@@ -22,20 +22,6 @@ services:
       timeout: 5s
       retries: 5
 
-  redis:
-    image: redis:8.6-alpine
-    container_name: redis
-    command: [ "redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}" ]
-    volumes:
-      - redis-data:/data
-    networks:
-      - internal
-    deploy:
-      resources:
-        limits:
-          cpus: '0.3'
-          memory: 256M
-
   api-gateway:
     container_name: api-gateway
     image: wisnieibiszkopty/music-catalog-api-gateway:0.1.0
@@ -54,7 +40,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpuas: '0.5'
           memory: 80M
     depends_on:
       - keycloak

@@ -1,39 +1,39 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: artist-db
+  name: keycloak-db
   namespace: music-catalog
 spec:
-  serviceName: artist-db
+  serviceName: keycloak-db
   replicas: 1
   selector:
     matchLabels:
-      app: artist-db
+      app: keycloak-db
   template:
     metadata:
       labels:
-        app: artist-db
+        app: keycloak-db
     spec:
       containers:
-        - name: artist-db
-          image: postgres:16
+        - name: keycloak-db
+          image: postgres:18.3-alpine
           ports:
             - containerPort: 5432
           env:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: artist-secret
+                  name: keycloak-db-secret
                   key: username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: artist-secret
+                  name: keycloak-db-secret
                   key: password
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
-                  name: artist-secret
+                  name: keycloak-db-secret
                   key: database
           resources:
             limits:
@@ -47,9 +47,9 @@ spec:
               command:
                 - pg_isready
                 - -U
-                - $(ARTISTS_DB_USER)
+                - $(POSTGRES_USER)
                 - -d
-                - $(ARTISTS_DB)
+                - $(POSTGRES_DB)
             initialDelaySeconds: 10
             periodSeconds: 5
             timeoutSeconds: 5
@@ -59,17 +59,17 @@ spec:
               command:
                 - pg_isready
                 - -U
-                - $(ARTISTS_DB_USER)
+                - $(POSTGRES_USER)
                 - -d
-                - $(ARTISTS_DB)
+                - $(POSTGRES_DB)
             initialDelaySeconds: 5
             periodSeconds: 5
             timeoutSeconds: 5
             failureThreshold: 5
           volumeMounts:
-            - name: artist-storage
-              mountPath: /var/lib/postgresql/data
+            - name: keycloak-db-storage
+              mountPath: /var/lib/postgresql
       volumes:
-        - name: artist-storage
+        - name: keycloak-db-storage
           persistentVolumeClaim:
-            claimName: artist-data
+            claimName: keycloak-db-data

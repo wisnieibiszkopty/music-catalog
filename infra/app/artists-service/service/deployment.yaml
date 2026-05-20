@@ -1,22 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: artists-service
+  name: artist-service
   namespace: music-catalog
   labels:
-    app: artists-service
+    app: artist-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: artists-service
+      app: artist-service
   template:
     metadata:
       labels:
-        app: artists-service
+        app: artist-service
     spec:
+      initContainers:
+        - name: flyway-migrate
+          image: wisnieibiszkopty/music-catalog-artist-migrations:0.1.0
+          command:
+            - flyway
+            - -connectRetries=60
+            - migrate
+          env:
+            - name: FLYWAY_URL
+              valueFrom:
+                secretKeyRef:
+                  name: artist-service-secret
+                  key: url
+            - name: FLYWAY_USER
+              valueFrom:
+                secretKeyRef:
+                  name: artist-service-secret
+                  key: user
+            - name: FLYWAY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: artist-service-secret
+                  key: password
       containers:
-        - name: artists-service
+        - name: artist-service
           image: wisnieibiszkopty/music-catalog-artist-service:0.1.0
           imagePullPolicy: IfNotPresent
           ports:
@@ -25,32 +48,32 @@ spec:
             - name: ConnectionStrings__DefaultConnection
               valueFrom:
                 secretKeyRef:
-                  name: artists-service-secret
+                  name: artist-service-secret
                   key: connection-string
             - name: ConnectionStrings__RabbitMq
               valueFrom:
                 secretKeyRef:
-                  name: artists-service-secret
+                  name: artist-service-secret
                   key: rabbitmq-url
             - name: Keycloak__InternalUrl
               valueFrom:
                 configMapKeyRef:
-                  name: artists-service-config
+                  name: artist-service-config
                   key: Keycloak__InternalUrl
             - name: Keycloak__Realm
               valueFrom:
                 configMapKeyRef:
-                  name: artists-service-config
+                  name: artist-service-config
                   key: Keycloak__Realm
             - name: Otlp__Endpoint
               valueFrom:
                 configMapKeyRef:
-                  name: artists-service-config
+                  name: artist-service-config
                   key: Otlp__Endpoint
             - name: NPGSQL_GSSAPI_LIBRARIES
               valueFrom:
                 configMapKeyRef:
-                  name: artists-service-config
+                  name: artist-service-config
                   key: NPGSQL_GSSAPI_LIBRARIES
           resources:
             limits:
@@ -60,3 +83,7 @@ spec:
               cpu: "100m"
               memory: "64Mi"
       restartPolicy: Always
+      volumes:
+        - name: migrations
+          configMap:
+            name: artist-migrations

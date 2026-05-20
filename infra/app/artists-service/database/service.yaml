@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: artists-db
+  name: artist-db
   namespace: music-catalog
 spec:
   selector:
-    app: artists-db
+    app: artist-db
   ports:
     - port: 5432
       targetPort: 5432
