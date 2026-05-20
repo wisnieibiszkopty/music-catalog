@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-service
+  namespace: music-catalog
+  labels:
+    app: catalog-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalog-service
+  template:
+    metadata:
+      labels:
+        app: catalog-service
+    spec:
+      initContainers:
+        - name: flyway-migrate
+          image: wisnieibiszkopty/music-catalog-catalog-migrations:0.1.0
+          command:
+            - flyway
+            - -connectRetries=60
+            - migrate
+          env:
+            - name: FLYWAY_URL
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-service-secret
+                  key: url
+            - name: FLYWAY_USER
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-service-secret
+                  key: user
+            - name: FLYWAY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-service-secret
+                  key: password
+      containers:
+        - name: catalog-service
+          image: wisnieibiszkopty/music-catalog-catalog-service:0.1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-service-secret
+                  key: connection-string
+            - name: ConnectionStrings__RabbitMq
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-service-secret
+                  key: rabbitmq-url
+            - name: Keycloak__InternalUrl
+              valueFrom:
+                configMapKeyRef:
+                  name: catalog-service-config
+                  key: Keycloak__InternalUrl
+            - name: Keycloak__Realm
+              valueFrom:
+                configMapKeyRef:
+                  name: catalog-service-config
+                  key: Keycloak__Realm
+            - name: Otlp__Endpoint
+              valueFrom:
+                configMapKeyRef:
+                  name: catalog-service-config
+                  key: Otlp__Endpoint
+            - name: NPGSQL_GSSAPI_LIBRARIES
+              valueFrom:
+                configMapKeyRef:
+                  name: catalog-service-config
+                  key: NPGSQL_GSSAPI_LIBRARIES
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+      restartPolicy: Always
+      volumes:
+        - name: migrations
+          configMap:
+            name: catalog-migrations
