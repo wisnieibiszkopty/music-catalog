@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: keycloak
   namespace: music-catalog
+  labels:
+    app.kubernetes.io/monitored-by: prometheus
 spec:
   selector:
     app: keycloak

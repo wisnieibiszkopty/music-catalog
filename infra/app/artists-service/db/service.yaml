@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: artist-db
   namespace: music-catalog
+  labels:
+    app.kubernetes.io/monitored-by: prometheus
 spec:
   selector:
     app: artist-db
