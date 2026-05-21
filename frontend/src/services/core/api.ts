@@ -2,7 +2,7 @@ import axios from 'axios';
 import keycloak from './keycloak';
 import { useToast } from '@nuxt/ui/composables'
 
-export const baseUrl = import.meta.env.VITE_API_URL;
+export const baseUrl = '';
 
 const api = axios.create({
   baseURL: `${baseUrl}/api`

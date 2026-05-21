@@ -1,5 +1,4 @@
 import Keycloak from "keycloak-js";
-import { baseUrl } from '@/services/core/api.ts'
 
 class CustomKeycloak extends Keycloak {
   isAdmin(): boolean {
@@ -8,7 +7,7 @@ class CustomKeycloak extends Keycloak {
 }
 
 const keycloak = new CustomKeycloak({
-  url: `${baseUrl}/auth`,
+  url: '/auth',
   realm: 'music-catalog',
   clientId: 'api-client'
 });

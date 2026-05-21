@@ -16,6 +16,7 @@ spec:
       containers:
         - name: web-app
           image: wisnieibiszkopty/music-catalog-web-app:0.1.0
+          imagePullPolicy: Always
           resources:
             limits:
               cpu: "200m"

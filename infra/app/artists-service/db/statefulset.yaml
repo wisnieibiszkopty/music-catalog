@@ -47,7 +47,7 @@ spec:
               command:
                 - pg_isready
                 - -U
-                - $(ARTISTS_DB_USER)
+                - $(POSTGRES_USER)
                 - -d
                 - $(ARTISTS_DB)
             initialDelaySeconds: 10
@@ -59,7 +59,7 @@ spec:
               command:
                 - pg_isready
                 - -U
-                - $(ARTISTS_DB_USER)
+                - $(POSTGRES_USER)
                 - -d
                 - $(ARTISTS_DB)
             initialDelaySeconds: 5

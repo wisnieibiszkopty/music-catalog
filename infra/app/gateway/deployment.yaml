@@ -18,7 +18,7 @@ spec:
       containers:
         - name: api-gateway
           image: wisnieibiszkopty/music-catalog-api-gateway:0.1.0
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
@@ -47,11 +47,6 @@ spec:
                 configMapKeyRef:
                   name: api-gateway-config
                   key: AllowedOrigins__0
-            - name: AllowedOrigins__1
-              valueFrom:
-                configMapKeyRef:
-                  name: api-gateway-config
-                  key: AllowedOrigins__1
           resources:
             limits:
               cpu: "500m"

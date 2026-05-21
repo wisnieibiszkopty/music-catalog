@@ -4,5 +4,5 @@ metadata:
   name: notification-service-config
   namespace: music-catalog
 data:
-  Keycloak__InternalUrl: "http://keycloak:8080"
+  Keycloak__InternalUrl: "http://keycloak.music-catalog.svc.cluster.local/auth"
   Keycloak__Realm: "music-catalog"

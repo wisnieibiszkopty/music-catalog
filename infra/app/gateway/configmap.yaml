@@ -5,8 +5,7 @@ metadata:
   namespace: music-catalog
 data:
   Keycloak__InternalUrl: "http://keycloak.music-catalog.svc.cluster.local/auth"
-  Keycloak__ExternalUrl: "http://localhost:30080/auth"
+  Keycloak__ExternalUrl: "http://music-catalog.local:8080/auth"
   Keycloak__Realm: "music-catalog"
   Keycloak__Audience: "api-client"
-  AllowedOrigins__0: "http://localhost:30080"
-  AllowedOrigins__1: "http://localhost:5173"
+  AllowedOrigins__0: "http://music-catalog.local:8080"
