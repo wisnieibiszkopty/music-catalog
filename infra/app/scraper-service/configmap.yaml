@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scraper-service-config
+  namespace: music-catalog
+data:
+  Otlp__Endpoint: "http://otel-collector:4317"

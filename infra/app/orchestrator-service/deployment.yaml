@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orchestrator-service
+  namespace: music-catalog
+  labels:
+    app: orchestrator-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orchestrator-service
+  template:
+    metadata:
+      labels:
+        app: orchestrator-service
+    spec:
+      containers:
+        - name: orchestrator-service
+          image: wisnieibiszkopty/music-catalog-orchestrator-service:0.1.0
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+          env:
+            - name: ConnectionStrings__RabbitMq
+              valueFrom:
+                secretKeyRef:
+                  name: orchestrator-service-secret
+                  key: rabbitmq-url
+            - name: ConnectionStrings__Redis
+              valueFrom:
+                secretKeyRef:
+                  name: orchestrator-service-secret
+                  key: redis-url
+            - name: Redis__InstanceName
+              valueFrom:
+                configMapKeyRef:
+                  name: orchestrator-service-config
+                  key: Redis__InstanceName
+            - name: Keycloak__InternalUrl
+              valueFrom:
+                configMapKeyRef:
+                  name: orchestrator-service-config
+                  key: Keycloak__InternalUrl
+            - name: Keycloak__Realm
+              valueFrom:
+                configMapKeyRef:
+                  name: orchestrator-service-config
+                  key: Keycloak__Realm
+            - name: Otlp__Endpoint
+              valueFrom:
+                configMapKeyRef:
+                  name: orchestrator-service-config
+                  key: Otlp__Endpoint
+      restartPolicy: Always

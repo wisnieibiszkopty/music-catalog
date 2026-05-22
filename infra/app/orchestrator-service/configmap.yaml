@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orchestrator-service-config
+  namespace: music-catalog
+data:
+  Keycloak__InternalUrl: "http://keycloak.music-catalog.svc.cluster.local/auth"
+  Keycloak__Realm: "music-catalog"
+  Redis__InstanceName: "ScrapperService"
+  Otlp__Endpoint: "http://otel-collector:4317"

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scraper-service
+  namespace: music-catalog
+  labels:
+    app: scraper-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scraper-service
+  template:
+    metadata:
+      labels:
+        app: scraper-service
+    spec:
+      containers:
+        - name: scraper-service
+          image: wisnieibiszkopty/music-catalog-scraper-service:0.1.0
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+          env:
+            - name: ConnectionStrings__RabbitMq
+              valueFrom:
+                secretKeyRef:
+                  name: scraper-service-secret
+                  key: rabbitmq-url
+            - name: ConnectionStrings__Redis
+              valueFrom:
+                secretKeyRef:
+                  name: scraper-service-secret
+                  key: redis-url
+            - name: SPOTIFY_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: scraper-service-secret
+                  key: spotify-client-id
+            - name: SPOTIFY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: scraper-service-secret
+                  key: spotify-client-secret
+            - name: Otlp__Endpoint
+              valueFrom:
+                configMapKeyRef:
+                  name: scraper-service-config
+                  key: Otlp__Endpoint
+      restartPolicy: Always
