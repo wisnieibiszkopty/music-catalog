@@ -33,9 +33,21 @@ grafana:
   enabled: true
   image:
     tag: "11.4.0"
-  adminPassword: "admin123"
   service:
     type: ClusterIP
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: selfsigned
+    hosts:
+      - music-catalog.local
+    path: /grafana
+    pathType: Prefix
+    tls:
+      - secretName: monitoring-tls
+        hosts:
+          - music-catalog.local
   sidecar:
     dashboards:
       enabled: true

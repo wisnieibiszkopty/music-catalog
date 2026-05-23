@@ -10,6 +10,7 @@ releases:
     chart: prometheus-community/kube-prometheus-stack
     version: "85.2.0"
     values:
+      - helmfile-secrets/kube-prometheus-stack.yaml
       - values/kube-prometheus-stack-values.yaml
   
   - name: loki
