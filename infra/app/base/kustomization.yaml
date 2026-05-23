@@ -6,6 +6,7 @@ resources:
   - cluster-issuer.yaml
   - ingress.yaml
   - service-monitor.yaml
+  - shared-config.yaml
   - artists-service/db/secret.yaml
   - artists-service/db/service.yaml
   - artists-service/db/statefulset.yaml
@@ -32,7 +33,6 @@ resources:
   - keycloak/db/secret.yaml
   - keycloak/db/service.yaml
   - keycloak/db/statefulset.yaml
-  - notification-service/configmap.yaml
   - notification-service/deployment.yaml
   - notification-service/secret.yaml
   - notification-service/service.yaml
@@ -40,7 +40,6 @@ resources:
   - orchestrator-service/deployment.yaml
   - orchestrator-service/secret.yaml
   - orchestrator-service/service.yaml
-  - scraper-service/configmap.yaml
   - scraper-service/deployment.yaml
   - scraper-service/secret.yaml
   - scraper-service/service.yaml

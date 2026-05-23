@@ -4,7 +4,4 @@ metadata:
   name: catalog-service-config
   namespace: music-catalog
 data:
-  Keycloak__Realm: "music-catalog"
-  Keycloak__InternalUrl: "http://keycloak.music-catalog.svc.cluster.local/auth"
-  Otlp__Endpoint: "http://otel-collector:4317"
   NPGSQL_GSSAPI_LIBRARIES: ""

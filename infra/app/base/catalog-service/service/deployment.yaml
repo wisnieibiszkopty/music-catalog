@@ -45,6 +45,9 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: shared-config
           env:
             - name: ConnectionStrings__DefaultConnection
               valueFrom:
@@ -56,21 +59,6 @@ spec:
                 secretKeyRef:
                   name: catalog-service-secret
                   key: rabbitmq-url
-            - name: Keycloak__InternalUrl
-              valueFrom:
-                configMapKeyRef:
-                  name: catalog-service-config
-                  key: Keycloak__InternalUrl
-            - name: Keycloak__Realm
-              valueFrom:
-                configMapKeyRef:
-                  name: catalog-service-config
-                  key: Keycloak__Realm
-            - name: Otlp__Endpoint
-              valueFrom:
-                configMapKeyRef:
-                  name: catalog-service-config
-                  key: Otlp__Endpoint
             - name: NPGSQL_GSSAPI_LIBRARIES
               valueFrom:
                 configMapKeyRef:
@@ -84,16 +72,14 @@ spec:
               cpu: "100m"
               memory: "64Mi"
           livenessProbe:
-            httpGet:
-              path: /health
+            tcpSocket:
               port: 8080
             initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 3
           readinessProbe:
-            httpGet:
-              path: /health
+            tcpSocket:
               port: 8080
             initialDelaySeconds: 10
             periodSeconds: 10

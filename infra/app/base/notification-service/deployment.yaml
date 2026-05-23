@@ -26,35 +26,26 @@ spec:
             requests:
               cpu: "100m"
               memory: "64Mi"
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
+          envFrom:
+            - configMapRef:
+                name: shared-config
           env:
             - name: ConnectionStrings__RabbitMq
               valueFrom:
                 secretKeyRef:
                   name: notification-service-secret
                   key: rabbitmq-url
-            - name: Keycloak__InternalUrl
-              valueFrom:
-                configMapKeyRef:
-                  name: notification-service-config
-                  key: Keycloak__InternalUrl
-            - name: Keycloak__Realm
-              valueFrom:
-                configMapKeyRef:
-                  name: notification-service-config
-                  key: Keycloak__Realm
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3

@@ -26,22 +26,9 @@ spec:
             requests:
               cpu: "100m"
               memory: "64Mi"
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
+          envFrom:
+            - configMapRef:
+                name: shared-config
           env:
             - name: ConnectionStrings__RabbitMq
               valueFrom:
@@ -63,9 +50,18 @@ spec:
                 secretKeyRef:
                   name: scraper-service-secret
                   key: spotify-client-secret
-            - name: Otlp__Endpoint
-              valueFrom:
-                configMapKeyRef:
-                  name: scraper-service-config
-                  key: Otlp__Endpoint
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
       restartPolicy: Always
