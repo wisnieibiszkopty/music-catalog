@@ -45,9 +45,8 @@ releases:
     chart: bitnami/redis
     version: 25.5.3
     values:
-      - auth:
-          password: "password"
-        master:
+      - helmfile-secrets/redis.yaml
+      - master:
           persistence:
             storageClass: local-path
             size: 1Gi
@@ -60,22 +59,19 @@ releases:
               memory: 256Mi
         replica:
           replicaCount: 0
-          
-          
+
+
   - name: rabbitmq
     namespace: music-catalog
     chart: groundhog2k/rabbitmq
     version: 2.3.0
     values:
+      - helmfile-secrets/rabbitmq.yaml
       - podSecurityContext:
           fsGroup: 999
         authentication:
           user:
             value: "user"
-          password:
-            value: "password"
-          erlangCookie:
-            value: "secreterlangcookie"
         env:
           - name: RABBITMQ_LOGS
             value: "-"

@@ -8,19 +8,15 @@ resources:
   - service-monitor.yaml
   - shared-config.yaml
   - network-policies.yaml
-  - artists-service/db/secret.yaml
   - artists-service/db/service.yaml
   - artists-service/db/statefulset.yaml
   - artists-service/service/configmap.yaml
   - artists-service/service/deployment.yaml
-  - artists-service/service/secret.yaml
   - artists-service/service/service.yaml
-  - catalog-service/db/secret.yaml
   - catalog-service/db/service.yaml
   - catalog-service/db/statefulset.yaml
   - catalog-service/service/conifmap.yaml
   - catalog-service/service/deployment.yaml
-  - catalog-service/service/secret.yaml
   - catalog-service/service/service.yaml
   - frontend/deployment.yaml
   - frontend/service.yaml
@@ -29,18 +25,70 @@ resources:
   - gateway/service.yaml
   - keycloak/app/configmap.yaml
   - keycloak/app/deployment.yaml
-  - keycloak/app/secret.yaml
   - keycloak/app/service.yaml
-  - keycloak/db/secret.yaml
   - keycloak/db/service.yaml
   - keycloak/db/statefulset.yaml
   - notification-service/deployment.yaml
-  - notification-service/secret.yaml
   - notification-service/service.yaml
   - orchestrator-service/configmap.yaml
   - orchestrator-service/deployment.yaml
-  - orchestrator-service/secret.yaml
   - orchestrator-service/service.yaml
   - scraper-service/deployment.yaml
-  - scraper-service/secret.yaml
   - scraper-service/service.yaml
+
+secretGenerator:
+  - name: artist-secret
+    type: kubernetes.io/basic-auth
+    options:
+      disableNameSuffixHash: true
+    envs:
+      - secrets/artist-db.env
+
+  - name: artist-service-secret
+    options:
+      disableNameSuffixHash: true
+    envs:
+      - secrets/artist-service.env
+
+  - name: catalog-secret
+    type: kubernetes.io/basic-auth
+    options:
+      disableNameSuffixHash: true
+    envs:
+      - secrets/catalog-db.env
+
+  - name: catalog-service-secret
+    options:
+      disableNameSuffixHash: true
+    envs:
+      - secrets/catalog-service.env
+
+  - name: keycloak-secret
+    options:
+      disableNameSuffixHash: true
+    envs:
+      - secrets/keycloak-app.env
+
+  - name: keycloak-db-secret
+    options:
+      disableNameSuffixHash: true
+    envs:
+      - secrets/keycloak-db.env
+
+  - name: notification-service-secret
+    options:
+      disableNameSuffixHash: true
+    envs:
+      - secrets/notification-service.env
+
+  - name: orchestrator-service-secret
+    options:
+      disableNameSuffixHash: true
+    envs:
+      - secrets/orchestrator-service.env
+
+  - name: scraper-service-secret
+    options:
+      disableNameSuffixHash: true
+    envs:
+      - secrets/scraper-service.env
