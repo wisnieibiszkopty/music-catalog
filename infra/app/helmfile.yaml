@@ -1,6 +1,8 @@
 repositories:
   - name: bitnami
     url: https://charts.bitnami.com/bitnami
+  - name: groundhog2k
+    url: https://groundhog2k.github.io/helm-charts/
     
 releases:
   - name: redis
@@ -23,20 +25,22 @@ releases:
           
   - name: rabbitmq
     namespace: music-catalog
-    chart: bitnami/rabbitmq
-    version: 16.0.14
+    chart: groundhog2k/rabbitmq
+    version: 2.3.0
     values:
-      - auth:
-          username: "user"
-          password: "password"
-        persistence:
-          size: 1Gi
+      - authentication:
+          user:
+            value: "user"
+          password:
+            value: "password"
+          erlangCookie:
+            value: "secreterlangcookie"
+        env:
+          - name: RABBITMQ_LOGS
+            value: "-"
+        storage:
+          requestedSize: 1Gi
         resources:
           limits:
             cpu: 500m
             memory: 256Mi
-        replicaCount: 1
-        livenessProbe:
-          enabled: true
-        readinessProbe:
-          enabled: true
