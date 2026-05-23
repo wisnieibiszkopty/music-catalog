@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: artist-db
-          image: postgres:16
+          image: postgres:18-alpine
           ports:
             - containerPort: 5432
           env:
@@ -38,10 +38,10 @@ spec:
           resources:
             limits:
               cpu: "500m"
-              memory: "100Mi"
+              memory: "256Mi"
             requests:
               cpu: "100m"
-              memory: "50Mi"
+              memory: "128Mi"
           livenessProbe:
             exec:
               command:
@@ -49,7 +49,7 @@ spec:
                 - -U
                 - $(POSTGRES_USER)
                 - -d
-                - $(ARTISTS_DB)
+                - $(POSTGRES_DB)
             initialDelaySeconds: 10
             periodSeconds: 5
             timeoutSeconds: 5
@@ -61,15 +61,21 @@ spec:
                 - -U
                 - $(POSTGRES_USER)
                 - -d
-                - $(ARTISTS_DB)
+                - $(POSTGRES_DB)
             initialDelaySeconds: 5
             periodSeconds: 5
             timeoutSeconds: 5
             failureThreshold: 5
           volumeMounts:
             - name: artist-storage
-              mountPath: /var/lib/postgresql/data
-      volumes:
-        - name: artist-storage
-          persistentVolumeClaim:
-            claimName: artist-data
+              mountPath: /var/lib/postgresql
+              subPath: pgdata
+  volumeClaimTemplates:
+    - metadata:
+        name: artist-storage
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: keycloak-db
-          image: postgres:18.3-alpine
+          image: postgres:18-alpine
           ports:
             - containerPort: 5432
           env:
@@ -38,10 +38,10 @@ spec:
           resources:
             limits:
               cpu: "500m"
-              memory: "100Mi"
+              memory: "256Mi"
             requests:
               cpu: "100m"
-              memory: "50Mi"
+              memory: "128Mi"
           livenessProbe:
             exec:
               command:
@@ -69,7 +69,13 @@ spec:
           volumeMounts:
             - name: keycloak-db-storage
               mountPath: /var/lib/postgresql
-      volumes:
-        - name: keycloak-db-storage
-          persistentVolumeClaim:
-            claimName: keycloak-db-data
+              subPath: pgdata
+  volumeClaimTemplates:
+    - metadata:
+        name: keycloak-db-storage
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi

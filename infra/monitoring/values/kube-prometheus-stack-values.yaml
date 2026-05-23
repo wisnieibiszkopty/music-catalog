@@ -23,7 +23,6 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: standard
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
@@ -82,7 +81,6 @@ grafana:
             datasourceUid: tempo
   persistence:
     enabled: true
-    storageClassName: standard
     size: 1Gi
 
 prometheus-node-exporter:

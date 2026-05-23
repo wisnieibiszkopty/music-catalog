@@ -38,7 +38,6 @@ singleBinary:
       memory: 256Mi
   persistence:
     enabled: true
-    storageClassName: standard
     size: 5Gi
 
 read:

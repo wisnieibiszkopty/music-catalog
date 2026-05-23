@@ -6,7 +6,6 @@ resources:
   - cluster-issuer.yaml
   - ingress.yaml
   - service-monitor.yaml
-  - artists-service/db/pvc.yaml
   - artists-service/db/secret.yaml
   - artists-service/db/service.yaml
   - artists-service/db/statefulset.yaml
@@ -14,7 +13,6 @@ resources:
   - artists-service/service/deployment.yaml
   - artists-service/service/secret.yaml
   - artists-service/service/service.yaml
-  - catalog-service/db/pvc.yaml
   - catalog-service/db/secret.yaml
   - catalog-service/db/service.yaml
   - catalog-service/db/statefulset.yaml
@@ -31,7 +29,6 @@ resources:
   - keycloak/app/deployment.yaml
   - keycloak/app/secret.yaml
   - keycloak/app/service.yaml
-  - keycloak/db/pvc.yaml
   - keycloak/db/secret.yaml
   - keycloak/db/service.yaml
   - keycloak/db/statefulset.yaml
