@@ -3,8 +3,14 @@ kind: Ingress
 metadata:
   name: music-catalog-ingress
   namespace: music-catalog
+  annotations:
+    cert-manager.io/cluster-issuer: selfsigned
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - music-catalog.local
+      secretName: music-catalog-tls
   rules:
     - host: music-catalog.local
       http:

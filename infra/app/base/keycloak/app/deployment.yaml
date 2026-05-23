@@ -22,10 +22,21 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: APP_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: APP_BASE_URL
             - name: KC_HOSTNAME
-              value: "http://music-catalog.local:8080/auth"
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: KEYCLOAK_EXTERNAL_URL
             - name: KC_HOSTNAME_ADMIN
-              value: "http://music-catalog.local:8080/auth"
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: KEYCLOAK_EXTERNAL_URL
             - name: KC_HOSTNAME_BACKCHANNEL_URL
               value: "http://keycloak.music-catalog.svc.cluster.local/auth"
             - name: KC_PROXY_HEADERS

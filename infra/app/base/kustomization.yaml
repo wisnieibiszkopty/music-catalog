@@ -1,0 +1,49 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - namespace.yaml
+  - cluster-issuer.yaml
+  - ingress.yaml
+  - service-monitor.yaml
+  - artists-service/db/pvc.yaml
+  - artists-service/db/secret.yaml
+  - artists-service/db/service.yaml
+  - artists-service/db/statefulset.yaml
+  - artists-service/service/configmap.yaml
+  - artists-service/service/deployment.yaml
+  - artists-service/service/secret.yaml
+  - artists-service/service/service.yaml
+  - catalog-service/db/pvc.yaml
+  - catalog-service/db/secret.yaml
+  - catalog-service/db/service.yaml
+  - catalog-service/db/statefulset.yaml
+  - catalog-service/service/conifmap.yaml
+  - catalog-service/service/deployment.yaml
+  - catalog-service/service/secret.yaml
+  - catalog-service/service/service.yaml
+  - frontend/deployment.yaml
+  - frontend/service.yaml
+  - gateway/configmap.yaml
+  - gateway/deployment.yaml
+  - gateway/service.yaml
+  - keycloak/app/configmap.yaml
+  - keycloak/app/deployment.yaml
+  - keycloak/app/secret.yaml
+  - keycloak/app/service.yaml
+  - keycloak/db/pvc.yaml
+  - keycloak/db/secret.yaml
+  - keycloak/db/service.yaml
+  - keycloak/db/statefulset.yaml
+  - notification-service/configmap.yaml
+  - notification-service/deployment.yaml
+  - notification-service/secret.yaml
+  - notification-service/service.yaml
+  - orchestrator-service/configmap.yaml
+  - orchestrator-service/deployment.yaml
+  - orchestrator-service/secret.yaml
+  - orchestrator-service/service.yaml
+  - scraper-service/configmap.yaml
+  - scraper-service/deployment.yaml
+  - scraper-service/secret.yaml
+  - scraper-service/service.yaml

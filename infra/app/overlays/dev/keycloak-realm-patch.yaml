@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-realm
+  namespace: music-catalog
+data:
+  realm-export.json: |
+    {
+      "realm": "music-catalog",
+      "enabled": true,
+      "sslRequired": "none",
+      "registrationAllowed": true,
+      "registrationEmailAsUsername": false,
+      "rememberMe": true,
+      "verifyEmail": false,
+      "resetPasswordAllowed": true,
+      "defaultRoles": [ "user" ],
+      "clients": [
+        {
+          "clientId": "api-client",
+          "enabled": true,
+          "protocol": "openid-connect",
+          "publicClient": true,
+          "bearerOnly": false,
+          "standardFlowEnabled": true,
+          "directAccessGrantsEnabled": true,
+          "serviceAccountsEnabled": false,
+          "redirectUris": [
+            "https://music-catalog.local:8443/*"
+          ],
+          "webOrigins": [
+            "https://music-catalog.local:8443"
+          ],
+          "protocolMappers": [
+            {
+              "name": "audience-mapper",
+              "protocol": "openid-connect",
+              "protocolMapper": "oidc-audience-mapper",
+              "consentRequired": false,
+              "config": {
+                "included.client.audience": "api-client",
+                "id.token.claim": "false",
+                "access.token.claim": "true"
+              }
+            },
+            {
+              "name": "realm-roles-mapper",
+              "protocol": "openid-connect",
+              "protocolMapper": "oidc-usermodel-realm-role-mapper",
+              "config": {
+                "multivalued": "true",
+                "userinfo.token.claim": "true",
+                "id.token.claim": "true",
+                "access.token.claim": "true",
+                "claim.name": "role",
+                "jsonType.label": "String"
+              }
+            }
+          ]
+        }
+      ],
+      "roles": {
+        "realm": [
+          { "name": "admin" },
+          { "name": "user" }
+        ]
+      },
+      "users": [
+        {
+          "username": "admin",
+          "enabled": true,
+          "email": "admin@admin",
+          "firstName": "admin",
+          "lastName": "admin",
+          "credentials": [
+            { "type": "password", "value": "admin", "temporary": false }
+          ],
+          "realmRoles": ["admin"]
+        },
+        {
+          "username": "user",
+          "enabled": true,
+          "email": "user@user",
+          "firstName": "user",
+          "lastName": "user",
+          "credentials": [
+            { "type": "password", "value": "user", "temporary": false }
+          ],
+          "realmRoles": ["user"]
+        }
+      ]
+    }

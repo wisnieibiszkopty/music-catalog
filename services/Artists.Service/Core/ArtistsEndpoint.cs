@@ -14,9 +14,9 @@ public static class ArtistsEndpoint
 
         group.MapGet("/", GetAll);
         group.MapGet("/{id}", GetById);
-        group.MapPost("/", Create).RequireAuthorization(Policies.Admin);
-        group.MapPut("/", Update).RequireAuthorization(Policies.Admin);
-        group.MapDelete("/{id}", Delete).RequireAuthorization(Policies.Admin);
+        group.MapPost("/", Create);
+        group.MapPut("/", Update);
+        group.MapDelete("/{id}", Delete);
         
         return builder;
     }

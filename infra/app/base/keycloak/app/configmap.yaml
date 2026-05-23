@@ -26,12 +26,10 @@ data:
           "directAccessGrantsEnabled": true,
           "serviceAccountsEnabled": false,
           "redirectUris": [
-            "http://music-catalog.local/*",
-            "http://music-catalog.local:8080/*"
+            "${env.APP_BASE_URL}/*"
           ],
           "webOrigins": [
-            "http://music-catalog.local",
-            "http://music-catalog.local:8080"
+            "${env.APP_BASE_URL}"
           ],
           "protocolMappers": [
             {

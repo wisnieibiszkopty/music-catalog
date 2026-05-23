@@ -1,0 +1,31 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - app-config.yaml
+
+patches:
+  - path: keycloak-realm-patch.yaml
+
+replacements:
+  - source:
+      kind: ConfigMap
+      name: app-config
+      fieldPath: data.KEYCLOAK_EXTERNAL_URL
+    targets:
+      - select:
+          kind: ConfigMap
+          name: api-gateway-config
+        fieldPaths:
+          - data.Keycloak__ExternalUrl
+  - source:
+      kind: ConfigMap
+      name: app-config
+      fieldPath: data.APP_BASE_URL
+    targets:
+      - select:
+          kind: ConfigMap
+          name: api-gateway-config
+        fieldPaths:
+          - data.AllowedOrigins__0
