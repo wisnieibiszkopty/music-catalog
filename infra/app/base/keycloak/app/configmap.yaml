@@ -26,10 +26,10 @@ data:
           "directAccessGrantsEnabled": true,
           "serviceAccountsEnabled": false,
           "redirectUris": [
-            "${env.APP_BASE_URL}/*"
+            "http://localhost/*"
           ],
           "webOrigins": [
-            "${env.APP_BASE_URL}"
+            "http://localhost"
           ],
           "protocolMappers": [
             {
