@@ -92,6 +92,8 @@ grafana:
             matcherRegex: '"TraceId":"(\w+)"'
             url: "$${__value.raw}"
             datasourceUid: tempo
+  initChownData:
+    enabled: false
   persistence:
     enabled: true
     storageClassName: local-path
