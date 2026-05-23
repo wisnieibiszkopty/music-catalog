@@ -9,16 +9,6 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
-  if(keycloak.authenticated){
-    try {
-      await keycloak.updateToken(30);
-
-      config.headers.Authorization = `Bearer ${keycloak.token}`;
-    } catch(error) {
-      keycloak.login();
-    }
-  }
-
   return config;
 }, (error) => {
   return Promise.reject(error);

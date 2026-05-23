@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: web-app
-          image: wisnieibiszkopty/music-catalog-web-app:0.1.0
+          image: wisnieibiszkopty/music-catalog-web-app:0.4.0
           imagePullPolicy: Always
           resources:
             limits:
