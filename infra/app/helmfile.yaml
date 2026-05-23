@@ -49,6 +49,7 @@ releases:
           password: "password"
         master:
           persistence:
+            storageClass: local-path
             size: 1Gi
           resources:
             requests:
@@ -66,7 +67,9 @@ releases:
     chart: groundhog2k/rabbitmq
     version: 2.3.0
     values:
-      - authentication:
+      - podSecurityContext:
+          fsGroup: 999
+        authentication:
           user:
             value: "user"
           password:
@@ -77,6 +80,7 @@ releases:
           - name: RABBITMQ_LOGS
             value: "-"
         storage:
+          storageClassName: local-path
           requestedSize: 1Gi
         resources:
           requests:

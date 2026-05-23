@@ -38,6 +38,7 @@ singleBinary:
       memory: 256Mi
   persistence:
     enabled: true
+    storageClass: local-path
     size: 5Gi
 
 read:

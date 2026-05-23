@@ -7,6 +7,7 @@ resources:
   - ingress.yaml
   - service-monitor.yaml
   - shared-config.yaml
+  - network-policies.yaml
   - artists-service/db/secret.yaml
   - artists-service/db/service.yaml
   - artists-service/db/statefulset.yaml

@@ -24,6 +24,7 @@ prometheus:
       volumeClaimTemplate:
         spec:
           accessModes: ["ReadWriteOnce"]
+          storageClassName: local-path
           resources:
             requests:
               storage: 5Gi
@@ -81,6 +82,7 @@ grafana:
             datasourceUid: tempo
   persistence:
     enabled: true
+    storageClassName: local-path
     size: 1Gi
 
 prometheus-node-exporter:
