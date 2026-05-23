@@ -49,11 +49,23 @@ spec:
             - configMapRef:
                 name: shared-config
           env:
-            - name: ConnectionStrings__DefaultConnection
+            - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: artist-service-secret
-                  key: connection-string
+                  name: artist-secret
+                  key: password
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: artist-secret
+                  key: username
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: artist-secret
+                  key: database
+            - name: ConnectionStrings__DefaultConnection
+              value: "Host=artist-db;Port=5432;Database=$(DB_NAME);Username=$(DB_USER);Password=$(DB_PASSWORD)"
             - name: ConnectionStrings__RabbitMq
               valueFrom:
                 secretKeyRef:
