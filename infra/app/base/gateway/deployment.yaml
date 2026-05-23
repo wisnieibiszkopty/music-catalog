@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: music-catalog
+  labels:
+    app: api-gateway
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: api-gateway
+                topologyKey: kubernetes.io/hostname
+      containers:
+        - name: api-gateway
+          image: wisnieibiszkopty/music-catalog-api-gateway:0.1.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: Keycloak__InternalUrl
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: Keycloak__InternalUrl
+            - name: Keycloak__ExternalUrl
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: Keycloak__ExternalUrl
+            - name: Keycloak__Realm
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: Keycloak__Realm
+            - name: Keycloak__Audience
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: Keycloak__Audience
+            - name: AllowedOrigins__0
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: AllowedOrigins__0
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "80Mi"
+            requests:
+              cpu: "100m"
+              memory: "40Mi"
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3

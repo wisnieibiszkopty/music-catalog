@@ -14,9 +14,9 @@ public static class CatalogEndpoint
 
         group.MapGet("/albums/{artistId}", GetAlbumsByArtistId);
         group.MapGet("/albums/songs/{albumId}", GetTracksByAlbumId);
-        group.MapPost("/", Create).RequireAuthorization(Policies.Admin);
-        group.MapPut("/", Update).RequireAuthorization(Policies.Admin);
-        group.MapDelete("/{albumId}", Delete).RequireAuthorization(Policies.Admin);
+        group.MapPost("/", Create);
+        group.MapPut("/", Update);
+        group.MapDelete("/{albumId}", Delete);
         
         return builder;
     }

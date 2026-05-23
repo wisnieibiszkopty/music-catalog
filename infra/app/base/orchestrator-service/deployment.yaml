@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orchestrator-service
+  namespace: music-catalog
+  labels:
+    app: orchestrator-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: orchestrator-service
+  template:
+    metadata:
+      labels:
+        app: orchestrator-service
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: orchestrator-service
+                topologyKey: kubernetes.io/hostname
+      containers:
+        - name: orchestrator-service
+          image: wisnieibiszkopty/music-catalog-orchestrator-service:0.1.0
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+          envFrom:
+            - configMapRef:
+                name: shared-config
+          env:
+            - name: ConnectionStrings__RabbitMq
+              valueFrom:
+                secretKeyRef:
+                  name: orchestrator-service-secret
+                  key: rabbitmq-url
+            - name: ConnectionStrings__Redis
+              valueFrom:
+                secretKeyRef:
+                  name: orchestrator-service-secret
+                  key: redis-url
+            - name: Redis__InstanceName
+              valueFrom:
+                configMapKeyRef:
+                  name: orchestrator-service-config
+                  key: Redis__InstanceName
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+      restartPolicy: Always

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orchestrator-service-config
+  namespace: music-catalog
+data:
+  Redis__InstanceName: "ScrapperService"

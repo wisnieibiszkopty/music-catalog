@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: artist-service
+  namespace: music-catalog
+  labels:
+    app: artist-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: artist-service
+  template:
+    metadata:
+      labels:
+        app: artist-service
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: artist-service
+                topologyKey: kubernetes.io/hostname
+      initContainers:
+        - name: flyway-migrate
+          image: wisnieibiszkopty/music-catalog-artist-migrations:0.1.0
+          imagePullPolicy: Always
+          command:
+            - flyway
+            - -connectRetries=60
+            - migrate
+          env:
+            - name: FLYWAY_URL
+              valueFrom:
+                secretKeyRef:
+                  name: artist-service-secret
+                  key: url
+            - name: FLYWAY_USER
+              valueFrom:
+                secretKeyRef:
+                  name: artist-service-secret
+                  key: user
+            - name: FLYWAY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: artist-service-secret
+                  key: password
+      containers:
+        - name: artist-service
+          image: wisnieibiszkopty/music-catalog-artist-service:0.1.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: shared-config
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: artist-secret
+                  key: password
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: artist-secret
+                  key: username
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: artist-secret
+                  key: database
+            - name: ConnectionStrings__DefaultConnection
+              value: "Host=artist-db;Port=5432;Database=$(DB_NAME);Username=$(DB_USER);Password=$(DB_PASSWORD)"
+            - name: ConnectionStrings__RabbitMq
+              valueFrom:
+                secretKeyRef:
+                  name: artist-service-secret
+                  key: rabbitmq-url
+            - name: NPGSQL_GSSAPI_LIBRARIES
+              valueFrom:
+                configMapKeyRef:
+                  name: artist-service-config
+                  key: NPGSQL_GSSAPI_LIBRARIES
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+      restartPolicy: Always

@@ -2,23 +2,13 @@ import axios from 'axios';
 import keycloak from './keycloak';
 import { useToast } from '@nuxt/ui/composables'
 
-export const baseUrl = import.meta.env.VITE_API_URL;
+export const baseUrl = '';
 
 const api = axios.create({
   baseURL: `${baseUrl}/api`
 });
 
 api.interceptors.request.use(async (config) => {
-  if(keycloak.authenticated){
-    try {
-      await keycloak.updateToken(30);
-
-      config.headers.Authorization = `Bearer ${keycloak.token}`;
-    } catch(error) {
-      keycloak.login();
-    }
-  }
-
   return config;
 }, (error) => {
   return Promise.reject(error);

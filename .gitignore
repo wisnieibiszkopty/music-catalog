@@ -17,3 +17,10 @@
 
 # docker secrets
 docker/.env.secrets
+
+# kubernetes secrets (use *.env.example as templates)
+infra/app/base/secrets/*.env
+
+# helmfile secrets (use *.yaml.example as templates)
+infra/app/helmfile-secrets/*.yaml
+infra/monitoring/helmfile-secrets/*.yaml

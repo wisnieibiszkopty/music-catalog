@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-service
+  namespace: music-catalog
+  labels:
+    app: catalog-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: catalog-service
+  template:
+    metadata:
+      labels:
+        app: catalog-service
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: catalog-service
+                topologyKey: kubernetes.io/hostname
+      initContainers:
+        - name: flyway-migrate
+          image: wisnieibiszkopty/music-catalog-catalog-migrations:0.1.0
+          imagePullPolicy: Always
+          command:
+            - flyway
+            - -connectRetries=60
+            - migrate
+          env:
+            - name: FLYWAY_URL
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-service-secret
+                  key: url
+            - name: FLYWAY_USER
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-service-secret
+                  key: user
+            - name: FLYWAY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-service-secret
+                  key: password
+      containers:
+        - name: catalog-service
+          image: wisnieibiszkopty/music-catalog-catalog-service:0.1.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: shared-config
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-secret
+                  key: password
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-secret
+                  key: username
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-secret
+                  key: database
+            - name: ConnectionStrings__DefaultConnection
+              value: "Host=catalog-db;Port=5432;Database=$(DB_NAME);Username=$(DB_USER);Password=$(DB_PASSWORD)"
+            - name: ConnectionStrings__RabbitMq
+              valueFrom:
+                secretKeyRef:
+                  name: catalog-service-secret
+                  key: rabbitmq-url
+            - name: NPGSQL_GSSAPI_LIBRARIES
+              valueFrom:
+                configMapKeyRef:
+                  name: catalog-service-config
+                  key: NPGSQL_GSSAPI_LIBRARIES
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+      restartPolicy: Always

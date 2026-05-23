@@ -78,7 +78,7 @@ const loggedInBottomItems: NavigationMenuItem = [
 
       <UNavigationMenu
         :collapsed="collapsed"
-        :items="keycloak.authenticated ? adminItems : items"
+        :items="adminItems"
         orientation="vertical"
       />
 
@@ -88,7 +88,7 @@ const loggedInBottomItems: NavigationMenuItem = [
 
         <UNavigationMenu
           :collapsed="collapsed"
-          :items="keycloak.authenticated ? loggedInBottomItems : notLoggedInBottomItems"
+          :items="notLoggedInBottomItems"
           orientation="vertical"
         />
       </div>

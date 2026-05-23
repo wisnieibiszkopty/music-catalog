@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: music-catalog
+  labels:
+    app: keycloak
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - name: keycloak
+          image: quay.io/keycloak/keycloak:26.6
+          args: ["start", "--import-realm"]
+          ports:
+            - containerPort: 8080
+          env:
+            - name: KC_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: KEYCLOAK_EXTERNAL_URL
+            - name: KC_HOSTNAME_ADMIN
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: KEYCLOAK_EXTERNAL_URL
+            - name: KC_HOSTNAME_BACKCHANNEL_URL
+              value: "http://keycloak.music-catalog.svc.cluster.local/auth"
+            - name: KC_PROXY_HEADERS
+              value: "xforwarded"
+            - name: KC_HTTP_ENABLED
+              value: "true"
+            - name: KC_HOSTNAME_STRICT
+              value: "true"
+            - name: KC_HTTP_RELATIVE_PATH
+              value: "/auth"
+            - name: KC_DB
+              value: "postgres"
+            - name: KC_DB_SCHEMA
+              value: "public"
+            - name: KC_DB_URL_HOST
+              value: "keycloak-db"
+            - name: KC_DB_URL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-db-secret
+                  key: database
+            - name: KC_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-db-secret
+                  key: username
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-db-secret
+                  key: password
+            - name: KEYCLOAK_ADMIN
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: admin-username
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: admin-password
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "1500Mi"
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+          volumeMounts:
+            - name: realm-config
+              mountPath: /opt/keycloak/data/import/realm-export.json
+              subPath: realm-export.json
+      volumes:
+        - name: realm-config
+          configMap:
+            name: keycloak-realm

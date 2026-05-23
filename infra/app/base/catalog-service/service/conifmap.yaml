@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: catalog-service-config
+  namespace: music-catalog
+data:
+  NPGSQL_GSSAPI_LIBRARIES: ""

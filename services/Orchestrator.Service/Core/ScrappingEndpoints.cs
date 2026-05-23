@@ -11,8 +11,8 @@ public static class ScrappingEndpoints
         var group = builder.MapGroup("/api/scraper")
             .WithTags("Scrapper");
 
-        group.MapPost("/artists/{artistName}", ScrapArtistByName).RequireAuthorization(Policies.Admin);
-        group.MapPost("/albums/{artistId}", ScrapArtistsAlbums).RequireAuthorization(Policies.Admin);
+        group.MapPost("/artists/{artistName}", ScrapArtistByName);
+        group.MapPost("/albums/{artistId}", ScrapArtistsAlbums);
         
         return builder;
     }

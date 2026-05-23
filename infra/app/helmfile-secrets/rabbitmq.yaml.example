@@ -1,0 +1,5 @@
+authentication:
+  password:
+    value: ""
+  erlangCookie:
+    value: ""
