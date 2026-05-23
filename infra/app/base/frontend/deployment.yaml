@@ -4,7 +4,7 @@ metadata:
   name: web-app
   namespace: music-catalog
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: web-app
@@ -13,6 +13,15 @@ spec:
       labels:
         app: web-app
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: web-app
+                topologyKey: kubernetes.io/hostname
       containers:
         - name: web-app
           image: wisnieibiszkopty/music-catalog-web-app:0.4.0

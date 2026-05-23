@@ -15,6 +15,8 @@ releases:
     values:
       - crds:
           enabled: true
+        startupapicheck:
+          enabled: false
         resources:
           requests:
             cpu: 10m

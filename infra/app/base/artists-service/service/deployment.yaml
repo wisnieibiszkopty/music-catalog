@@ -6,7 +6,7 @@ metadata:
   labels:
     app: artist-service
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: artist-service
@@ -15,6 +15,15 @@ spec:
       labels:
         app: artist-service
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: artist-service
+                topologyKey: kubernetes.io/hostname
       initContainers:
         - name: flyway-migrate
           image: wisnieibiszkopty/music-catalog-artist-migrations:0.1.0

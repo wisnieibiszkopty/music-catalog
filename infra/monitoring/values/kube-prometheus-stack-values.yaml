@@ -3,6 +3,13 @@ alertmanager:
 
 prometheus:
   prometheusSpec:
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: prometheus
     scrapeInterval: "30s"
     scrapeTimeout: "10s"
     serviceMonitorSelectorNilUsesHelmValues: false
@@ -92,6 +99,13 @@ grafana:
             matcherRegex: '"TraceId":"(\w+)"'
             url: "$${__value.raw}"
             datasourceUid: tempo
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: grafana
   initChownData:
     enabled: false
   persistence:
